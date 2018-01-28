@@ -1,8 +1,7 @@
-# Sapling
+# Lynx
 
 ## Contributors
-- Greg Griffith
-- Dan Molitor
+- Project-ecc Lynx Core team
 
 
 ## Install

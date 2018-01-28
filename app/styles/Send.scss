@@ -4,11 +4,22 @@
 
 .send .greenBtn{
 	margin: 0 !important;
-	background-color: #008B45 !important;
-	width: 200px;
+	background-color: #D58920 !important;
+	width: 225px;
+    transition: background-color 0.1s linear;
 }
 
-.send .inpuText{
+.send .greenBtn:hover {
+    margin: 0 !important;
+    background-color: #BF7B1D !important;
+}
+
+.send .greenBtn:active {
+    margin: 0 !important;
+    background-color: #D58920 !important;
+}
+
+.send .inpuText {
 	font-size: 0.9em !important;
 }
 

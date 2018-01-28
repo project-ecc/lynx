@@ -1,6 +1,17 @@
 .receive .greenBtn{
 	margin: 0 !important;
-	background-color: #008B45 !important;
+	background-color: #D58920 !important;
+    transition: background-color 0.1s linear;
+}
+
+.receive .greenBtn:hover {
+    margin: 0 !important;
+    background-color: #BF7B1D !important;
+}
+
+.receive .greenBtn:active {
+    margin: 0 !important;
+    background-color: #D58920 !important;
 }
 
 .receive .inpuText{

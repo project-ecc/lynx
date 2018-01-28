@@ -5,7 +5,7 @@ import BalanceBanner from '../containers/BalanceBanner';
 
 
 const event = require('../utils/eventhandler');
-const splash = require('../../resources/images/splash-image.png');
+const splash = require('../../resources/images/splash-image.jpg');
 
 let lasttype = 'hide';
 
