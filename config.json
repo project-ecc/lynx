@@ -1,0 +1,15 @@
+{
+  "guiName": "Sapling",
+  "coinName": "CryptoUnited",
+  "coinTicker": "CryptoUnited",
+  "githubLink": "https://github.com/CryptoUnited/Sapling",
+  "githubText" : "Sapling Github",
+  "bitcointalkLink": "#",
+  "bitcointalkText": "This is a place holder for BCT link",
+  "linux32": "#",
+  "linux64": "#",
+  "win32": "#",
+  "win64": "#",
+  "osx": "#",
+  "downloadFileName": "daemon-name"
+}

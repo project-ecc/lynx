@@ -1,0 +1,28 @@
+.balance-banner {
+  z-index: 5;
+  height: 150px;
+  margin-left: calc(200px + 2.5vw);
+  margin-right: calc(2.5vw);
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.balance-banner .panel-body {
+  display: flex;
+}
+
+.balance-container {
+  flex: 1;
+}
+
+.stake-container {
+  flex: 1;
+}
+
+.unconfirmed-container {
+  flex: 1;
+}
+
+.total-container {
+  flex: 1;
+}

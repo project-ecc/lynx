@@ -1,0 +1,182 @@
+.settings{
+	padding-top: 15px;
+}
+
+.settings_tab{
+	text-align: center;
+	background-color: #474747;
+	padding: 5px;
+	cursor: pointer;
+	border-left: 1px solid #efefef;
+	font-weight: bold;
+}
+
+.settings_tab_active{
+	border-bottom: solid 6px #FF7F00;
+}
+
+.settings_tab p{
+	color: #fff;
+	margin: 0px;
+	font-size: 1.1em;
+}
+
+.tab_wrapp{
+	margin-top: 15px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.tab_body{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.settings .tab_body .panel{
+	min-height: 50vh;
+}
+
+.rule{
+	margin: 10px 0px 10px 0px;
+}
+
+.radios{
+	display: inline-block;
+    cursor: pointer;
+    margin-top: -1px !important;
+ 	vertical-align: middle !important;
+}
+
+.text_fields{
+	margin-left: 10px;
+}
+
+.text_fields::-webkit-input-placeholder{
+	text-align: center;
+	font-size: 0.9em;
+}
+
+.subtitle{
+	font-weight: 700;
+	font-size: 1em;
+}
+
+.desc{
+	margin-left: 10px;
+	font-size: 0.9em;
+}
+
+
+.btn_console{
+	background-color: #efefef;
+	color: #000;
+	cursor: pointer;
+	padding: 5px 5px 5px 5px;
+	font-size: 1em;
+	text-align: center;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	cursor: pointer;
+	border-radius: 10px;
+	z-index: 1000;
+	width: 100px;
+}
+
+.buttons{
+	position: absolute;
+	bottom: 25px;
+	right: 25px;
+}
+
+.buttons .greenButton{
+	background-color: #474747;
+	border: 2px solid #FF7F00;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	margin-left: 15px;
+	padding: 10px 20px 10px 20px;
+	width: 100px;
+	font-weight: 300;
+	text-align: center;
+}
+
+.btn_files_open{
+	background-color: #efefef;
+	color: #000;
+	cursor: pointer;
+	padding: 5px 5px 5px 5px;
+	text-align: center;
+	font-size: 0.9em;
+	border-radius: 10px;
+	width: 120px;
+}
+
+.settings .selectfield{
+	padding-left: 10px;
+}
+
+.settings .selectfield select{
+	font-size: 0.9em;
+}
+
+.disable{
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.console_body{
+	position: relative;
+	padding: 25px;
+	min-height: 50vh;
+}
+
+.console_wrapper{
+	height: 65vh; 
+	border: 2px solid #efefef;
+	padding-top: 15px;
+	overflow-y: auto;
+}
+
+.hours_list{
+	
+}
+
+.commands_list{
+
+}
+
+.text_green{
+	color: #a1be5a;
+}
+
+.console_buttons{
+	position: absolute;
+	bottom: 15px;
+	left: 10px;
+	right: 0px;
+}
+
+.command_input {
+	width: 100%;
+	padding: 10px;
+	font-size: 0.9em;
+	border: 2px solid #efefef;
+	border-color:  #efefef;
+}
+
+.command_input:focus {
+    border: 2px solid #efefef;
+    border-color:  #efefef;
+}
+
+.enter_btn{
+	background-color: #a1be5a;
+	border: 2px solid #8DA557;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 20px 10px 20px;
+	font-weight: 300;
+	text-align: center;
+}

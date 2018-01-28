@@ -1,0 +1,63 @@
+.home {
+  padding-top: 15px;
+}
+
+.padicon {
+  display: inline-block;
+  opacity: 0.4;
+  width: 12px;
+  vertical-align: baseline;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.home .selectfield {
+  position: absolute;
+  right: 35px;
+  top: 5px;
+  width: 100px;
+}
+
+.home .selectfield select {
+  font-size: 0.9em;
+}
+
+.home .title {
+  font-size: 1.1em;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.home .subtitle {
+  font-size: 0.8em;
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.home .desc {
+  font-size: 2em;
+  color: #e0e0e0;
+}
+
+.home .desc2 {
+  font-size: 1.4em;
+  color: #C1D86C;
+}
+
+
+.home .borderBot {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.passPhraseError {
+  color: #f44336;
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+.home .dialog {
+  width: 600px !important;
+}
+
+
