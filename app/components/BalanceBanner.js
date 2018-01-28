@@ -60,7 +60,7 @@ class BalanceBanner extends Component {
             <div className="unconfirmed-container">
               <p className="subtitle">{lang.overviewMyUnconfirmed}:</p>
               <p className="borderBot">
-                <span className="desc-banner">{this.props.unconfirmed}</span>
+                <span className="desc-banner">{this.props.unconfirmed_balance}</span>
                 <span className="desc2"> {config.coinTicker}</span>
               </p>
             </div>
