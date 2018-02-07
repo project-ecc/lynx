@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import glob from 'glob';
 import os from 'os';
 import $ from 'jquery';
+import fs from 'fs';
 import Wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-
 const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
@@ -203,29 +203,6 @@ class Security extends Component {
       default:
         return 'An Error Occurred';
     }
-  }
-
-  onChangeWalletAddress(event) {
-    this.setState({ walletAddress: event.target.value });
-  }
-
-  dumpPrivateKey(){
-
-    const method = 'dumpprivkey';
-    const parameters = [
-      this.state.walletAddress
-    ];
-    wallet.command([{ method, parameters }]).then((response) => {
-      if (response === 'RpcError'){
-        event.emit('show', 'wrong moite');
-      }
-      console.log(response);
-    }).catch((error) => {
-      alert(error);
-    });
-
-    event.emit('animate', lang.notificationAddressCopiedToClipboard);
-    clipboard.writeText(address);
   }
 
   onClickBackupLocation() {
