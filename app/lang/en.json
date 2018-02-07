@@ -166,6 +166,13 @@
     "console5": "Type",
     "console6": "help",
     "console7": "for an overview of available commands.",
-    "immature": "Immature"
-
+    "immature": "Immature",
+    "dumpPrivKeyButton": "Dump Private Key",
+    "dumpPrivKeyInput": "Enter Wallet Address",
+    "dumpPrivKeyClipboard": "Private Key copied to clipboard",
+    "dumpPrivKeyMessage": "Use the button below to copy your wallet private key to the clipboard",
+    "dumpPrivKeyMessage2": "Remember to write this private key down, if you lose this key you will not beable to recover your wallet",
+    "invalidEccAddress": "Invalid Ecc wallet address",
+    "unlockWalletFirst": "Please unlock your wallet first",
+    "privateKeyCopied": "Private Key Copied to clipboard"
 }

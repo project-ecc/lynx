@@ -158,7 +158,7 @@ class Home extends Component {
         console.log(err);
         event.emit('animate', lang.walletLockedError);
       });
-      self.setState({ dialog: false, passPhrase: '', timeL: '' })
+      self.setState({ dialog: false, passPhrase: '', timeL: '' });
     }
   }
 

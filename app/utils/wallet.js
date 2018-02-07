@@ -159,8 +159,7 @@ export default class Wallet {
 
   async walletChangePassphrase(oldPassphrase, newPassphrase) {
     try {
-      const result = await client.walletPassphraseChange(oldPassphrase, newPassphrase);
-      return result;
+      return await client.walletPassphraseChange(oldPassphrase, newPassphrase);
     } catch (err) {
       return err;
     }

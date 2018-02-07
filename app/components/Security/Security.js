@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import glob from 'glob';
 import os from 'os';
 import $ from 'jquery';
 import Wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+
 const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
@@ -49,6 +52,9 @@ class Security extends Component {
     this.handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
     this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
     this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
+    this.getErrorMessageFromStatus = this.getErrorMessageFromStatus.bind(this);
+    this.clearPassResetState = this.clearPassResetState.bind(this);
+    this.renderDumpPrivateKey = this.renderDumpPrivateKey.bind(this);
   }
 
   componentDidMount() {
@@ -136,27 +142,67 @@ class Security extends Component {
     const self = this;
     if (this.state.pass2.length <= 0) {
       event.emit('animate', lang.invalidFields);
+    } else if (this.state.pass1 !== this.state.pass2) {
+      this.setState({ passEqual: lang.backup2PasswordsDontMatch });
     } else {
-      if (this.state.pass1 !== this.state.pass2) {
-        this.setState({ passEqual: lang.backup2PasswordsDontMatch });
-      } else {
-        wallet.encryptWallet(self.state.pass2).then((data) =>{
-          if (data.code === -1) {
-            event.emit('animate', lang.walletEncryptedError);
-          } else {
-            self.setState({ step: 3 });
-            event.emit('animate', lang.walletEncrypted);
-          }
-        }).catch((err) => {
-          console.log(err);
-          event.emit('animate', err);
-        });
-      }
+      wallet.encryptWallet(self.state.pass2).then((data) => {
+        if (data.code === -1) {
+          event.emit('animate', lang.walletEncryptedError);
+        } else {
+          self.setState({ step: 3 });
+          event.emit('animate', lang.walletEncrypted);
+        }
+      }).catch((err) => {
+        console.log(err);
+        event.emit('animate', err);
+      });
     }
   }
 
   onClickBack() {
-    this.setState({ step: 1, pass1: '', passStrength: ''});
+    this.setState({ step: 1, pass1: '', passStrength: '' });
+  }
+
+  onChangeWalletAddress(event) {
+    this.setState({ walletAddress: event.target.value });
+  }
+
+  dumpPrivateKey() {
+    console.log(this.props.unlocked_until);
+    const method = 'dumpprivkey';
+    const parameters = [
+      this.state.walletAddress
+    ];
+    wallet.command([{ method, parameters }]).then((response) => {
+      if (typeof response[0] !== 'undefined') {
+        if (typeof response[0].status !== 'undefined') {
+          const rpcError = response[0];
+          const message = this.getErrorMessageFromStatus(rpcError.status);
+          event.emit('animate', message);
+        } else {
+          event.emit('animate', lang.privateKeyCopied);
+          clipboard.writeText(response[0]);
+        }
+      } else {
+        event.emit('animate', 'An Error Occurred');
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  getErrorMessageFromStatus(status) {
+    switch (status) {
+      case -5:
+        return lang.invalidEccAddress;
+      case -13:
+        return lang.unlockWalletFirst;
+      case -14:
+        return lang.walletWrongPass;
+
+      default:
+        return 'An Error Occurred';
+    }
   }
 
   onChangeWalletAddress(event) {
@@ -250,31 +296,41 @@ class Security extends Component {
   changePassword() {
     this.setState({ changePassRequesting: true });
     wallet.walletChangePassphrase(this.state.currPass, this.state.newPass)
-      .then((result) => {
-        this.setState({
-          currPass: '',
-          newPass: '',
-          reenteredNewPass: '',
-          passValidated: false,
-          changePassRequesting: false,
-          passStrength: lang.backup1PasswordWeak,
-        });
-        event.emit('show', 'Passphrase changed successfully.');
-        setTimeout(() => {
-          event.emit('hide');
-        }, 2500);
+      .then((response) => {
+        if (response !== null) {
+          const message = this.getErrorMessageFromStatus(response.status);
+          event.emit('animate', message);
+          this.clearPassResetState();
+        } else {
+          this.setState({
+            currPass: '',
+            newPass: '',
+            reenteredNewPass: '',
+            passValidated: false,
+            changePassRequesting: false,
+            passStrength: lang.backup1PasswordWeak,
+          });
+          event.emit('show', 'Passphrase changed successfully.');
+          setTimeout(() => {
+            event.emit('hide');
+          }, 2500);
+        }
       })
       .catch(err => {
-        this.setState({
-          currPass: '',
-          newPass: '',
-          reenteredNewPass: '',
-          passValidated: false,
-          changePassRequesting: false
-        });
+        this.clearPassResetState();
         console.error(err);
         return event.emit('show', err);
       });
+  }
+
+  clearPassResetState() {
+    this.setState({
+      currPass: '',
+      newPass: '',
+      reenteredNewPass: '',
+      passValidated: false,
+      changePassRequesting: false
+    });
   }
 
   renderPageStep() {
@@ -315,7 +371,6 @@ class Security extends Component {
         </div>
       );
     } else if (this.state.step === 3) {
-
       let passColor = '#f44336';
       let equalColor = '#ff4336';
 
@@ -375,19 +430,41 @@ class Security extends Component {
                 <button className="nextButton" onClick={this.onClickBackupLocation}>{lang.backup3SetBackupLocation}</button>
 
               </div>
-              <div className="col-md-6">
-                <p className="desc -space-top">{lang.backupDumpPrivateKeyMessage}
-                  <span className="desc_green"> {lang.backupDumpPrivateKeyMessageImportant}</span>
-                </p>
-                <input className="input" placeholder={lang.enterYourWalletAddress} type="text" onChange={this.onChangeWalletAddress} value={this.state.walletAddress} />
-                <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.backupDumpPrivateKey}</button>
-
-              </div>
+              {this.renderDumpPrivateKey()}
             </div>
           </div>
         </div>
       );
     }
+  }
+
+  renderDumpPrivateKey() {
+    if (this.props.unlocked_until !== 0) {
+      return (
+        <div className="col-md-6">
+          <p className="desc -space-top">{lang.dumpPrivKeyMessage}
+            <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
+          </p>
+          <input
+            className="input"
+            placeholder={lang.dumpPrivKeyInput}
+            type="text"
+            onChange={this.onChangeWalletAddress}
+            value={this.state.walletAddress}
+          />
+          <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.dumpPrivKeyButton}</button>
+        </div>
+      );
+    }
+    return (
+      <div className="col-md-6">
+        <p className="desc -space-top">{lang.dumpPrivKeyMessage}
+          <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
+        </p>
+        <h3 >Wallet must be unlocked!</h3>
+
+      </div>
+    );
   }
 
   render() {
@@ -402,12 +479,17 @@ class Security extends Component {
           {this.renderPageStep()}
         </div>
         <div className="tip">
-            <p className="tip_title">{lang.backupTipBold}</p>
-            <p className="tip_desc">{lang.backupTipMessage}</p>
-          </div>
+          <p className="tip_title">{lang.backupTipBold}</p>
+          <p className="tip_desc">{lang.backupTipMessage}</p>
+        </div>
       </div>
     );
   }
 }
 
-export default Security;
+const mapStateToProps = state => {
+  return {
+    unlocked_until: state.wallet.unlocked_until,
+  };
+};
+export default withRouter(connect(mapStateToProps)(Security));
