@@ -66,12 +66,12 @@ class Receive extends Component {
       <div className="receive">
         <div className="row">
           <div className="col-md-12">
-            <p className="title">{lang.receiveNewAdress}</p>
+            <p className="title">{lang.receiveNewAddress}</p>
             <div className="panel panel-default">
               <div className="panel-body">
                 <div className="input-group">
                   <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
-                    <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAdress}</button>
+                    <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
                   </span>
                   <div>
                     <input
@@ -79,7 +79,7 @@ class Receive extends Component {
                       onChange={this._handleGenericFormChange}
                       value={this.state.nameOfNewAddress}
                       name="nameOfNewAddress"
-                      placeholder={lang.receiveAdressNameOptional}
+                      placeholder={lang.receiveAddressNameOptional}
                       type="text"
                     />
                   </div>

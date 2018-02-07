@@ -30,9 +30,9 @@
     "sendNameOptional": "Name (optional)",
     "sendNameAddress": "Name / Address",
     "sendAmountToSend": "Amount to Send",
-    "receiveNewAdress": "New Address",
-    "receiveCreateNewAdress": "CREATE NEW ADDRESS",
-    "receiveAdressNameOptional": "Adress Name (optional)",
+    "receiveNewAddress": "New Address",
+    "receiveCreateNewAddress": "CREATE NEW ADDRESS",
+    "receiveAddressNameOptional": "Address Name (optional)",
     "receiveExistingAddresses": "Existing Addresses",
     "transactionsLatestTransactions": "Latest Transactions",
     "transactionsLoadMore": "Load more",
@@ -167,4 +167,5 @@
     "console6": "help",
     "console7": "for an overview of available commands.",
     "immature": "Immature"
+
 }

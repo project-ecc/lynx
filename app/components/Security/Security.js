@@ -7,6 +7,7 @@ import { traduction } from '../../lang/lang';
 const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
+const { clipboard } = require('electron');
 
 const dialog = remote.require('electron').dialog;
 const app = remote.app;
@@ -29,6 +30,7 @@ class Security extends Component {
       newPass: '',
       reenteredNewPass: '',
       changePassRequesting: false,
+      walletAddress: ''
     };
 
     this.checkIfWalletEncrypted = this.checkIfWalletEncrypted.bind(this);
@@ -45,6 +47,8 @@ class Security extends Component {
     this.handleCurrPassChange = this.handleCurrPassChange.bind(this);
     this.handleNewPassChange = this.handleNewPassChange.bind(this);
     this.handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
+    this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
+    this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
   }
 
   componentDidMount() {
@@ -153,6 +157,29 @@ class Security extends Component {
 
   onClickBack() {
     this.setState({ step: 1, pass1: '', passStrength: ''});
+  }
+
+  onChangeWalletAddress(event) {
+    this.setState({ walletAddress: event.target.value });
+  }
+
+  dumpPrivateKey(){
+
+    const method = 'dumpprivkey';
+    const parameters = [
+      this.state.walletAddress
+    ];
+    wallet.command([{ method, parameters }]).then((response) => {
+      if (response === 'RpcError'){
+        event.emit('show', 'wrong moite');
+      }
+      console.log(response);
+    }).catch((error) => {
+      alert(error);
+    });
+
+    event.emit('animate', lang.notificationAddressCopiedToClipboard);
+    clipboard.writeText(address);
   }
 
   onClickBackupLocation() {
@@ -338,10 +365,26 @@ class Security extends Component {
           >
             Change Passphrase
           </button>
-          <p className="desc -space-top">{lang.backup3Message2}
-            <span className="desc_green"> {lang.backup3Message3Green}</span>
-          </p>
-          <button className="nextButton" onClick={this.onClickBackupLocation}>{lang.backup3SetBackupLocation}</button>
+
+          <div className="row">
+            <div className="col-md-12">
+              <div className="col-md-6">
+                <p className="desc -space-top">{lang.backup3Message2}
+                  <span className="desc_green"> {lang.backup3Message3Green}</span>
+                </p>
+                <button className="nextButton" onClick={this.onClickBackupLocation}>{lang.backup3SetBackupLocation}</button>
+
+              </div>
+              <div className="col-md-6">
+                <p className="desc -space-top">{lang.backupDumpPrivateKeyMessage}
+                  <span className="desc_green"> {lang.backupDumpPrivateKeyMessageImportant}</span>
+                </p>
+                <input className="input" placeholder={lang.enterYourWalletAddress} type="text" onChange={this.onChangeWalletAddress} value={this.state.walletAddress} />
+                <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.backupDumpPrivateKey}</button>
+
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
