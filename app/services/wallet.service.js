@@ -7,5 +7,18 @@ export default {
   },
   lockWallet: () => {
     return wallet.walletlock();
+  },
+  backupWallet: (path) => {
+    return wallet.backupWallet(path);
+  },
+  importWallet: (walletPath) => {
+    return wallet.importWallet(walletPath);
+  },
+  dumpPrivateKey: (walletAddress) => {
+    return wallet.dumpPrivateKey(walletAddress);
+  },
+  changePassphase: (oldPassphase, newPassphase) => {
+    return wallet.walletChangePassphrase(oldPassphase, newPassphase);
   }
-};
+}
+;

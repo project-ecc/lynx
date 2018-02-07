@@ -65,7 +65,7 @@ class WalletWrapper extends Component {
 
   processError(err) {
     const { evaluateStatusDux } = this.props;
-    // console.log(err);
+    console.log(String(err))
     if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
       evaluateStatusDux({
         starting: false,
@@ -73,7 +73,9 @@ class WalletWrapper extends Component {
         stopping: false,
         off: true,
       });
-    } else if (err.message.includes('Loading block index')) {
+    } else if (err.message.includes('-28')) {
+      console.log('in here')
+      event.emit('animare', 'Loading block ' + err.id);
       evaluateStatusDux({
         starting: true,
         running: false,
@@ -142,6 +144,7 @@ class WalletWrapper extends Component {
     // check to see if it is running if it is running
     if (this.props.walletInstalled) {
       wallet.getInfo().then((data) => {
+        console.log(data)
         evaluateStatusDux({
           starting: false,
           running: true,
@@ -198,12 +201,13 @@ class WalletWrapper extends Component {
 
   startStopWalletHandler() {
     // we can only start the wallet if it is currently off
-    if (this.props.off) {
+    if (this.props.off || !this.props.running) {
       this.startWallet();
       // we can only stop the wallet if it is running
     } else if (this.props.running) {
       this.stopWallet();
     } else {
+      console.log(this.props)
       event.emit('animate', 'wallet is either starting or stopping, please wait for it to finish before trying to turn it off or on again');
     }
   }
@@ -238,7 +242,8 @@ class WalletWrapper extends Component {
     if (process.platform.indexOf('win') > -1) {
       event.emit('animate', 'Stopping wallet...');
     }
-    wallet.walletstop().then(() => {
+    wallet.walletstop().then((data) => {
+      console.log(data)
       evaluateStatusDux({
         starting: false,
         running: false,

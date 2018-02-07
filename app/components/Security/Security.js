@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import glob from 'glob';
-import os from 'os';
-import $ from 'jquery';
-import fs from 'fs';
 import wallet from '../../utils/wallet';
+import WalletService from '../../services/wallet.service';
+import ErrorService from '../../services/error.service';
 import { traduction } from '../../lang/lang';
 
 
@@ -15,7 +14,6 @@ const remote = require('electron').remote;
 const { clipboard } = require('electron');
 
 const dialog = remote.require('electron').dialog;
-const app = remote.app;
 
 const lang = traduction();
 
@@ -53,7 +51,6 @@ class Security extends Component {
     this.handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
     this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
     this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
-    this.getErrorMessageFromStatus = this.getErrorMessageFromStatus.bind(this);
     this.clearPassResetState = this.clearPassResetState.bind(this);
     this.renderDumpPrivateKey = this.renderDumpPrivateKey.bind(this);
   }
@@ -169,22 +166,18 @@ class Security extends Component {
   }
 
   dumpPrivateKey() {
-    console.log(this.props.unlocked_until);
-    const method = 'dumpprivkey';
-    const parameters = [
-      this.state.walletAddress
-    ];
-    wallet.command([{ method, parameters }]).then((response) => {
-      if (typeof response[0] !== 'undefined') {
-        if (typeof response[0].status !== 'undefined') {
-          const rpcError = response[0];
-          const message = this.getErrorMessageFromStatus(rpcError.status);
+    WalletService.dumpPrivateKey(this.state.walletAddress).then((response) => {
+      console.log(response)
+      if (typeof response !== 'undefined') {
+        if (typeof response.code !== 'undefined') {
+          const message = ErrorService.getErrorFromCode(response.code);
           event.emit('animate', message);
         } else {
           event.emit('animate', lang.privateKeyCopied);
-          clipboard.writeText(response[0]);
+          clipboard.writeText(response);
         }
       } else {
+        console.log(response)
         event.emit('animate', 'An Error Occurred');
       }
     }).catch((error) => {
@@ -192,22 +185,7 @@ class Security extends Component {
     });
   }
 
-  getErrorMessageFromStatus(status) {
-    switch (status) {
-      case -5:
-        return lang.invalidEccAddress;
-      case -13:
-        return lang.unlockWalletFirst;
-      case -14:
-        return lang.walletWrongPass;
-
-      default:
-        return 'An Error Occurred';
-    }
-  }
-
   onClickBackupLocation() {
-    const self = this;
     dialog.showOpenDialog({
       properties: ['openDirectory']
     }, (folderPaths) => {
@@ -215,29 +193,13 @@ class Security extends Component {
         event.emit('animate', lang.noFolderSelected);
         return;
       }
-      const platform = os.platform();
-      let walletpath;
 
-      if (platform.indexOf('win') > -1) {
-        walletpath = `${app.getPath('appData')}/eccoin/wallet.dat`;
-      } else {
-        walletpath = `${app.getPath('home')}/.eccoin/wallet.dat`;
-      }
-
-      fs.readFile(walletpath, (err, data) => {
-        if (err) {
-          console.log(err);
-          event.emit('animate', lang.readingFileError);
-          return;
-        }
-
-        fs.writeFile(`${folderPaths}/walletBackup.dat`, data, (err) => {
-          if (err) {
-            console.log(err);
-            event.emit('animate', lang.writtingFileError);
-          }
+      WalletService.backupWallet(`${folderPaths}/walletBackup.dat`).then((data) => {
+        if(data == null) {
           event.emit('animate', lang.backupOk);
-        });
+        }
+      }).catch((err) => {
+        event.emit('animate', ErrorService.getErrorFromCode(-99));
       });
     });
   }
@@ -273,10 +235,10 @@ class Security extends Component {
 
   changePassword() {
     this.setState({ changePassRequesting: true });
-    wallet.walletChangePassphrase(this.state.currPass, this.state.newPass)
+    WalletService.changePassphase(this.state.currPass, this.state.newPass)
       .then((response) => {
         if (response !== null) {
-          const message = this.getErrorMessageFromStatus(response.status);
+          const message = ErrorService.getErrorFromCode(response.code);
           event.emit('animate', message);
           this.clearPassResetState();
         } else {

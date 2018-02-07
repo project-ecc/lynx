@@ -14,6 +14,7 @@ class Wallet {
       username: 'yourusername',
       password: 'yourpassword'
     });
+    console.log(this.client)
   }
 
   help() {
@@ -165,6 +166,30 @@ class Wallet {
   async walletChangePassphrase(oldPassphrase, newPassphrase) {
     try {
       return await this.client.walletPassphraseChange(oldPassphrase, newPassphrase);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async dumpPrivateKey(walletAddress){
+    try {
+      return await this.client.dumpPrivKey(walletAddress);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async importWallet(walletPath) {
+    try {
+      return await this.client.importWallet(walletPath);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async backupWallet(path) {
+    try {
+      return await this.client.backupWallet(path);
     } catch (err) {
       return err;
     }
