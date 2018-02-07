@@ -2,7 +2,7 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import ReactLoading from 'react-loading';
 import AddressBook from './AddressBook';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import glob from 'glob';
 
@@ -10,7 +10,6 @@ const fs = require('fs');
 const event = require('../../utils/eventhandler');
 const homedir = require('os').homedir();
 const lang = traduction();
-const wallet = new Wallet();
 
 class Send extends Component {
   constructor(props) {

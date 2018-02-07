@@ -24,6 +24,7 @@
     "ovweviewModalLockQuestion": "Do you want to lock your wallet ?",
     "walletPassPhrase": "wallet pass phrase",
     "secondsUnlocked": "seconds unlocked",
+    "seconds" : "seconds",
     "sendAddAddress": "ADD ADDRESS",
     "sendClear": "Clear",
     "sendName": "Name",
@@ -174,5 +175,6 @@
     "dumpPrivKeyMessage2": "Remember to write this private key down, if you lose this key you will not beable to recover your wallet",
     "invalidEccAddress": "Invalid Ecc wallet address",
     "unlockWalletFirst": "Please unlock your wallet first",
-    "privateKeyCopied": "Private Key Copied to clipboard"
+    "privateKeyCopied": "Private Key Copied to clipboard",
+    "unlockForStatking": "Unlock for staking"
 }

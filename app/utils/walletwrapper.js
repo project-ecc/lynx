@@ -10,9 +10,8 @@ import {
   evaluateStatus,
   isWalletInstalled
 } from '../reducers/WalletReducer';
-import Wallet from './wallet';
+import wallet from './wallet';
 
-const wallet = new Wallet();
 const event = require('../utils/eventhandler');
 const homedir = require('os').homedir();
 
@@ -66,7 +65,7 @@ class WalletWrapper extends Component {
 
   processError(err) {
     const { evaluateStatusDux } = this.props;
-    console.log(err);
+    // console.log(err);
     if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
       evaluateStatusDux({
         starting: false,
@@ -93,7 +92,6 @@ class WalletWrapper extends Component {
         chain: data.chain,
         bestblockhash: data.bestblockhash
       });
-      return;
     }).catch((err) => {
       this.processError(err);
     });
@@ -121,7 +119,6 @@ class WalletWrapper extends Component {
           unlocked_until: data.unlocked_until,
         });
       }
-      return;
     }).catch((err) => {
       this.processError(err);
     });

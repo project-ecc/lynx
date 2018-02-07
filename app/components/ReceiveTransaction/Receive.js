@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import CurrentAddresses from './CurrentAddressTable';
 import low from '../../utils/low';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 
 const event = require('../../utils/eventhandler');
 
 const lang = traduction();
-const wallet = new Wallet();
 const { clipboard } = require('electron');
 
 

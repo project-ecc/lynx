@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 const homedir = require('os').homedir();
 import glob from 'glob';
@@ -8,7 +8,6 @@ const settings = require('electron-settings');
 const event = require('../../utils/eventhandler');
 
 const lang = traduction();
-const wallet = new Wallet();
 
 class TransactionTable extends Component {
   constructor(props) {

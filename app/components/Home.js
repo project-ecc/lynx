@@ -25,6 +25,7 @@ class Home extends Component {
       dialog: false,
       timeL: '',
       passPhrase: '',
+      stakeUnlock: false
     };
     // this.infoUpdate = this.infoUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -33,6 +34,7 @@ class Home extends Component {
     this.confirmDialog = this.confirmDialog.bind(this);
     this.onPassPhraseChange = this.onPassPhraseChange.bind(this);
     this.onTimeLChange = this.onTimeLChange.bind(this);
+    this.checkboxChange = this.checkboxChange.bind(this);
   }
 
   handleChange(event) {
@@ -51,6 +53,13 @@ class Home extends Component {
     this.setState(() => {
       return { dialog: true };
     });
+  }
+  checkboxChange(evt) {
+    if (this.state.checked !== evt.target.checked) {
+      this.setState({
+        stakeUnlock: evt.target.checked
+      });
+    }
   }
 
   componentDidMount() {
@@ -86,10 +95,18 @@ class Home extends Component {
             <p className="desc">{lang.ovweviewModalAuthDesc}</p>
             <div className="row">
               <div className="col-md-10 col-md-offset-1 input-group">
-                <input className="form-control inpuText" type="password" value={this.state.passPhrase} onChange={this.onPassPhraseChange} placeholder={lang.walletPassPhrase} />
+                <input className="form-control inputText" type="password" value={this.state.passPhrase} onChange={this.onPassPhraseChange} placeholder={lang.walletPassPhrase} />
               </div>
               <div className="col-md-10 col-md-offset-1 input-group" style={{ marginTop: '15px' }}>
-                <input className="form-control inpuText" type="number" value={this.state.timeL} onChange={this.onTimeLChange} placeholder={lang.secondsUnlocked} />
+                <input className="form-control inputText" type="number" value={this.state.timeL} onChange={this.onTimeLChange} placeholder={lang.secondsUnlocked} />
+              </div>
+              <div className="col-md-10 col-md-offset-1 input-group" style={{ marginTop: '15px' }}>
+                <div className="form-check">
+                  <input style={{marginRight: '10px'}} className="form-check-input" type="checkbox" value="" id="defaultCheck1" checked={this.state.stakeUnlock} onChange={this.checkboxChange} />
+                    <label className="form-check-label" htmlFor="defaultCheck1">
+                      {lang.unlockForStatking}
+                    </label>
+                </div>
               </div>
             </div>
           </div>
@@ -136,10 +153,11 @@ class Home extends Component {
     if (this.props.unlocked_until === 0) {
       const passPhrase = this.state.passPhrase;
       let timeL = this.state.timeL;
-      if (timeL === 0) {
+      const staking = this.state.stakeUnlock;
+      if (timeL === 0 || timeL.length === 0) {
         timeL = 300000;
       }
-      WalletService.unlockWallet(passPhrase, timeL, false).then((data) => {
+      WalletService.unlockWallet(passPhrase, timeL, staking).then((data) => {
         if (data === null) {
           event.emit('animate', `${lang.walletUnlockedFor} ${timeL} ${lang.seconds}`);
         }

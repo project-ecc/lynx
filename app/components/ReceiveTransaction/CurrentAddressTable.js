@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 import glob from 'glob';
 const lang = traduction();
-const wallet = new Wallet();
+
 const { clipboard } = require('electron');
 
 class CurrentAddresses extends Component {

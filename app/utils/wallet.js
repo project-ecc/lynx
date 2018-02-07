@@ -4,17 +4,21 @@ import shell from 'node-powershell';
 const homedir = require('os').homedir();
 const { exec, spawn } = require('child_process');
 
-const client = new Client({
-  host: '127.0.0.1',
-  port: 19119,
-  username: 'yourusername',
-  password: 'yourpassword'
-});
 
-export default class Wallet {
+class Wallet {
+
+  constructor() {
+    this.client = new Client({
+      host: '127.0.0.1',
+      port: 19119,
+      username: 'yourusername',
+      password: 'yourpassword'
+    });
+  }
+
   help() {
     return new Promise((resolve, reject) => {
-      client.help().then((data) => {
+      this.client.help().then((data) => {
         return resolve(data);
       }).catch((err) => {
         return reject(err);
@@ -24,7 +28,7 @@ export default class Wallet {
 
   command(batch) {
     return new Promise((resolve, reject) => {
-      client.command(batch).then((responses) => {
+      this.client.command(batch).then((responses) => {
         return resolve(responses);
       }).catch((err) => {
         return reject(err);
@@ -33,18 +37,20 @@ export default class Wallet {
   }
 
   getInfo() {
-    return new Promise((resolve, reject) => {
-      client.getInfo().then((data) => {
-        return resolve(data);
-      }).catch((err) => {
-        return reject(err);
-      });
+    if (typeof this.client === 'undefined' || !this.client) {
+      return Promise.reject(new Error('RPC this.client was not defined'));
+    }
+
+    return this.client.getInfo().then(res => {
+      return Promise.resolve(res);
+    }).catch((err) => {
+      return Promise.reject(new Error(err));
     });
   }
 
   getBlockchainInfo() {
     return new Promise((resolve, reject) => {
-      client.getBlockchainInfo().then((data) => {
+      this.client.getBlockchainInfo().then((data) => {
         return resolve(data);
       }).catch((err) => {
         return reject(err);
@@ -53,12 +59,11 @@ export default class Wallet {
   }
 
   getWalletInfo() {
-    return new Promise((resolve, reject) => {
-      client.getWalletInfo().then((data) => {
-        return resolve(data);
-      }).catch((err) => {
-        return reject(err);
-      });
+
+    return this.client.getWalletInfo().then(res => {
+      return Promise.resolve(res);
+    }).catch((err) => {
+      return Promise.reject(new Error(err))
     });
   }
 
@@ -69,7 +74,7 @@ export default class Wallet {
       if (a === null) {
         a = '*';
       }
-      client.listTransactions(a, count, skip).then((transactions) => {
+      this.client.listTransactions(a, count, skip).then((transactions) => {
         return resolve(transactions);
       }).catch((err) => {
         return reject(err);
@@ -79,7 +84,7 @@ export default class Wallet {
 
   listAllAccounts() {
     return new Promise((resolve, reject) => {
-      client.listReceivedByAddress(0, true).then((addresses) => {
+      this.client.listReceivedByAddress(0, true).then((addresses) => {
         return resolve(addresses);
       }).catch((err) => {
         return reject(err);
@@ -91,9 +96,9 @@ export default class Wallet {
     const name = nameOpt || null;
     let newAddress;
     if (name === null) {
-      newAddress = await client.getNewAddress();
+      newAddress = await this.client.getNewAddress();
     } else {
-      newAddress = await client.getNewAddress(name);
+      newAddress = await this.client.getNewAddress(name);
     }
     return newAddress;
   }
@@ -101,37 +106,37 @@ export default class Wallet {
   async sendMoney(sendAddress, amount) {
     const amountNum = parseFloat(amount);
     const sendAddressStr = `${sendAddress}`;
-    await client.sendToAddress(sendAddressStr, amountNum);
+    await this.client.sendToAddress(sendAddressStr, amountNum);
   }
 
   async setTxFee(amount) {
     const amountNum = parseFloat(amount);
-    await client.setTxFee(amountNum);
+    await this.client.setTxFee(amountNum);
   }
 
   async validate(address) {
-    const result = await client.validateAddress(address);
+    const result = await this.client.validateAddress(address);
     return result;
   }
 
   async getblockcount() {
-    const result = await client.getBlockCount();
+    const result = await this.client.getBlockCount();
     return result;
   }
 
   async getblockhash(hash) {
-    const result = await client.getBlockHash(hash);
+    const result = await this.client.getBlockHash(hash);
     return result;
   }
 
   async getpeerinfo() {
-    const result = await client.getPeerInfo();
+    const result = await this.client.getPeerInfo();
     return result;
   }
 
   async encryptWallet(passphrase) {
     try {
-      const result = await client.encryptWallet(passphrase);
+      const result = await this.client.encryptWallet(passphrase);
       return result;
     } catch (err) {
       return err;
@@ -140,7 +145,7 @@ export default class Wallet {
 
   async walletlock() {
     try {
-      const result = await client.walletLock();
+      const result = await this.client.walletLock();
       return result;
     } catch (err) {
       return err;
@@ -149,8 +154,8 @@ export default class Wallet {
 
   async walletpassphrase(passphrase, time) {
     try {
-      const ntime = parseInt(time)
-      const result = await client.walletPassphrase(passphrase, ntime);
+      const ntime = parseInt(time);
+      const result = await this.client.walletPassphrase(passphrase, ntime);
       return result;
     } catch (err) {
       return err;
@@ -159,7 +164,7 @@ export default class Wallet {
 
   async walletChangePassphrase(oldPassphrase, newPassphrase) {
     try {
-      return await client.walletPassphraseChange(oldPassphrase, newPassphrase);
+      return await this.client.walletPassphraseChange(oldPassphrase, newPassphrase);
     } catch (err) {
       return err;
     }
@@ -167,7 +172,7 @@ export default class Wallet {
 
   async walletstop() {
     try {
-      return await client.stop();
+      return await this.client.stop();
     } catch (err) {
       return err;
     }
@@ -213,6 +218,11 @@ export default class Wallet {
   }
 
 }
+
+const instance = new Wallet();
+Object.freeze(instance);
+
+export default instance;
 
 function runExec(cmd, timeout, cb) {
   return new Promise((resolve, reject) => {

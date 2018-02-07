@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { traduction } from '../../lang/lang';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 
 const remote = require('electron').remote;
 const settings = require('electron-settings');
 
 const app = remote.app;
 
-const wallet = new Wallet();
 const lang = traduction();
 
 class SettingsMain extends Component {
@@ -49,7 +48,6 @@ class SettingsMain extends Component {
   }
 
   loadSettings() {
-
     if (settings.has('settings.main')) {
       const ds = settings.get('settings.main');
       this.setState(ds);
@@ -80,11 +78,11 @@ class SettingsMain extends Component {
 
     if (name === 'optimal_tx_fee') {
       if (value === true) {
-        this.setState({disableInputs1: ''});
+        this.setState({ disableInputs1: '' });
       } else {
         this.setState({ disableInputs1: 'disable' });
       }
-    } 
+    }
 
     this.setState({
       [name]: value
@@ -113,7 +111,6 @@ class SettingsMain extends Component {
     self.setState({
       dialog: true
     });
-
   }
 
   btnCancel() {

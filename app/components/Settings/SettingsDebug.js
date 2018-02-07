@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import os from 'os';
-import Wallet from '../../utils/wallet';
+import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 
 const event = require('../../utils/eventhandler');
@@ -8,7 +8,6 @@ const appVersion = require('../../../package.json').version;
 const remote = require('electron').remote;
 const config = require('../../../config');
 
-const wallet = new Wallet();
 const shell = remote.shell;
 const app = remote.app;
 
