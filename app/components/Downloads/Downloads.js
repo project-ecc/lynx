@@ -58,11 +58,11 @@ export default class Downloads extends Component {
   };
   downloadWindows64 = () => {
     event.emit('show', 'Wallet downloading...');
-    ipcRenderer.send('wallet-download', { url: config.win32, filename: config.downloadFileName });
+    ipcRenderer.send('wallet-download', { url: config.win64, filename: config.downloadFileName });
   };
   downloadWindows32 = () => {
     event.emit('show', 'Wallet downloading...');
-    ipcRenderer.send('wallet-download', { url: config.win64, filename: config.downloadFileName });
+    ipcRenderer.send('wallet-download', { url: config.win32, filename: config.downloadFileName });
   };
   downloadMacOSX = () => {
     event.emit('show', 'Wallet downloading...');
