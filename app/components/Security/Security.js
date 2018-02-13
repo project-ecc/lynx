@@ -49,10 +49,10 @@ class Security extends Component {
     this.handleCurrPassChange = this.handleCurrPassChange.bind(this);
     this.handleNewPassChange = this.handleNewPassChange.bind(this);
     this.handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
-    this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
-    this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
     this.clearPassResetState = this.clearPassResetState.bind(this);
-    this.renderDumpPrivateKey = this.renderDumpPrivateKey.bind(this);
+    // this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
+    // this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
+    // this.renderDumpPrivateKey = this.renderDumpPrivateKey.bind(this);
   }
 
   componentDidMount() {
@@ -161,29 +161,29 @@ class Security extends Component {
     this.setState({ step: 1, pass1: '', passStrength: '' });
   }
 
-  onChangeWalletAddress(event) {
-    this.setState({ walletAddress: event.target.value });
-  }
-
-  dumpPrivateKey() {
-    WalletService.dumpPrivateKey(this.state.walletAddress).then((response) => {
-      console.log(response)
-      if (typeof response !== 'undefined') {
-        if (typeof response.code !== 'undefined') {
-          const message = ErrorService.getErrorFromCode(response.code);
-          event.emit('animate', message);
-        } else {
-          event.emit('animate', lang.privateKeyCopied);
-          clipboard.writeText(response);
-        }
-      } else {
-        console.log(response)
-        event.emit('animate', 'An Error Occurred');
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+  // onChangeWalletAddress(event) {
+  //   this.setState({ walletAddress: event.target.value });
+  // }
+  //
+  // dumpPrivateKey() {
+  //   WalletService.dumpPrivateKey(this.state.walletAddress).then((response) => {
+  //     console.log(response)
+  //     if (typeof response !== 'undefined') {
+  //       if (typeof response.code !== 'undefined') {
+  //         const message = ErrorService.getErrorFromCode(response.code);
+  //         event.emit('animate', message);
+  //       } else {
+  //         event.emit('animate', lang.privateKeyCopied);
+  //         clipboard.writeText(response);
+  //       }
+  //     } else {
+  //       console.log(response)
+  //       event.emit('animate', 'An Error Occurred');
+  //     }
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
 
   onClickBackupLocation() {
     dialog.showOpenDialog({
@@ -370,7 +370,7 @@ class Security extends Component {
                 <button className="nextButton" onClick={this.onClickBackupLocation}>{lang.backup3SetBackupLocation}</button>
 
               </div>
-              {this.renderDumpPrivateKey()}
+              {/*{this.renderDumpPrivateKey()}*/}
             </div>
           </div>
         </div>
@@ -378,34 +378,34 @@ class Security extends Component {
     }
   }
 
-  renderDumpPrivateKey() {
-    if (this.props.unlocked_until !== 0) {
-      return (
-        <div className="col-md-6">
-          <p className="desc -space-top">{lang.dumpPrivKeyMessage}
-            <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
-          </p>
-          <input
-            className="input"
-            placeholder={lang.dumpPrivKeyInput}
-            type="text"
-            onChange={this.onChangeWalletAddress}
-            value={this.state.walletAddress}
-          />
-          <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.dumpPrivKeyButton}</button>
-        </div>
-      );
-    }
-    return (
-      <div className="col-md-6">
-        <p className="desc -space-top">{lang.dumpPrivKeyMessage}
-          <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
-        </p>
-        <h3 >Wallet must be unlocked!</h3>
-
-      </div>
-    );
-  }
+  // renderDumpPrivateKey() {
+  //   if (this.props.unlocked_until !== 0) {
+  //     return (
+  //       <div className="col-md-6">
+  //         <p className="desc -space-top">{lang.dumpPrivKeyMessage}
+  //           <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
+  //         </p>
+  //         <input
+  //           className="input"
+  //           placeholder={lang.dumpPrivKeyInput}
+  //           type="text"
+  //           onChange={this.onChangeWalletAddress}
+  //           value={this.state.walletAddress}
+  //         />
+  //         <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.dumpPrivKeyButton}</button>
+  //       </div>
+  //     );
+  //   }
+  //   return (
+  //     <div className="col-md-6">
+  //       <p className="desc -space-top">{lang.dumpPrivKeyMessage}
+  //         <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
+  //       </p>
+  //       <h3 >Wallet must be unlocked!</h3>
+  //
+  //     </div>
+  //   );
+  // }
 
   render() {
     return (

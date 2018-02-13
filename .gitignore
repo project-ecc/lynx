@@ -62,3 +62,4 @@ typings/
 .idea/
 dll/
 package-lock.json
+Sapling.iml
