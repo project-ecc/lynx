@@ -11,7 +11,6 @@
  * @flow
  */
 
-import path from 'path';
 import MenuBuilder from './menu';
 
 const { app, Tray, Menu, BrowserWindow, nativeImage, ipcMain } = require('electron');
@@ -20,6 +19,7 @@ const autoUpdater = require('electron-updater').autoUpdater;
 const settings = require('electron-settings');
 const event = require('./utils/eventhandler');
 const { logo } = require('./base-sixty-four');
+const extract = require('extract-zip');
 
 const iconPath = nativeImage.createFromDataURL(logo);
 
@@ -193,12 +193,29 @@ app.on('ready', async () => {
 });
 
 ipcMain.on('wallet-download', (e, args) => {
-  DownloadManager.download({ url: args.url, filename: args.filename }, (err, url) => {
-    if (err) {
-      e.sender.send('wallet-downloaded', err);
-    } else {
-      e.sender.send('wallet-downloaded');
+
+  DownloadManager.download({ url: args.url, filename: args.filename }, (error, url) => {
+    if (error) {
+      e.sender.send('wallet-downloaded', error);
+      console.log(`ERROR: ${url}`);
+      return;
     }
+
+    if (process.platform === 'darwin') {
+      extract(`${app.getPath('home')}/.eccoin-wallet/${args.filename}.zip`,
+        { dir: `${app.getPath('home')}/.eccoin-wallet/` },
+        (err) => {
+          if (err) {
+            e.sender.send('wallet-downloaded', err);
+            console.log(err);
+          } else {
+            console.log('unzip successfully.');
+          }
+        });
+    }
+
+    e.sender.send('wallet-downloaded');
+    console.log(`DONE: ${url}`);
   });
 });
 
