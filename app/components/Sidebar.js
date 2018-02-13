@@ -76,7 +76,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-    }, 600000);
+  }, 600000);
 
     this.checkWalletVersion();
 
@@ -127,8 +127,8 @@ class Sidebar extends Component {
     aLinks.settings = '';
 
     aIcons.default = require('../../resources/images/overview1.ico');
-    aIcons.send = require('../../resources/images/send1.ico');
-    aIcons.receive = require('../../resources/images/receive1.ico');
+    aIcons.send = require('../../resources/images/receive1.ico');
+    aIcons.receive = require('../../resources/images/send1.ico');
     aIcons.transactions = require('../../resources/images/trans1.ico');
     aIcons.statuspage = require('../../resources/images/backup1.ico');
     aIcons.about = require('../../resources/images/about1.ico');
@@ -137,12 +137,12 @@ class Sidebar extends Component {
     if (pathname === '/') {
       aLinks.default = 'sidebaritem_active';
       aIcons.default = require('../../resources/images/overview2.ico');
-    } else if (pathname === '/send'){
+    } else if (pathname === '/send') {
       aLinks.send = 'sidebaritem_active';
-      aIcons.send = require('../../resources/images/send2.ico');
+      aIcons.send = require('../../resources/images/receive2.ico');
     } else if (pathname === '/receive') {
       aLinks.receive = 'sidebaritem_active';
-      aIcons.receive = require('../../resources/images/receive2.ico');
+      aIcons.receive = require('../../resources/images/send2.ico');
     } else if (pathname === '/transaction') {
       aLinks.transactions = 'sidebaritem_active';
       aIcons.transactions = require('../../resources/images/trans2.ico');
@@ -164,7 +164,7 @@ class Sidebar extends Component {
     if (opt === this.state.pathname) {
       return (
         <div className="rectround" />
-      );
+    );
     }
     return null;
   }
