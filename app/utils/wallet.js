@@ -1,7 +1,7 @@
 import Client from 'bitcoin-core';
 import shell from 'node-powershell';
 
-const homedir = require('os').homedir();
+import { getPlatformWalletUri } from '../services/platform.service';
 const { exec, spawn } = require('child_process');
 
 
@@ -14,10 +14,9 @@ class Wallet {
       username: 'yourusername',
       password: 'yourpassword'
     });
-    console.log(this.client)
   }
 
-  help() {
+  async help() {
     return new Promise((resolve, reject) => {
       this.client.help().then((data) => {
         return resolve(data);
@@ -27,7 +26,7 @@ class Wallet {
     });
   }
 
-  command(batch) {
+  async command(batch) {
     return new Promise((resolve, reject) => {
       this.client.command(batch).then((responses) => {
         return resolve(responses);
@@ -37,7 +36,7 @@ class Wallet {
     });
   }
 
-  getInfo() {
+  async getInfo() {
     if (typeof this.client === 'undefined' || !this.client) {
       return Promise.reject(new Error('RPC this.client was not defined'));
     }
@@ -49,7 +48,7 @@ class Wallet {
     });
   }
 
-  getBlockchainInfo() {
+  async getBlockchainInfo() {
     return new Promise((resolve, reject) => {
       this.client.getBlockchainInfo().then((data) => {
         return resolve(data);
@@ -59,7 +58,7 @@ class Wallet {
     });
   }
 
-  getWalletInfo() {
+  async getWalletInfo() {
 
     return this.client.getWalletInfo().then(res => {
       return Promise.resolve(res);
@@ -69,7 +68,7 @@ class Wallet {
   }
 
 
-  getTransactions(account, count, skip) {
+  async getTransactions(account, count, skip) {
     return new Promise((resolve, reject) => {
       let a = account;
       if (a === null) {
@@ -83,7 +82,7 @@ class Wallet {
     });
   }
 
-  listAllAccounts() {
+  async listAllAccounts() {
     return new Promise((resolve, reject) => {
       this.client.listReceivedByAddress(0, true).then((addresses) => {
         return resolve(addresses);
@@ -91,6 +90,11 @@ class Wallet {
         return reject(err);
       });
     });
+  }
+
+  async importPrivateKey(privateKey) {
+    const result = await this.client.importPrivKey(privateKey);
+    return result;
   }
 
   async createNewAddress(nameOpt) {
@@ -204,25 +208,24 @@ class Wallet {
   }
 
   walletstart(cb) {
+    let path = getPlatformWalletUri();
     if (process.platform === 'linux') {
-      const path = `${homedir}/.eccoin-wallet/Eccoind`;
-      runExec(`chmod +x ${path} && ${path}`, 1000).then(() => {
+      runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
         return cb(true);
       })
         .catch(() => {
           cb(false);
         });
-
     } else if (process.platform === 'darwin') {
-      const path = `${homedir}/.eccoin-wallet/Eccoind.app/Contents/MacOS/eccoind`;
-      runExec(`chmod +x ${path} && ${path}`, 1000).then(() => {
+      console.log(path)
+      runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
         return cb(true);
       })
-        .catch(() => {
-          cb(false);
-        });
+      .catch((err) => {
+        console.log(err)
+        cb(false);
+      });
     } else if (process.platform.indexOf('win') > -1) {
-      let path = `${homedir}\\.eccoin-wallet\\Eccoind.exe`;
       path = `& '${path}'`;
       const ps = new shell({ //eslint-disable-line
         executionPolicy: 'Bypass',
@@ -239,7 +242,7 @@ class Wallet {
           cb(false);
           ps.dispose();
         });
-    } 
+    }
   }
 
 }

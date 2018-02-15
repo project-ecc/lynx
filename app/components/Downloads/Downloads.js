@@ -12,11 +12,11 @@ const homedir = require('os').homedir();
 const { ipcRenderer } = require('electron');
 
 const event = require('../../utils/eventhandler');
+import { grabWalletDir } from '../../services/platform.service';
 
 export default class Downloads extends Component {
   componentWillMount() {
     ipcRenderer.on('wallet-downloaded', (e, err) => {
-        console.log("dan");
       if (err) {
         event.emit('hide');
         event.emit('animate', err);
@@ -30,10 +30,10 @@ export default class Downloads extends Component {
         return request(opts)
           .then((response) => {
             console.log(response);
-            const path = `${homedir}/.eccoin-wallet`;
+            const path = `${grabWalletDir()}`;
             const parsed = JSON.parse(response);
             const version = parsed.name;
-            fs.writeFile(`${path}/wallet-version.txt`, version, (err) => {
+            fs.writeFile(`${path}wallet-version.txt`, version, (err) => {
               if (err) throw err;
               ipcRenderer.send('wallet-version-created');
               event.emit('hide');

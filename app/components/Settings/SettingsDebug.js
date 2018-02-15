@@ -222,7 +222,7 @@ class SettingsDebug extends Component {
           if (!isNaN(p)) { // is number
             if (p % 1 === 0) { // integer
               p = parseInt(p);
-            } else { // float
+            } else  { // float
               p = parseFloat(p);
             }
           }

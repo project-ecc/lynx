@@ -177,5 +177,7 @@
     "unlockWalletFirst": "Please unlock your wallet first",
     "privateKeyCopied": "Private Key Copied to clipboard",
     "unlockForStatking": "Unlock for staking",
-    "importWallet": "Import Wallet"
+    "importWallet": "Import Wallet",
+    "import": "Import",
+    "importPrivKey": "Import Private Key"
 }

@@ -1,34 +1,51 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CurrentAddresses from './CurrentAddressTable';
-import low from '../../utils/low';
-import WalletService from '../../services/wallet.service';
+
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+import ImportPartial from './Partials/ImportPartial';
+
 
 const event = require('../../utils/eventhandler');
 
 const lang = traduction();
 const { clipboard } = require('electron');
-const remote = require('electron').remote;
-const dialog = remote.require('electron').dialog;
+
 
 class Receive extends Component {
 
+
+  static propTypes = {
+    isOpened: PropTypes.bool
+  };
+
+
+  static defaultProps = {
+    isOpened: false
+  };
   constructor(props) {
     super(props);
     this.state = {
       nameOfNewAddress: '',
       theNewAddress: '',
       eccAddress: '',
-      amout: ''
+      amout: '',
+      isOpened: this.props.isOpened
     };
     this._handleAddressClick = this._handleAddressClick.bind(this);
     this._handleGenericFormChange = this._handleGenericFormChange.bind(this);
-    this.importWallet = this.importWallet.bind(this);
+    this.toggleImport = this.toggleImport.bind(this);
   }
 
   componentWillUnmount() {
     this.state.requesting = false;
+  }
+
+  toggleImport() {
+    this.setState({
+      isOpened: !this.state.isOpened
+    });
   }
 
   _handleAddressClick() {
@@ -57,32 +74,6 @@ class Receive extends Component {
 
   }
 
-  importWallet() {
-    dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: [
-        {name: 'data', extensions: ['dat']}
-      ]
-    }, (file) => {
-      if (file === undefined) {
-        event.emit('animate', lang.noFolderSelected);
-        return;
-      } else {
-        WalletService.importWallet(String(file)).then((response) => {
-          if (response == null) {
-            event.emit('animate', 'Wallet Imported');
-          } else {
-
-            event.emit('animate', 'An Error Occurred');
-          }
-          return true;
-        }).catch((error) => {
-          console.log(error);
-        });
-      }
-    });
-  }
-
   _handleGenericFormChange(event) {
     const name = event.target.name;
     const value = event.target.value;
@@ -90,11 +81,12 @@ class Receive extends Component {
   }
 
   render() {
+    const {isOpened} = this.state;
     return (
       <div className="receive">
         <div className="row">
           <div className="col-md-12">
-            <p className="title">{lang.receiveNewAddress}</p>
+            <p className="title">{lang.receiveNewAddress }</p>
             <div className="panel panel-default">
               <div className="panel-body">
                 <div className="input-group">
@@ -120,14 +112,19 @@ class Receive extends Component {
           <div className="col-md-12">
             <div className="row">
               <div className="col-md-6">
-                <p className="title">{lang.receiveExistingAddresses}</p>
+                <p className="title">{isOpened === true ? lang.importPrivKey : lang.receiveExistingAddresses }</p>
               </div>
               <div className="col-md-6">
-                <button type="button" className="btn btn-default btn-sm pull-right" onClick={this.importWallet} style={{ marginTop: '-10px', paddingTop: '10px' }}>
-                  <span className="glyphicon glyphicon-plus"></span> {lang.importWallet}
+                <button type="button" className="btn btn-default btn-sm pull-right" onClick={this.toggleImport} style={{ marginTop: '-10px', paddingTop: '10px' }}>
+                  <span className="glyphicon glyphicon-plus"></span> {lang.import}
                 </button>
               </div>
+
             </div>
+            <div className="row">
+              <ImportPartial isOpened={isOpened} />
+            </div>
+
             <div className="panel panel-default">
               <div className="panel-body">
                 <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />

@@ -18,6 +18,9 @@ export default {
   importWallet: (walletPath) => {
     return wallet.importWallet(walletPath);
   },
+  importPrivateKey: (privateKey) => {
+    return wallet.importPrivateKey(privateKey);
+  },
   dumpPrivateKey: (walletAddress) => {
     return wallet.dumpPrivateKey(walletAddress);
   },

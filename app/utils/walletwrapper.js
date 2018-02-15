@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import glob from 'glob';
+import ErrorService from '../services/error.service';
+import { grabWalletDir } from '../services/platform.service';
 import {
   getBlockchainInfo,
   getInfo,
@@ -65,24 +67,26 @@ class WalletWrapper extends Component {
 
   processError(err) {
     const { evaluateStatusDux } = this.props;
-    console.log(String(err))
-    if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
+    // console.log(err)
+    if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119')) {
       evaluateStatusDux({
         starting: false,
         running: false,
         stopping: false,
         off: true,
       });
-    } else if (err.message.includes('-28')) {
-      console.log('in here')
-      event.emit('animare', 'Loading block ' + err.id);
+    } else if (err.message.includes('Loading block index...')) {
+      event.emit('show', ErrorService.getErrorFromCode(-28));
       evaluateStatusDux({
         starting: true,
         running: false,
         stopping: false,
         off: false,
       });
+    } else if(err.message.includes('s') ) {
+      event.emit('show', 'Rescanning blocks for new key transactions');
     } else {
+
       event.emit('animate', err.message);
     }
   }
@@ -170,7 +174,7 @@ class WalletWrapper extends Component {
     if (this.props.off) {
       event.emit('hide');
       // check to see if the wallet is downloaded
-      glob(`${homedir}/.eccoin-wallet/Eccoind*`, (err, files) => {
+      glob(`${grabWalletDir()}`, (err, files) => {
         if (!files.length) {
           isWalletInstalledDux({
             walletInstalled: false,
@@ -180,6 +184,7 @@ class WalletWrapper extends Component {
             walletInstalled: true,
           });
         } else {
+          console.log(err);
           event.emit('show', err.message);
         }
       });

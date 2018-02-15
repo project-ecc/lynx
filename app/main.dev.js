@@ -12,6 +12,7 @@
  */
 
 import MenuBuilder from './menu';
+import { grabWalletDir } from './services/platform.service';
 
 const { app, Tray, Menu, BrowserWindow, nativeImage, ipcMain } = require('electron');
 
@@ -32,29 +33,29 @@ function sendStatusToWindow(text) {
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
-})
+});
 autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available.');
-})
+});
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow('Update not available.');
-})
+});
 autoUpdater.on('error', (err) => {
   sendStatusToWindow('Error in auto-updater.');
-})
+});
 autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  let log_message = `Download speed: ${progressObj.bytesPerSecond}`;
+  log_message = `${log_message} - Downloaded ${progressObj.percent}%`;
+  log_message = `${log_message} (${progressObj.transferred}/${progressObj.total})`;
   sendStatusToWindow(log_message);
-})
+});
 
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded; will install in 5 seconds');
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  setTimeout(function() {
+  setTimeout(() => {
     autoUpdater.quitAndInstall();
   }, 5000);
 });
@@ -90,11 +91,11 @@ const installExtensions = async () => {
 const DownloadManager = require('electron-download-manager');
 
 if (process.platform === 'darwin') {
-  DownloadManager.register({ downloadFolder: `${app.getPath('home')}/.eccoin-wallet`, filename: 'Eccoind' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind.zip' });
 } else if (process.platform === 'linux') {
-  DownloadManager.register({ downloadFolder: `${app.getPath('home')}/.eccoin-wallet`, filename: 'Eccoind' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind' });
 } else if (process.platform.indexOf('win') > -1) {
-  DownloadManager.register({ downloadFolder: `${app.getPath('home')}/.eccoin-wallet`, filename: 'Eccoind.exe' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind.exe' });
 }
 
 app.on('ready', async () => {
@@ -102,7 +103,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  var ds = settings.get('settings.display');
+  const ds = settings.get('settings.display');
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -111,7 +112,7 @@ app.on('ready', async () => {
     minWidth: 1200,
     minHeight: 620,
     icon: iconPath,
-    title: "Ecc-Wallet"
+    title: 'Ecc-Wallet'
   });
 
   mainWindow.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
@@ -127,8 +128,8 @@ app.on('ready', async () => {
     mainWindow.focus();
   });
 
-  mainWindow.on('minimize', function (event) {
-    if(ds !== undefined && ds.minimise_to_tray !== undefined && ds.minimise_to_tray){
+  mainWindow.on('minimize', (event) => {
+    if (ds !== undefined && ds.minimise_to_tray !== undefined && ds.minimise_to_tray) {
       event.preventDefault();
       mainWindow.setSkipTaskbar(true);
       mainWindow.hide();
@@ -136,12 +137,12 @@ app.on('ready', async () => {
     }
   });
 
-  mainWindow.on('show', function (event) {
+  mainWindow.on('show', (event) => {
     mainWindow.setSkipTaskbar(false);
   });
 
 
-  mainWindow.on('close', function (event) {
+  mainWindow.on('close', (event) => {
     if (ds !== undefined && ds.minimise_on_close !== undefined && ds.minimise_on_close) {
       event.preventDefault();
       if (!ds.minimise_to_tray) {
@@ -159,12 +160,11 @@ app.on('ready', async () => {
   menuBuilder.buildMenu();
 
   if (ds === undefined || ds.tray_icon === undefined || !ds.tray_icon) {
-
     const defaultMenu = [
       {
         label: 'Quit',
         accelerator: 'Command+Q',
-        click: function () {
+        click() {
           app.exit(0);
         }
       },
@@ -176,11 +176,11 @@ app.on('ready', async () => {
     tray.setToolTip('Ecc-Wallet');
     tray.setContextMenu(contextMenu);
 
-    if (process.platform === "darwin") {
+    if (process.platform === 'darwin') {
       tray.setImage(iconPath);
-    } else if(process.platform === "linux") {
+    } else if (process.platform === 'linux') {
       tray.setImage(iconPath);
-    } else if(process.platform.indexOf("win") > -1) {
+    } else if (process.platform.indexOf('win') > -1) {
       tray.setImage(iconPath);
     }
 
@@ -193,17 +193,15 @@ app.on('ready', async () => {
 });
 
 ipcMain.on('wallet-download', (e, args) => {
-
   DownloadManager.download({ url: args.url, filename: args.filename }, (error, url) => {
     if (error) {
       e.sender.send('wallet-downloaded', error);
       console.log(`ERROR: ${url}`);
       return;
     }
-
     if (process.platform === 'darwin') {
-      extract(`${app.getPath('home')}/.eccoin-wallet/${args.filename}.zip`,
-        { dir: `${app.getPath('home')}/.eccoin-wallet/` },
+      extract(`${grabWalletDir()}${args.filename}.zip`,
+        { dir: `${grabWalletDir()}` },
         (err) => {
           if (err) {
             e.sender.send('wallet-downloaded', err);

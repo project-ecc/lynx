@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import fs from 'fs';
-import wallet from '../../utils/wallet';
 
-const homedir = require('os').homedir();
+import fs from 'fs';
+import { getConfUri } from '../../services/platform.service';
 
 const event = require('../../utils/eventhandler');
-
 
 export default class Config extends Component {
   constructor(props) {
@@ -54,20 +52,7 @@ export default class Config extends Component {
   }
 
   getConfigInfo() {
-    let directory = '';
-
-    if (process.platform === 'linux') {
-      directory = `${homedir}/.eccoin/eccoin.conf`;
-    } else if (process.platform === 'darwin') {
-      directory = `${homedir}/Library/Application Support/eccoin/eccoin.conf`;
-    } else if (process.platform.indexOf('win') > -1) {
-      if (fs.existsSync('C:/ProgramData/ECC/ecc.conf')) {
-        directory = 'C:/ProgramData/ECC/ecc.conf';
-      } else if (fs.existsSync(`${homedir}/appdata/roaming/eccoin/eccoin.conf`)) {
-        directory = `${homedir}/appdata/roaming/eccoin/eccoin.conf`;
-      }
-    }
-    this.getInfo(directory);
+    this.getInfo(getConfUri());
   }
 
   changeStaking(directory, staking) {
@@ -106,24 +91,7 @@ export default class Config extends Component {
     event.persist();
     // Grab the event stack.
     const toggleState = event.target.value;
-    let directory = '';
-
-    if (process.platform === 'linux') {
-      // linux directory
-      directory = `${homedir}/.eccoin/eccoin.conf`;
-    } else if (process.platform === 'darwin') {
-      // OSX
-      directory = `${homedir}/Library/Application Support/eccoin/eccoin.conf`;
-    } else if (process.platform.indexOf('win') > -1) {
-      // Windows
-      if (fs.existsSync('C:/ProgramData/ECC/ecc.conf')) {
-        directory = 'C:/ProgramData/ECC/ecc.conf';
-      } else if (fs.existsSync(`${homedir}/appdata/roaming/eccoin/eccoin.conf`)) {
-        directory = `${homedir}/appdata/roaming/eccoin/eccoin.conf`;
-      }
-    }
-
-    this.changeStaking(directory, toggleState);
+    this.changeStaking(getConfUri(), toggleState);
   }
 
   render() {
