@@ -1,15 +1,15 @@
 {
-  "guiName": "Lynx",
-  "coinName": "ECC",
-  "coinTicker": "ECC",
-  "githubLink": "https://github.com/project-ecc/Lynx",
-  "githubText": "Lynx Github",
-  "bitcointalkLink": "https://bitcointalk.org/index.php?topic=1006830.msg10926361#msg10926361",
-  "bitcointalkText": "ECC Bitcointalk",
-  "linux32": "https://www.ecc.network/downloads/updates/eccoind-linux32",
-  "linux64": "https://www.ecc.network/downloads/updates/eccoind-linux64",
-  "win32": "https://www.ecc.network/downloads/updates/eccoind-win32.exe",
-  "win64": "https://www.ecc.network/downloads/updates/eccoind-win64.exe",
-  "osx": "https://www.ecc.network/downloads/updates/eccoind-osx.zip",
-  "downloadFileName": "Eccoind"
+  "guiName": "Sapling",
+  "coinName": "CryptoUnited",
+  "coinTicker": "CryptoUnited",
+  "githubLink": "https://github.com/CryptoUnited/Sapling",
+  "githubText" : "Sapling Github",
+  "bitcointalkLink": "#",
+  "bitcointalkText": "This is a place holder for BCT link",
+  "linux32": "#",
+  "linux64": "#",
+  "win32": "#",
+  "win64": "#",
+  "osx": "#",
+  "downloadFileName": "daemon-name"
 }
