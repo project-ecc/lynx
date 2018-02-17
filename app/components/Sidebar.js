@@ -100,7 +100,6 @@ class Sidebar extends Component {
       const exists = await updater.checkForWalletVersion();
       if (exists) {
         updater.checkWalletVersion((result) => {
-          console.log(result);
           self.setState(() => { return { newVersionAvailable: result, }; });
         });
       }

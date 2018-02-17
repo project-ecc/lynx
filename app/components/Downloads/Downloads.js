@@ -24,7 +24,7 @@ export default class Downloads extends Component {
         const opts = {
           url: 'https://api.github.com/repos/Greg-Griffith/eccoin/releases/latest',
           headers: {
-            'User-Agent': 'request',
+            'User-Agent': 'request'
           },
         };
         return request(opts)
@@ -33,7 +33,7 @@ export default class Downloads extends Component {
             const path = `${grabWalletDir()}`;
             const parsed = JSON.parse(response);
             const version = parsed.name;
-            fs.writeFile(`${path}wallet-version.txt`, version, (err) => {
+            fs.writeFile(`${grabWalletDir()}wallet-version.txt`, version, (err) => {
               if (err) throw err;
               ipcRenderer.send('wallet-version-created');
               event.emit('hide');

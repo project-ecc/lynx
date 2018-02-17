@@ -9,8 +9,7 @@ const event = require('../../../utils/eventhandler');
 
 const dialog = require('electron').remote.require('electron').dialog;
 
-
-class ImportPartial extends Component {
+class ImportPartial extends React.Component {
   static propTypes = {
     isOpened: PropTypes.bool
   };
@@ -69,6 +68,7 @@ class ImportPartial extends Component {
       } else {
         event.emit('animate', 'An Error Occurred');
       }
+
       return true;
     }).catch((error) => {
       event.emit('animate', error.message);
@@ -82,39 +82,38 @@ class ImportPartial extends Component {
 
     return (
       <div>
-        <Collapse isOpened={this.props.isOpened}>
-          <div className="row">
-            <div style={{ marginLeft: '15px' }} className="col-md-12">
+          <div className="col-md-6">
+
+            <Collapse isOpened={this.props.isOpened}>
               <div className="panel panel-default">
                 <div className="panel-body">
+                  <div className="row col-md-12">
                   <div className="col-md-12">
-                      <div className="col-md-4 col-sm-2">
-                        <div>
-                          <input
-                            ref="key"
-                            className="inputText form-control"
-                            onChange={this._handleGenericFormChange}
-                            value={this.state.privateKey}
-                            name="privateKey"
-                            placeholder="Insert Private key"
-                            type="text"
-                          />
-                        </div>
+                    <div className="col-md-6">
+                      <div>
+                        <input
+                          className="inpuText form-control"
+                          onChange={this._handleGenericFormChange}
+                          value={this.state.privateKey}
+                          name="privateKey"
+                          placeholder="Insert Private key"
+                          type="text"
+                        />
                       </div>
-                      <div className="col-md-2 col-sm-1">
-                        <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
-                          <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this.importPrivateKey} >{lang.importPrivKey}</button>
-                        </span>
-                      </div>
-                    <div className="col-md-6 col-sm-3">
-                      <p style={{ color: '#000' }}>Hi</p>
                     </div>
+                    <div className="col-md-6">
+
+                    <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
+                      <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this.importPrivateKey} >{lang.importPrivKey}</button>
+                    </span>
+                    </div>
+                  </div>
+
                   </div>
                 </div>
               </div>
-            </div>
+            </Collapse>
           </div>
-        </Collapse>
       </div>
     );
   }

@@ -21,6 +21,7 @@ const settings = require('electron-settings');
 const event = require('./utils/eventhandler');
 const { logo } = require('./base-sixty-four');
 const extract = require('extract-zip');
+const fs = require('fs');
 
 const iconPath = nativeImage.createFromDataURL(logo);
 
@@ -188,12 +189,15 @@ app.on('ready', async () => {
       mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
   }
-
   autoUpdater.checkForUpdates();
 });
 
 ipcMain.on('wallet-download', (e, args) => {
-  DownloadManager.download({ url: args.url, filename: args.filename }, (error, url) => {
+  DownloadManager.download({ url: args.url,
+    filename: args.filename,
+    progress(progress) {
+      e.sender.send('wallet-progress', progress);
+    } }, (error, url) => {
     if (error) {
       e.sender.send('wallet-downloaded', error);
       console.log(`ERROR: ${url}`);
@@ -207,6 +211,18 @@ ipcMain.on('wallet-download', (e, args) => {
             e.sender.send('wallet-downloaded', err);
             console.log(err);
           } else {
+            if (fs.existsSync(`${grabWalletDir()}${args.filename}.zip`)) {
+              fs.unlink(`${grabWalletDir()}${args.filename}.zip`, (error) => {
+                if (err) {
+                  alert(`An error ocurred updating${error.message}`);
+                  console.log(error);
+                  return;
+                }
+                console.log('File successfully deleted');
+              });
+            } else {
+              alert("This file doesn't exist, cannot delete");
+            }
             console.log('unzip successfully.');
           }
         });

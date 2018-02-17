@@ -67,7 +67,6 @@ class WalletWrapper extends Component {
 
   processError(err) {
     const { evaluateStatusDux } = this.props;
-    // console.log(err)
     if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119')) {
       evaluateStatusDux({
         starting: false,

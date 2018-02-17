@@ -91,8 +91,8 @@ class Wallet {
       });
     });
   }
-
-  async importPrivateKey(privateKey) {
+  
+  async importPrivateKey(privateKey){
     const result = await this.client.importPrivKey(privateKey);
     return result;
   }
