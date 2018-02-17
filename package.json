@@ -33,7 +33,7 @@
     "package-win-32": "npm run build && build --win --ia32 -c ./os/win32.json",
     "package-linux": "npm run build && build --linux -c ./os/lin64.json",
     "package-linux-32": "npm run build && build --linux --ia32 -c ./os/lin32.json",
-    "package-all": "npm run package-win && npm run package-win-32 && npm run package-linux && npm run package-linux-32"
+    "package-all": "npm run package-win && npm run package-win-32 && npm run package-linux && npm run package-linux-32 && npm run package-osx"
   },
   "browserslist": "electron 1.6",
   "repository": "git+https://github.com/cryptounited/sapling.git",
