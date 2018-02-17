@@ -179,5 +179,9 @@
     "unlockForStatking": "Unlock for staking",
     "importWallet": "Import Wallet",
     "import": "Import",
-    "importPrivKey": "Import Private Key"
+    "importPrivKey": "Import Private Key",
+    "keyImported": "Key Imported (rescan started)",
+    "loading": "Loading please wait",
+    "walletUnresponsive": "Your wallet may become unresponsive while it scans for your transactions (Please wait)",
+    "socketDisconnect" : "Disconnected from daemon"
 }

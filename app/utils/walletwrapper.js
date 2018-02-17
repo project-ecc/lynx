@@ -15,7 +15,8 @@ import {
 import wallet from './wallet';
 
 const event = require('../utils/eventhandler');
-const homedir = require('os').homedir();
+import { traduction } from '../lang/lang';
+const lang = traduction();
 
 class WalletWrapper extends Component {
   static propTypes = {
@@ -82,11 +83,20 @@ class WalletWrapper extends Component {
         stopping: false,
         off: false,
       });
-    } else if(err.message.includes('s') ) {
-      event.emit('show', 'Rescanning blocks for new key transactions');
-    } else {
+    } else if(err.code === 500) {
+      if (this.props.running) {
+        event.emit('show', lang.loading);
+      } else {
+        event.emit('show', lang.notificationDaemonDownOrSyncing);
+      }
 
-      event.emit('animate', err.message);
+    } else if(err.message.includes('500 Internal Server Error') ) {
+      event.emit('show', lang.loading);
+    } else if(err.message.includes('socket hang up')) {
+      event.emit('show', lang.socketDisconnect);
+    } else {
+      console.log(err)
+      event.emit('animate', err.code);
     }
   }
 

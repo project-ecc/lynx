@@ -41,10 +41,9 @@ class ImportPartial extends React.Component {
         return;
       } else {
         WalletService.importWallet(String(file)).then((response) => {
-          if (response == null) {
+          if (response === null) {
             event.emit('animate', 'Wallet Imported');
           } else {
-
             event.emit('animate', 'An Error Occurred');
           }
           return true;
@@ -64,7 +63,7 @@ class ImportPartial extends React.Component {
   importPrivateKey() {
     WalletService.importPrivateKey(String(this.state.privateKey)).then((response) => {
       if (response === null) {
-        event.emit('animate', 'Key Imported (rescan started)');
+        event.emit('animate',lang.keyImported);
       } else {
         event.emit('animate', 'An Error Occurred');
       }
@@ -82,14 +81,14 @@ class ImportPartial extends React.Component {
 
     return (
       <div>
-          <div className="col-md-6">
+          <div className="col-md-12">
 
             <Collapse isOpened={this.props.isOpened}>
               <div className="panel panel-default">
                 <div className="panel-body">
-                  <div className="row col-md-12">
+                  <div className="row">
                   <div className="col-md-12">
-                    <div className="col-md-6">
+                    <div className="col-md-8">
                       <div>
                         <input
                           className="inpuText form-control"
@@ -98,14 +97,14 @@ class ImportPartial extends React.Component {
                           name="privateKey"
                           placeholder="Insert Private key"
                           type="text"
+                          ref="key"
                         />
                       </div>
+                      <span style={{ color: 'red' }}><b>{lang.walletUnresponsive}</b></span>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-4">
 
-                    <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
-                      <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this.importPrivateKey} >{lang.importPrivKey}</button>
-                    </span>
+                      <button className="greenBtn btn btn-success btn-raised pull-right" type="button" onClick={this.importPrivateKey} >{lang.importPrivKey}</button>
                     </div>
                   </div>
 

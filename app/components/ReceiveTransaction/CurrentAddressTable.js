@@ -5,6 +5,7 @@ const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 import glob from 'glob';
 const lang = traduction();
+import { grabWalletDir } from '../../services/platform.service';
 
 const { clipboard } = require('electron');
 
@@ -41,7 +42,7 @@ class CurrentAddresses extends Component {
       this.setState({ existingAddresses: data, requesting: false });
     }).catch((err) => {
       if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
-        glob(`${homedir}/.eccoin-wallet/Eccoind*`, (error, files) => {
+        glob(`${grabWalletDir()}Eccoind*`, (error, files) => {
           if (!files.length) {
             event.emit('show', 'Install wallet by clicking the button in the bottom left.');
           } else {

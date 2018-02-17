@@ -91,7 +91,7 @@ class Wallet {
       });
     });
   }
-  
+
   async importPrivateKey(privateKey){
     const result = await this.client.importPrivKey(privateKey);
     return result;
@@ -226,7 +226,7 @@ class Wallet {
         cb(false);
       });
     } else if (process.platform.indexOf('win') > -1) {
-      path = `& '${path}'`;
+      path = `& "${path}"`;
       const ps = new shell({ //eslint-disable-line
         executionPolicy: 'Bypass',
         noProfile: true
