@@ -44,7 +44,7 @@ class Wallet {
     return this.client.getInfo().then(res => {
       return Promise.resolve(res);
     }).catch((err) => {
-      return Promise.reject(new Error(err));
+      return Promise.reject(err);
     });
   }
 

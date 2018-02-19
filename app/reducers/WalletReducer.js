@@ -4,6 +4,7 @@ const GET_WALLET_INFO = 'GET_WALLET_INFO';
 const SET_UNLOCKED_UNTIL = 'SET_UNLOCKED_UNTIL';
 const EVALUATE_STATUS = 'EVALUATE_STATUS';
 const IS_WALLET_INSTALLED = 'IS_WALLET_INSTALLED';
+const IS_INSTALLING_PRIVATE_KEY = 'IS_INSTALLING_PRIVATE_KEY';
 
 export const getBlockchainInfo = data => {
   return {
@@ -74,6 +75,14 @@ export const isWalletInstalled = data => {
     }
   };
 };
+export const isImportingPrivateKey = data => {
+  return {
+    type : IS_INSTALLING_PRIVATE_KEY,
+    payload: {
+      importingKey: data.importingKey
+    }
+  }
+};
 
 const initialState = {
   // Wallet State
@@ -82,6 +91,7 @@ const initialState = {
   running: false,
   stopping: false,
   walletInstalled: false,
+  importingKey: false,
 
   // getblockchaininfo
   chain: '',
@@ -113,6 +123,10 @@ export default (state = initialState, action) => {
       return Object.assign({}, state, {
         chain: action.payload.chain,
         bestblockhash: action.payload.bestblockhash,
+      });
+    case IS_INSTALLING_PRIVATE_KEY:
+      return Object.assign({}, state, {
+        importingKey: action.payload.importingKey
       });
     case GET_INFO:
       return Object.assign({}, state, {

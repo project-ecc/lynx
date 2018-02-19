@@ -77,6 +77,7 @@ class Sidebar extends Component {
   }
 
   componentDidUpdate() {
+
   }
 
   componentWillUnmount() {
@@ -274,10 +275,7 @@ class Sidebar extends Component {
                 </button>
               : <button className="stopStartButton" disabled>Wallet starting...</button>
           }
-          {this.state.newVersionAvailable && this.props.walletInstalled
-            ? <div className="new-version">New Wallet Version Available</div>
-            : null
-          }
+          <br />
           {this.state.newVersionAvailable && this.props.walletInstalled
             ?
             <Link to="/downloads" id="a-tag-button-wrapper">

@@ -10,7 +10,8 @@ import {
   setUnlockedUntil,
   getWalletInfo,
   evaluateStatus,
-  isWalletInstalled
+  isWalletInstalled,
+  isImportingPrivateKey
 } from '../reducers/WalletReducer';
 import wallet from './wallet';
 
@@ -26,11 +27,13 @@ class WalletWrapper extends Component {
     getWalletInfoDux: PropTypes.func,
     evaluateStatusDux: PropTypes.func,
     isWalletInstalledDux: PropTypes.func,
+    IsImportingKeyDux: PropTypes.func,
     walletInstalled: PropTypes.bool,
     off: PropTypes.bool,
     starting: PropTypes.bool,
     running: PropTypes.bool,
     stopping: PropTypes.bool,
+    importingKey: PropTypes.bool
   };
   constructor(props) {
     super(props);
@@ -84,18 +87,13 @@ class WalletWrapper extends Component {
         off: false,
       });
     } else if(err.code === 500) {
-      if (this.props.running) {
-        event.emit('show', lang.loading);
-      } else {
-        event.emit('show', lang.notificationDaemonDownOrSyncing);
-      }
-
+      console.log(err)
     } else if(err.message.includes('500 Internal Server Error') ) {
-      event.emit('show', lang.loading);
-    } else if(err.message.includes('socket hang up')) {
+      console.log(err);
+    } else if(err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
       event.emit('show', lang.socketDisconnect);
     } else {
-      console.log(err)
+      console.log(err);
       event.emit('animate', err.code);
     }
   }
@@ -157,7 +155,6 @@ class WalletWrapper extends Component {
     // check to see if it is running if it is running
     if (this.props.walletInstalled) {
       wallet.getInfo().then((data) => {
-        console.log(data)
         evaluateStatusDux({
           starting: false,
           running: true,
@@ -290,6 +287,7 @@ const mapStateToProps = state => {
     starting: state.wallet.starting,
     stopping: state.wallet.stopping,
     walletInstalled: state.wallet.walletInstalled,
+    importingKey: state.wallet.importingKey
   };
 };
 
@@ -297,6 +295,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getBlockchainInfoDux: (data) => {
       dispatch(getBlockchainInfo(data));
+    },
+    IsImportingKeyDux: (data) => {
+      dispatch(isImportingPrivateKey(data));
     },
     getInfoDux: (data) => {
       dispatch(getInfo(data));

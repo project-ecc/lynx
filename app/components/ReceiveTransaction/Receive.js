@@ -15,7 +15,6 @@ const { clipboard } = require('electron');
 
 class Receive extends Component {
 
-
   static propTypes = {
     isOpened: PropTypes.bool
   };
@@ -122,13 +121,23 @@ class Receive extends Component {
 
             </div>
             <div className="row">
+
               <ImportPartial isOpened={isOpened} />
             </div>
-
-            <div className="panel panel-default">
-              <div className="panel-body">
-                <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />
+            <div className="row">
+              <div className="col-md-12">
+                <p className="title pull-left">{isOpened === true ? lang.receiveExistingAddresses: null }</p>
               </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="panel panel-default">
+                  <div className="panel-body">
+                    <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

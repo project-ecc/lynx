@@ -79,6 +79,7 @@ export default class App extends Component<Props> {
         <div className="snack">
           <p id="snackMsg" />
         </div>
+
       </div>
     );
   }
