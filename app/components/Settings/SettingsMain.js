@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { traduction } from '../../lang/lang';
 import wallet from '../../utils/wallet';
+import event from '../../utils/eventhandler';
 
 const remote = require('electron').remote;
 const settings = require('electron-settings');
+
 
 const app = remote.app;
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import os from 'os';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 
@@ -7,6 +6,8 @@ const event = require('../../utils/eventhandler');
 const appVersion = require('../../../package.json').version;
 const remote = require('electron').remote;
 const config = require('../../../config');
+import { getConfUri, getDebugUri } from '../../services/platform.service';
+
 
 const shell = remote.shell;
 const app = remote.app;
@@ -98,27 +99,13 @@ class SettingsDebug extends Component {
   }
 
   openDebugFile() {
-    const platform = os.platform();
-    let debugFile;
-
-    if (platform.indexOf('win') > -1){
-      debugFile = `${app.getPath('appData')}/eccoin/debug.log`;
-    } else {
-      debugFile = `${app.getPath('home')}/.eccoin/debug.log`;
-    }
-    shell.openItem(debugFile);
+    console.log(getDebugUri());
+    shell.openItem(getDebugUri());
   }
 
   openConfigFile() {
-    const platform = os.platform();
-    let configFilePath;
-
-    if (platform.indexOf('win') > -1) {
-      configFilePath = `${app.getPath('appData')}/eccoin/eccoin.conf`;
-    } else {
-      configFilePath = `${app.getPath('home')}/.eccoin/eccoin.conf`;
-    }
-    shell.openItem(configFilePath);
+    console.log(getConfUri());
+    shell.openItem(getConfUri());
   }
 
   renderHelpMsg() {
@@ -251,6 +238,7 @@ class SettingsDebug extends Component {
         });
         this.setState({ commandList: currentList });
       }
+      console.log(this.state.commandList);
     }
   }
 
@@ -387,7 +375,7 @@ class SettingsDebug extends Component {
                     <div className="hours_list col-md-1">
                       <p>{cmd.time}</p>
                     </div>
-                    <div className="commands_list col-md-11">
+                    <div id="commands-list" className="commands_list col-md-11">
                       <p><span style={{ fontWeight: '400' }}>{cmd.desc}</span>: <span style={{fontWeight: '300', fontSize: '0.9em' }}>{res}</span></p>
                     </div>
                   </div>
@@ -418,15 +406,17 @@ class SettingsDebug extends Component {
               }
             })}
           </div>
+        </div>
+        <div className="row">
           <div className="col-md-12 console_buttons">
             <div className="col-md-10" style={{ padding: '0px' }}>
               <input className="command_input" type="text" name="command_input" value={this.state.command_input} onChange={this.handleInputChange.bind(this)} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}/>
             </div>
-            <div className="col-md-2" style={{ paddingLeft: '5px', paddingRight: '-5px' }}>
+            <div className="col-md-2" style={{ paddingLeft: '5px', paddingRight: '18px' }}>
               <p className="enter_btn" onClick={this.onenter.bind(this)}>Enter</p>
             </div>
           </div>
-        </div>
+      </div>
       </div>
     );
   }

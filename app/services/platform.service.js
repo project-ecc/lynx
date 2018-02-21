@@ -43,3 +43,7 @@ export function getConfUri() {
   return `${grabEccoinDir()}eccoin.conf`;
 }
 
+export function getDebugUri() {
+  return `${grabEccoinDir()}debug.log`;
+}
+
