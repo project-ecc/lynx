@@ -15,6 +15,11 @@
 	border-bottom: solid 6px #FF7F00;
 }
 
+.title{
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
 .settings_tab p{
 	color: #fff;
 	margin: 0px;
@@ -30,6 +35,10 @@
 .tab_body{
 	padding-left: 0px;
 	padding-right: 0px;
+}
+.greenBtn{
+  margin: 0 !important;
+  background-color: #008B45 !important;
 }
 
 .settings .tab_body .panel{
