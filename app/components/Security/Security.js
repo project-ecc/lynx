@@ -6,9 +6,8 @@ import wallet from '../../utils/wallet';
 import WalletService from '../../services/wallet.service';
 import ErrorService from '../../services/error.service';
 import { traduction } from '../../lang/lang';
+import { grabWalletDir } from "../../services/platform.service";
 
-
-const homedir = require('os').homedir();
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
 const { clipboard } = require('electron');
@@ -70,7 +69,7 @@ class Security extends Component {
       }
     }).catch((err) => {
       if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
-        glob(`${homedir}/.eccoin-wallet/Eccoind*`, (error, files) => {
+        glob(`${grabWalletDir()}`, (err, files) => {
           if (!files.length) {
             event.emit('show', 'Install wallet by clicking the button in the bottom left.');
           } else {
@@ -151,7 +150,6 @@ class Security extends Component {
           event.emit('animate', lang.walletEncrypted);
         }
       }).catch((err) => {
-        console.log(err);
         event.emit('animate', err);
       });
     }
@@ -195,8 +193,10 @@ class Security extends Component {
       }
 
       WalletService.backupWallet(`${folderPaths}/walletBackup.dat`).then((data) => {
-        if(data == null) {
+        if(data === null) {
           event.emit('animate', lang.backupOk);
+        } else {
+          event.emit('animate', ErrorService.getErrorFromCode(data.code, data.message));
         }
       }).catch((err) => {
         event.emit('animate', ErrorService.getErrorFromCode(-99));

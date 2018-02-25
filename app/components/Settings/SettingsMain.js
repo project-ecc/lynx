@@ -4,7 +4,7 @@ import wallet from '../../utils/wallet';
 import event from '../../utils/eventhandler';
 import {getConfUri} from "../../services/platform.service";
 import fs from 'fs';
-const fsPath = require('fs-path');
+import fsPath from 'fs-path';
 
 const remote = require('electron').remote;
 const settings = require('electron-settings');

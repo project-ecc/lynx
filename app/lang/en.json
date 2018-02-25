@@ -188,5 +188,7 @@
     "loadingBlockIndex": "Loading block index",
     "failedToImportAddress": "Failed to import address",
     "customRpcCredentials": "Use custom rpc credentials (This stops unauthorized access to your daemon)",
-    "generateRandomCredentials": "Generate random Credentials"
+    "generateRandomCredentials": "Generate random Credentials",
+    "generalWalletError": "Wallet Error: ",
+    "addressBook": "Address book"
 }

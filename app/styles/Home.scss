@@ -11,6 +11,16 @@
   cursor: pointer;
 }
 
+.padicon-unlocked {
+  display: inline-block;
+  opacity: 0.4;
+  color: green;
+  width: 12px;
+  vertical-align: baseline;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
 .home .selectfield {
   position: absolute;
   right: 35px;

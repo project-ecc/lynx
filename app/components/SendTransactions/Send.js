@@ -5,10 +5,10 @@ import AddressBook from './AddressBook';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import glob from 'glob';
+import { grabWalletDir } from "../../services/platform.service";
+import ErrorService from '../../services/error.service';
 
-const fs = require('fs');
 const event = require('../../utils/eventhandler');
-const homedir = require('os').homedir();
 const lang = traduction();
 
 class Send extends Component {
@@ -40,14 +40,15 @@ class Send extends Component {
   checkIfWalletEncrypted() {
     const self = this;
     wallet.help().then((data) => {
+      // console.log(data);
       if (data.indexOf('walletlock') > -1) {
-        self.setState({ encrypted: true });
+        self.setState({ step: 3 });
       } else {
-        self.setState({ encrypted: false });
+        self.setState({ step: 1 });
       }
     }).catch((err) => {
       if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
-        glob(`${homedir}/.eccoin-wallet/Eccoind*`, (error, files) => {
+        glob(`${grabWalletDir()}`, (err, files) => {
           if (!files.length) {
             event.emit('show', 'Install wallet by clicking the button in the bottom left.');
           } else {
@@ -236,9 +237,8 @@ class Send extends Component {
         event.emit('animate', lang.moneySent);
       }
     }).catch((err) => {
-      console.log(err);
       self.setState({ dialog: false, eccAddress: '', amount: ''});
-      event.emit('animate', lang.moneySendError);
+      event.emit('animate', ErrorService.getErrorFromCode(err.code));
     });
   }
 
@@ -279,12 +279,11 @@ class Send extends Component {
     return (
       <div className="send">
         <div className="row">
-          <div className="col-md-12">
-            <div className="panel panel-default">
-              <div className="panel-body">
-                <AddressBook friendClicked={this.friendClicked} />
-              </div>
-            </div>
+          <div className="col-md-6">
+            <p className="title">{lang.send}</p>
+          </div>
+          <div className="col-md-6">
+
           </div>
         </div>
         <div className="row">
@@ -307,6 +306,24 @@ class Send extends Component {
             </div>
           </div>
         </div>
+        <div className="row">
+          <div className="col-md-6">
+            <p className="title">{lang.addressBook}</p>
+          </div>
+          <div className="col-md-6">
+
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <div className="panel panel-default">
+              <div className="panel-body">
+                <AddressBook friendClicked={this.friendClicked} />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {this.renderDialog()}
       </div>
     );

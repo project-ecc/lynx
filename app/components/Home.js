@@ -7,6 +7,7 @@ import { walletwrapper } from '../utils/walletwrapper';
 import { traduction } from '../lang/lang';
 
 import WalletService from '../services/wallet.service';
+import ErrorService from '../services/error.service';
 
 const event = require('../utils/eventhandler');
 const lang = traduction();
@@ -160,9 +161,13 @@ class Home extends Component {
       WalletService.unlockWallet(passPhrase, timeL, staking).then((data) => {
         if (data === null) {
           event.emit('animate', `${lang.walletUnlockedFor} ${timeL} ${lang.seconds}`);
+        } else {
+          event.emit('animate', ErrorService.getErrorFromCode(data.code));
         }
         self.setState({ dialog: false, passPhrase: '', timeL: '' });
       }).catch((err) => {
+        const message = ErrorService.getErrorFromCode(err.code);
+        event.emit('animate', message);
         self.setState({ dialog: false, passPhrase: '', timeL: '' });
       });
     } else {
