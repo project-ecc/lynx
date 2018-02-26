@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import glob from 'glob';
 import ErrorService from '../services/error.service';
-import { grabWalletDir } from '../services/platform.service';
+import { getPlatformWalletUri } from '../services/platform.service';
 import {
   getBlockchainInfo,
   getInfo,
@@ -180,7 +180,7 @@ class WalletWrapper extends Component {
     if (this.props.off) {
       event.emit('hide');
       // check to see if the wallet is downloaded
-      glob(`${grabWalletDir()}`, (err, files) => {
+      glob(`${getPlatformWalletUri()}`, (err, files) => {
         if (!files.length) {
           isWalletInstalledDux({
             walletInstalled: false,
