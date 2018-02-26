@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
 import fs from 'fs';
+import os from 'os';
 import { getConfUri } from '../../services/platform.service';
 
 const event = require('../../utils/eventhandler');
+const STAKING_EXISTS_PATTERN = new RegExp('staking=(0|1)', 'g');
 
 export default class Config extends Component {
   constructor(props) {
@@ -34,19 +36,12 @@ export default class Config extends Component {
         return console.log(err);
       }
 
-      if (/staking=[0-9]/g.test(data)) {
-        if (/staking=1/g.test(data)) {
-          this.setState({ staking: true });
-        } else {
-          this.setState({ staking: false });
-        }
-      } else {
-        this.setState({ staking: false });
-        fs.appendFile(directory, 'staking=0', 'utf8', (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
+      // user is either staking or not (either staking is 0, or not in config)
+      this.setState({ staking: /staking=1/g.test(data) });
+
+      // staking is not in config at all--update it
+      if (!STAKING_EXISTS_PATTERN.test(data)) {
+        this.changeStaking(directory, 0);
       }
     });
   }
@@ -61,29 +56,21 @@ export default class Config extends Component {
         console.log(err);
       }
 
-      if (/staking=[0-9]/g.test(data)) {
-        console.log('STAKING EXISTS');
-        const result = data.replace(/staking=[0-9]/g, `staking=${staking}`);
-
-        console.log(result);
-
-        fs.writeFile(directory, result, 'utf8', (err) => {
-          if (err) {
-            console.log(err);
-          }
-          this.getConfigInfo();
-        });
+      // staking exists in the file--update the value
+      // else add it to the end of the file
+      var configContents;
+      if (STAKING_EXISTS_PATTERN.test(data)) {
+        configContents = data.replace(STAKING_EXISTS_PATTERN, `staking=${staking}`);
       } else {
-        console.log('STAKING NOT FOUND');
-        const result = `${data}staking=${staking}`;
-
-        fs.writeFile(directory, result, 'utf8', (err) => {
-          if (err) {
-            console.log(err);
-          }
-          this.getConfigInfo();
-        });
+        configContents = `${data.trim()}${os.EOL}staking=${staking}`;
       }
+
+      fs.writeFile(directory, configContents, 'utf8', (err) => {
+        if (err) {
+          console.log(err);
+        }
+        this.getConfigInfo();
+      });
     });
   }
 
