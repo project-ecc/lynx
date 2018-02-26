@@ -1,5 +1,8 @@
 import { traduction } from '../lang/lang';
+import { getPlatformWalletUri } from "../services/platform.service";
+import glob from 'glob';
 
+const event = require('../utils/eventhandler');
 const l = traduction();
 
 // //! General application defined errors
@@ -130,6 +133,22 @@ export default {
         return WalletErrEnum.RPC_WALLET_ALREADY_UNLOCKED;
       default:
         return 'An Error Occurred';
+    }
+  },
+  handleWalletError: (err, history) => {
+    console.log(err);
+    if (err.code === 'ECONNREFUSED') {
+      glob(getPlatformWalletUri(), (err, files) => {
+        if (!files.length) {
+          event.emit('animate', 'Wallet not installed.');
+          // event.emit('animate', 'Wallet not installed. Choose a wallet to download above.');
+          // history.push('/downloads');
+        } else {
+          event.emit('animate', 'Wallet not running. Click "Start wallet" on the left.');
+        }
+      });
+    } else if (err.message !== 'Loading block index...') {
+      event.emit('animate', err.message);
     }
   }
 };

@@ -6,7 +6,6 @@ import wallet from '../../utils/wallet';
 import WalletService from '../../services/wallet.service';
 import ErrorService from '../../services/error.service';
 import { traduction } from '../../lang/lang';
-import { grabWalletDir } from "../../services/platform.service";
 
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
@@ -68,17 +67,7 @@ class Security extends Component {
         self.setState({ step: 1 });
       }
     }).catch((err) => {
-      if (err.message === 'connect ECONNREFUSED 127.0.0.1:19119') {
-        glob(`${grabWalletDir()}`, (err, files) => {
-          if (!files.length) {
-            event.emit('show', 'Install wallet by clicking the button in the bottom left.');
-          } else {
-            event.emit('show', 'Wallet not running.');
-          }
-        });
-      } else if (err.message !== 'Loading block index...' && err.message !== 'connect ECONNREFUSED 127.0.0.1:19119') {
-        event.emit('animate', err.message);
-      }
+      ErrorService.handleWalletError(err, this.props.history);
     });
   }
 

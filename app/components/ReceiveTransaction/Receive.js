@@ -4,8 +4,8 @@ import CurrentAddresses from './CurrentAddressTable';
 
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+import ErrorService from '../../services/error.service';
 import ImportPartial from './Partials/ImportPartial';
-
 
 const event = require('../../utils/eventhandler');
 
@@ -65,6 +65,8 @@ class Receive extends Component {
       clipboard.writeText(newAddress);
       self.child_current_addresses.getAllAddresses();
     }).catch((err) => {
+      ErrorService.handleWalletError(err, this.props.history);
+      
       if (this.state.requesting) {
         self.setState({ requesting: false, nameOfNewAddress: '' });
         event.emit('animate', lang.notificationErrorCreatingAdrress);
