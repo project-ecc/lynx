@@ -183,6 +183,7 @@
     "keyImported": "Key Imported",
     "importingKey": "Importing key please wait",
     "loading": "Loading please wait",
+    "loadingWallet": "Loading wallet",
     "walletUnresponsive": "Your wallet may become unresponsive while it scans for your transactions (Please wait)",
     "socketDisconnect" : "Disconnected from daemon",
     "loadingBlockIndex": "Loading block index",
@@ -190,5 +191,7 @@
     "customRpcCredentials": "Use custom rpc credentials (This stops unauthorized access to your daemon)",
     "generateRandomCredentials": "Generate random Credentials",
     "generalWalletError": "Wallet Error: ",
-    "addressBook": "Address book"
+    "addressBook": "Address book",
+    "invalidCredentials": "Invalid RPC credentials",
+    "savedRPC": "Saved and starting wallet!"
 }

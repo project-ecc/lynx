@@ -7,6 +7,9 @@ export function formatNumber(number) {
 }
 
 export default {
+  startWallet: () => {
+    return wallet.walletstart();
+  },
   unlockWallet: (passPhrase, seconds, onlyStaking) => {
     return wallet.walletpassphrase(passPhrase, parseInt(seconds), parseInt(onlyStaking));
   },
@@ -43,5 +46,8 @@ export default {
 
     return text;
   },
+  reload: () => {
+    return wallet.reloadConfig;
+  }
 };
 

@@ -31,7 +31,7 @@ const GeneralErrEnum = Object.freeze({
   RPC_VERIFY_ERROR                :'', //! General error during transaction or block submission
   RPC_VERIFY_REJECTED             :'', //! Transaction or block was rejected by network rules
   RPC_VERIFY_ALREADY_IN_CHAIN     :'', //! Transaction already in chain
-  RPC_IN_WARMUP                   :l.loadingBlockIndex //! Client still warming up
+  RPC_IN_WARMUP                   :l.loadingWallet //! Client still warming up
 });
 
 const P2PClientErrEnum = Object.freeze({
@@ -67,6 +67,10 @@ const WalletErrEnum = Object.freeze({
 
 });
 
+const HTTPErrEnum = Object.freeze({
+  RPC_401_ERROR: l.invalidCredentials
+});
+
 export default {
   getErrorFromCode: (status, message = null) => {
     switch (status) {
@@ -94,7 +98,7 @@ export default {
       case -27:
         return GeneralErrEnum.RPC_VERIFY_ALREADY_IN_CHAIN;
       case -28:
-        return GeneralErrEnum.RPC_IN_WARMUP;
+        return GeneralErrEnum.RPC_IN_WARMUP + ': ' +message;
 
 
       //P2P errors
@@ -131,6 +135,10 @@ export default {
         return WalletErrEnum.RPC_WALLET_ENCRYPTION_FAILED;
       case -17:
         return WalletErrEnum.RPC_WALLET_ALREADY_UNLOCKED;
+
+      //HTTP errors
+      case 401:
+        return HTTPErrEnum.RPC_401_ERROR;
       default:
         return 'An Error Occurred';
     }

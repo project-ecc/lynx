@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { traduction } from '../../lang/lang';
 import wallet from '../../utils/wallet';
 import event from '../../utils/eventhandler';
-import {getConfUri} from "../../services/platform.service";
-import fs from 'fs';
-import fsPath from 'fs-path';
 
 const remote = require('electron').remote;
 const settings = require('electron-settings');
@@ -25,128 +22,19 @@ class SettingsMain extends Component {
       optimal_tx_fee: false,
       tx_fee: '',
       reserve_amount: '',
-      custom_rpc_credentials: false,
-      random_credentials: false,
-      username: '',
-      password: ''
 
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.btnConfirm = this.btnConfirm.bind(this);
     this.btnCancel = this.btnCancel.bind(this);
     this.btnConfirmRestart = this.btnConfirmRestart.bind(this);
-    this.updateOrCreateConfig = this.updateOrCreateConfig.bind(this);
-    this.readRpcCredentials = this.readRpcCredentials.bind(this);
-    this.resetCredsToDefault = this.resetCredsToDefault.bind(this);
   }
 
   componentDidMount() {
-    this.readRpcCredentials().then((data)=> {
-      this.setState({
-        username: data.username,
-        password: data.password
-      });
-    })
-    .catch((err) => {
-      event.emit('animate', 'conf file not loaded')
-    });
-
     this.loadSettings();
     this.getWalletInfo();
   }
 
-
-  updateOrCreateConfig(username, password){
-    return new Promise((resolve, reject) => {
-      fs.exists(getConfUri(), (exists) => {
-        if(!exists){
-          //create
-          const toWrite = "maxconnections=100" + os.EOL + "rpcuser=" + username + os.EOL + "rpcpassword=" + password + os.EOL + "addnode=www.cryptounited.io" + os.EOL + "rpcport=19119" + os.EOL + "rpcconnect=127.0.0.1" + os.EOL + "staking=0" + os.EOL + "zapwallettxes=0";
-          fsPath.writeFile(getConfUri(), toWrite, 'utf8', (err) => {
-            if (err) {
-              console.log(err)
-              resolve(false);
-              return;
-            }
-            resolve(true);
-          });
-        }
-        else{
-          fs.readFile(getConfUri(), 'utf8', (err, data) => {
-            if (err) {
-              console.log("readFile error: ", err);
-              resolve(false);
-              return;
-            }
-            var patt = /(rpcuser=(.*))/g
-            var myArray = patt.exec(data);
-            var result = data;;
-            if(myArray && myArray.length > 2)
-            {
-              result = result.replace('rpcuser='+myArray[2], 'rpcuser='+username);
-            }
-            else{
-              result += `${os.EOL}rpcuser=${username}`;
-            }
-
-            patt = /(rpcpassword=(.*))/g
-            myArray = patt.exec(data);
-            if(myArray && myArray.length > 2)
-            {
-              result = result.replace('rpcpassword='+myArray[2], 'rpcpassword='+password);
-            }
-            else{
-              result += `${os.EOL}rpcpassword=${password}`;
-            }
-
-            fs.writeFile(getConfUri(), result, 'utf8', (err) => {
-              if(!err)
-                resolve(true);
-              else resolve(false);
-            });
-          });
-        }
-      });
-    });
-  }
-
-  readRpcCredentials () {
-    let toReturn = null;
-    return new Promise((resolve, reject) => {
-      fs.exists(getConfUri(), (exists) => {
-        if(!exists){
-          resolve(toReturn);
-          return;
-        }
-        fs.readFile(getConfUri(), 'utf8', (err, data) => {
-          if (err) {
-            console.log("readFile error: ", err);
-            resolve(toReturn);
-            return;
-          }
-          toReturn = {
-            username: "",
-            password: ""
-          };
-          let patt = /(rpcuser=(.*))/g
-          let myArray = patt.exec(data);
-          if(myArray && myArray.length > 2)
-          {
-            toReturn.username = myArray[2];
-          }
-
-          patt = /(rpcpassword=(.*))/g
-          myArray = patt.exec(data);
-          if(myArray && myArray.length > 2)
-          {
-            toReturn.password = myArray[2];
-          }
-          console.log(toReturn);
-          resolve(toReturn);
-        });
-      })
-    });
-  }
 
   getWalletInfo() {
     const self = this;
@@ -172,26 +60,16 @@ class SettingsMain extends Component {
       } else {
         this.setState({ disableInputs1: '' });
       }
-      if (!ds.custom_rpc_credentials) {
-        this.setState({ disableInputs2: 'disable' });
-      } else {
-        this.setState({ disableInputs2: '' });
-      }
+
     } else {
       const s = {
         optimal_tx_fee: false,
-        custom_rpc_credentials: false,
         reserve_amount: ''
       };
       if (s.optimal_tx_fee === true) {
         this.setState({ disableInputs1: '' });
       } else {
         this.setState({ disableInputs1: 'disable' });
-      }
-      if (s.custom_rpc_credentials === true) {
-        this.setState({ disableInputs2: '' });
-      } else {
-        this.setState({ disableInputs2: 'disable' });
       }
       settings.set('settings.main', s);
       this.setState(s);
@@ -205,16 +83,9 @@ class SettingsMain extends Component {
 
     if (name === 'optimal_tx_fee') {
       if (value === true) {
-        this.setState({ disableInputs1: '' });
+        this.setState({disableInputs1: ''});
       } else {
-        this.setState({ disableInputs1: 'disable' });
-      }
-    } else if (name === 'custom_rpc_credentials') {
-      if (value === true) {
-        this.setState({ disableInputs2: '' });
-      } else {
-        this.setState({ disableInputs2: 'disable' });
-        this.resetCredsToDefault();
+        this.setState({disableInputs1: 'disable'});
       }
     }
 
@@ -228,8 +99,7 @@ class SettingsMain extends Component {
     let validationError = false;
     settings.set('settings.main', {
       optimal_tx_fee: self.state.optimal_tx_fee,
-      tx_fee: self.state.tx_fee,
-      custom_rpc_credentials: self.state.custom_rpc_credentials
+      tx_fee: self.state.tx_fee
     });
 
     let txfee = 0;
@@ -248,22 +118,6 @@ class SettingsMain extends Component {
       });
     }
 
-    let username = this.state.username;
-    let password = this.state.password;
-
-    if(!this.state.custom_rpc_credentials) {
-      username = 'yourusername';
-      password = 'yourpassword';
-    }
-
-    this.updateOrCreateConfig(username, password).then((boolResult) => {
-      console.log(boolResult)
-    })
-      .catch((err) => {
-        event.emit('animate', err);
-        validationError = true
-      });
-
     if(!validationError) {
       self.setState({
         dialog: true
@@ -280,13 +134,6 @@ class SettingsMain extends Component {
   btnConfirmRestart() {
     app.relaunch();
     app.exit(0);
-  }
-
-  resetCredsToDefault() {
-    this.setState({
-      username: 'yourusername',
-      password: 'yourpassword'
-    });
   }
 
   renderDialog() {
@@ -324,32 +171,6 @@ class SettingsMain extends Component {
                   <div className="row">
                     <div className="col-md-3 rule">
                       <input className={`inpuText form-control ${this.state.disableInputs1}`} type="number" name="tx_fee" placeholder="0.000000 ecc" value={this.state.tx_fee} onChange={this.handleInputChange.bind(this)} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <p className="title">RPC configuration</p>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <input className="radios" type="checkbox" name="custom_rpc_credentials" checked={this.state.custom_rpc_credentials} onChange={this.handleInputChange.bind(this)} />
-                      <span className="desc">{lang.customRpcCredentials}</span>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-4">
-                      <div className="input-group full-width" style={{width:'100%'}}>
-                        <input type="text" className={`inpuText form-control ${this.state.disableInputs2}`} name="username" placeholder="Username"
-                               value={this.state.username} onChange={this.handleInputChange.bind(this)}/>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-4">
-                      <div className="input-group" style={{width:'100%'}}>
-                        <input type="text" className={`inpuText form-control ${this.state.disableInputs2}`} name="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange.bind(this)}/>
-                      </div>
                     </div>
                   </div>
                 </div>

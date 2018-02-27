@@ -36,6 +36,16 @@ class Wallet {
     });
   }
 
+  async reloadConfig() {
+    return new Promise((resolve, reject) => {
+      this.client.reloadconfig().then((response) => {
+        return resolve(response);
+      }).catch((err) => {
+        return reject(err);
+      });
+    });
+  }
+
   async getInfo() {
     if (typeof this.client === 'undefined' || !this.client) {
       return Promise.reject(new Error('RPC this.client was not defined'));

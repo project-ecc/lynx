@@ -78,8 +78,8 @@ class WalletWrapper extends Component {
         stopping: false,
         off: true,
       });
-    } else if (err.message.includes('Loading block index...')) {
-      event.emit('show', ErrorService.getErrorFromCode(-28));
+    } else if (err.code === -28) {
+      event.emit('show', ErrorService.getErrorFromCode(err.code, err.message));
       evaluateStatusDux({
         starting: true,
         running: false,
@@ -93,8 +93,7 @@ class WalletWrapper extends Component {
     } else if(err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
       event.emit('show', lang.socketDisconnect);
     } else {
-      console.log(err);
-      event.emit('animate', err.code);
+      event.emit('animate', ErrorService.getErrorFromCode(err.code));
     }
   }
 
