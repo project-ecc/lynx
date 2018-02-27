@@ -1,6 +1,6 @@
 {
-  "productName": "Lynx",
-  "appId": "com.github.project-ecc.lynx",
+  "productName": "Sapling",
+  "appId": "com.github.cryptounited.sapling",
   "files": [
     "./app/dist/",
     "./app/node_modules/",
@@ -12,8 +12,8 @@
   "publish": [
     {
       "provider": "github",
-      "owner": "project-ecc",
-      "repo": "Lynx",
+      "owner": "cryptounited",
+      "repo": "Sapling",
       "vPrefixedTagName": "true",
       "protocol": "https"
     }

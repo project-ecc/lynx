@@ -22,7 +22,7 @@ const event = require('./utils/eventhandler');
 const { logo } = require('./base-sixty-four');
 const extract = require('extract-zip');
 const fs = require('fs');
-
+const config = require('../config.json');
 const iconPath = nativeImage.createFromDataURL(logo);
 
 let tray = null;
@@ -92,11 +92,11 @@ const installExtensions = async () => {
 const DownloadManager = require('electron-download-manager');
 
 if (process.platform === 'darwin') {
-  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind.zip' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: `${config.downloadFileName}.zip` });
 } else if (process.platform === 'linux') {
-  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: config.downloadFileName });
 } else if (process.platform.indexOf('win') > -1) {
-  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: 'Eccoind.exe' });
+  DownloadManager.register({ downloadFolder: grabWalletDir(), filename: `${config.downloadFileName}.exe` });
 }
 
 app.on('ready', async () => {
@@ -113,7 +113,7 @@ app.on('ready', async () => {
     minWidth: 1200,
     minHeight: 620,
     icon: iconPath,
-    title: 'Ecc-Wallet'
+    title: `${config.coinName}-${config.guiName}`
   });
 
   mainWindow.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
@@ -174,7 +174,7 @@ app.on('ready', async () => {
 
     tray = new Tray(iconPath);
     const contextMenu = Menu.buildFromTemplate(defaultMenu);
-    tray.setToolTip('Ecc-Wallet');
+    tray.setToolTip(`${config.coinName}-${config.guiName}`);
     tray.setContextMenu(contextMenu);
 
     if (process.platform === 'darwin') {

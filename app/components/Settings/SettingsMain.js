@@ -5,7 +5,7 @@ import event from '../../utils/eventhandler';
 
 const remote = require('electron').remote;
 const settings = require('electron-settings');
-
+const config = require('../../../config.json');
 
 const app = remote.app;
 
@@ -170,7 +170,7 @@ class SettingsMain extends Component {
                   <span className="desc">{lang.settingsMainOptionalTransactionFee}</span>
                   <div className="row">
                     <div className="col-md-3 rule">
-                      <input className={`inpuText form-control ${this.state.disableInputs1}`} type="number" name="tx_fee" placeholder="0.000000 ecc" value={this.state.tx_fee} onChange={this.handleInputChange.bind(this)} />
+                      <input className={`inpuText form-control ${this.state.disableInputs1}`} type="number" name="tx_fee" placeholder={`0.000000 ${config.coinTicker}`} value={this.state.tx_fee} onChange={this.handleInputChange.bind(this)} />
                     </div>
                   </div>
                 </div>

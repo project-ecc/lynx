@@ -23,7 +23,7 @@ const GeneralErrEnum = Object.freeze({
   RPC_MISC_ERROR                  :'',  //! std::exception thrown in command handling
   RPC_FORBIDDEN_BY_SAFE_MODE      :'',  //! Server is in safe mode, and command is not allowed in safe mode
   RPC_TYPE_ERROR                  :'',  //! Unexpected type was passed as parameter
-  RPC_INVALID_ADDRESS_OR_KEY      :l.invalidEccAddress,  //! Invalid address or key
+  RPC_INVALID_ADDRESS_OR_KEY      :l.invalidAddress,  //! Invalid address or key
   RPC_OUT_OF_MEMORY               :'',  //! Ran out of memory during operation
   RPC_INVALID_PARAMETER           :'',  //! Invalid, missing or duplicate parameter
   RPC_DATABASE_ERROR              :'', //! Database error
@@ -57,7 +57,7 @@ const P2PClientErrEnum = Object.freeze({
 const WalletErrEnum = Object.freeze({
   RPC_WALLET_ERROR: l.generalWalletError, //! Unspecified problem with wallet (key not found etc.)
   RPC_WALLET_INSUFFICIENT_FUNDS:'',    //! Not enough funds in wallet or account
-  RPC_WALLET_INVALID_ACCOUNT_NAME: l.invalidEccAddress, //! Invalid account name
+  RPC_WALLET_INVALID_ACCOUNT_NAME: l.invalidAddress, //! Invalid account name
   RPC_WALLET_KEYPOOL_RAN_OUT: '',      //! Keypool ran out, call keypoolrefill first
   RPC_WALLET_UNLOCK_NEEDED: l.unlockWalletFirst,        //! Enter the wallet passphrase with walletpassphrase first
   RPC_WALLET_PASSPHRASE_INCORRECT: l.walletWrongPass, //! The wallet passphrase entered was incorrect

@@ -28,7 +28,7 @@ class Receive extends Component {
     this.state = {
       nameOfNewAddress: '',
       theNewAddress: '',
-      eccAddress: '',
+      address: '',
       amout: '',
       isOpened: this.props.isOpened
     };

@@ -6,7 +6,7 @@ const homedir = require('os').homedir();
 import glob from 'glob';
 const settings = require('electron-settings');
 const event = require('../../utils/eventhandler');
-
+const config = require('../../../config.json');
 const lang = traduction();
 
 class TransactionTable extends Component {
@@ -246,7 +246,7 @@ class TransactionTable extends Component {
                     <p style={{ margin: '0px' }}><span className="desc1">{category}</span><span className="desc2"> ({t.address})</span></p>
                   </div>
                   <div className="col-md-3 trans_col" onClick={self.rowClicked.bind(self, index)}>
-                    <p style={{ margin: '0px' }}><span className="desc1">{t.amount} ecc</span></p>
+                    <p style={{ margin: '0px' }}><span className="desc1">{t.amount} config.coinTicker</span></p>
                   </div>
                   <div className="col-md-2 trans_col" onClick={self.rowClicked.bind(self, index)}>
                     <p style={{ margin: '0px' }}>{self.renderStatus(t.confirmations)}</p>
