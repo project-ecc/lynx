@@ -193,5 +193,5 @@
     "generalWalletError": "Wallet Error: ",
     "addressBook": "Address book",
     "invalidCredentials": "Invalid RPC credentials",
-    "savedRPC": "Saved and starting wallet!"
+    "savedRPC": "Saved RPC configuration"
 }

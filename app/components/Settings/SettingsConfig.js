@@ -33,8 +33,6 @@ class SettingsConfig extends Component {
       messaging: false,
       requesting1: false,
       requesting2: false,
-      custom_rpc_credentials: false,
-      random_credentials: false,
       username: '',
       password: ''
     };
@@ -77,7 +75,7 @@ class SettingsConfig extends Component {
       fs.exists(getConfUri(), (exists) => {
         if(!exists){
           //create
-          const toWrite = "maxconnections=100" + os.EOL + "rpcuser=" + username + os.EOL + "rpcpassword=" + password + os.EOL + "addnode=www.cryptounited.io" + os.EOL + "rpcport=19119" + os.EOL + "rpcconnect=127.0.0.1" + os.EOL + "staking=0" + os.EOL + "zapwallettxes=0";
+          const toWrite = "rpcuser=" + username + os.EOL + "rpcpassword=" + password + os.EOL + "rpcport=19119" + os.EOL + "rpcconnect=127.0.0.1" + os.EOL;
           fsPath.writeFile(getConfUri(), toWrite, 'utf8', (err) => {
             if (err) {
               console.log(err)
@@ -130,12 +128,7 @@ class SettingsConfig extends Component {
 
     this.updateOrCreateConfig(this.state.username, this.state.password).then((boolResult) => {
       if(boolResult){
-
-        WalletService.startWallet((result) => {
-          if(result){
             event.emit('animate', lang.savedRPC);
-          }
-        });
       }
       console.log(boolResult)
     })
