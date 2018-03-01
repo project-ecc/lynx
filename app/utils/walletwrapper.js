@@ -196,7 +196,7 @@ class WalletWrapper extends Component {
       // check to see if it is running if it is running
       this.evaluateStatus();
     } else if (this.props.starting) {
-      event.emit('show', 'The wallet is starting, this may take a few minutes');
+      //event.emit('show', 'The wallet is starting, this may take a few minutes');
       this.evaluateStatus();
     } else if (this.props.running) {
       event.emit('hide');

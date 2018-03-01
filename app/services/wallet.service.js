@@ -7,6 +7,9 @@ export function formatNumber(number) {
 }
 
 export default {
+  loadclient: () => {
+    return wallet.loadClient();
+  },
   startWallet: () => {
     return wallet.walletstart();
   },

@@ -1,18 +1,55 @@
 import Client from 'bitcoin-core';
 import shell from 'node-powershell';
+import fs from 'fs';
 
-import { getPlatformWalletUri } from '../services/platform.service';
+import { getPlatformWalletUri,getConfUri } from '../services/platform.service';
 const { exec, spawn } = require('child_process');
 
 
 class Wallet {
 
   constructor() {
-    this.client = new Client({
-      host: '127.0.0.1',
-      port: 19119,
-      username: 'yourusername',
-      password: 'yourpassword'
+    this._u = 'yourusername';
+    this._p = 'yourpassword';
+    this.client = null;
+
+    this.loadClient()
+
+  }
+
+  get username() {
+    return this._u;
+  }
+
+  get password() {
+    return this._p;
+  }
+
+  set username(username) {
+    this._u = username;
+  }
+
+  set password(password) {
+    this._p = password;
+  }
+
+  loadClient () {
+    readRpcCredentials().then((data) => {
+      if (data !== null) {
+        console.log(data)
+        this.username = data['username'];
+        this.password = data['password']
+      }
+
+      this.client = new Client({
+        host: '127.0.0.1',
+        port: 19119,
+        username: this.username,
+        password: this.password
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
   }
 
@@ -258,9 +295,46 @@ class Wallet {
 }
 
 const instance = new Wallet();
-Object.freeze(instance);
 
 export default instance;
+
+function readRpcCredentials () {
+  let toReturn = null;
+  return new Promise((resolve, reject) => {
+    fs.exists(getConfUri(), (exists) => {
+      if(!exists){
+        resolve(toReturn);
+        return;
+      }
+      fs.readFile(getConfUri(), 'utf8', (err, data) => {
+        if (err) {
+          console.log("readFile error: ", err);
+          resolve(toReturn);
+          return;
+        }
+        toReturn = {
+          username: "",
+          password: ""
+        };
+        let patt = /(rpcuser=(.*))/g
+        let myArray = patt.exec(data);
+        if(myArray && myArray.length > 2)
+        {
+          toReturn.username = myArray[2];
+        }
+
+        patt = /(rpcpassword=(.*))/g
+        myArray = patt.exec(data);
+        if(myArray && myArray.length > 2)
+        {
+          toReturn.password = myArray[2];
+        }
+        console.log(toReturn);
+        resolve(toReturn);
+      });
+    })
+  });
+}
 
 function runExec(cmd, timeout, cb) {
   return new Promise((resolve, reject) => {

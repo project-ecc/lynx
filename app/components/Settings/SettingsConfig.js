@@ -42,7 +42,6 @@ class SettingsConfig extends Component {
     this.getInfo = this.getInfo.bind(this);
     this.updateOrCreateConfig = this.updateOrCreateConfig.bind(this);
     this.readRpcCredentials = this.readRpcCredentials.bind(this);
-    this.resetCredsToDefault = this.resetCredsToDefault.bind(this);
     this.save = this.save.bind(this);
     this.renderSaveButton = this.renderSaveButton.bind(this);
   }
@@ -54,9 +53,10 @@ class SettingsConfig extends Component {
         password: data.password
       });
     })
-      .catch((err) => {
-        event.emit('animate', 'conf file not loaded')
-      });
+    .catch((err) => {
+      console.log(err);
+      event.emit('animate', 'conf file not loaded')
+    });
     this.getConfigInfo();
   }
 
@@ -125,12 +125,11 @@ class SettingsConfig extends Component {
   }
 
   save(){
-
     this.updateOrCreateConfig(this.state.username, this.state.password).then((boolResult) => {
       if(boolResult){
-            event.emit('animate', lang.savedRPC);
+        WalletService.loadclient();
+        event.emit('animate', lang.savedRPC);
       }
-      console.log(boolResult)
     })
     .catch((err) => {
       event.emit('animate', err);
@@ -172,13 +171,6 @@ class SettingsConfig extends Component {
           resolve(toReturn);
         });
       })
-    });
-  }
-
-  resetCredsToDefault() {
-    this.setState({
-      username: 'yourusername',
-      password: 'yourpassword'
     });
   }
 
