@@ -246,7 +246,7 @@ class TransactionTable extends Component {
                     <p style={{ margin: '0px' }}><span className="desc1">{category}</span><span className="desc2"> ({t.address})</span></p>
                   </div>
                   <div className="col-md-3 trans_col" onClick={self.rowClicked.bind(self, index)}>
-                    <p style={{ margin: '0px' }}><span className="desc1">{t.amount} config.coinTicker</span></p>
+                    <p style={{ margin: '0px' }}><span className="desc1">{t.amount} {config.coinTicker}</span></p>
                   </div>
                   <div className="col-md-2 trans_col" onClick={self.rowClicked.bind(self, index)}>
                     <p style={{ margin: '0px' }}>{self.renderStatus(t.confirmations)}</p>
