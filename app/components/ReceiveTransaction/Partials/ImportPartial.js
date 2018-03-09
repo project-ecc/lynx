@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import SmoothCollapse from 'react-smooth-collapse';
 import { traduction } from '../../../lang/lang';
 import WalletService from '../../../services/wallet.service';
 import { isImportingPrivateKey } from '../../../reducers/WalletReducer';
 const lang = traduction();
 const event = require('../../../utils/eventhandler');
-import SmoothCollapse from 'react-smooth-collapse';
 var Loader=require('react-loader-display').loader;
 
 // const dialog = require('electron').remote.require('electron').dialog;

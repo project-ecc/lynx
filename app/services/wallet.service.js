@@ -1,5 +1,5 @@
 import wallet from '../utils/wallet';
-import ErrorService from './error.service'
+import {getErrorFromCode, handleWalletError} from './error.service';
 
 
 export function formatNumber(number) {
@@ -35,7 +35,7 @@ export default {
     return wallet.walletChangePassphrase(oldPassphase, newPassphase);
   },
   processErrorCode: (code) => {
-    return ErrorService.getErrorFromCode(code)
+    return getErrorFromCode(code);
   },
   checkDaemonStatus: () => {
     return wallet.getInfo();

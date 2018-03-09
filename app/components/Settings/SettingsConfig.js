@@ -127,8 +127,14 @@ class SettingsConfig extends Component {
   save(){
     this.updateOrCreateConfig(this.state.username, this.state.password).then((boolResult) => {
       if(boolResult){
-        WalletService.loadclient();
-        event.emit('animate', lang.savedRPC);
+        WalletService.loadclient().then((loaded) => {
+          if (loaded) {
+            event.emit('animate', lang.savedRPC);
+          }
+        }).catch((err)=> {
+          console.log(err)
+        });
+
       }
     })
     .catch((err) => {

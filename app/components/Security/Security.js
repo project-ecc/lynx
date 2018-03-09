@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import glob from 'glob';
 import wallet from '../../utils/wallet';
 import WalletService from '../../services/wallet.service';
-import ErrorService from '../../services/error.service';
+import {handleWalletError} from '../../services/error.service';
 import { traduction } from '../../lang/lang';
 
 const event = require('../../utils/eventhandler');
@@ -67,7 +67,7 @@ class Security extends Component {
         self.setState({ step: 1 });
       }
     }).catch((err) => {
-      ErrorService.handleWalletError(err, this.props.history);
+      handleWalletError(err, this.props.history);
     });
   }
 

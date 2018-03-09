@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import fs from 'fs';
+import { grabWalletDir } from '../../services/platform.service';
 
 const config = require('../../../config');
 
@@ -12,7 +13,6 @@ const homedir = require('os').homedir();
 const { ipcRenderer } = require('electron');
 
 const event = require('../../utils/eventhandler');
-import { grabWalletDir } from '../../services/platform.service';
 
 export default class Downloads extends Component {
   componentWillMount() {

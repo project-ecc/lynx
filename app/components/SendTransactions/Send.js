@@ -5,7 +5,7 @@ import AddressBook from './AddressBook';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import glob from 'glob';
-import ErrorService from '../../services/error.service';
+import {handleWalletError} from '../../services/error.service';
 
 const event = require('../../utils/eventhandler');
 const lang = traduction();
@@ -46,7 +46,7 @@ class Send extends Component {
         self.setState({ step: 1 });
       }
     }).catch((err) => {
-      ErrorService.handleWalletError(err, this.props.history);
+      handleWalletError(err, this.props.history);
     });
   }
 
@@ -81,7 +81,7 @@ class Send extends Component {
         }
       }).catch((err) => {
         console.log(err);
-        event.emit('animate', lang.addressValidadeError);
+        event.emit('animate', lang.addressValidateError);
       });
     } else {
       event.emit('animate', lang.invalidFields);

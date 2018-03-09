@@ -255,15 +255,15 @@ class Sidebar extends Component {
         <div className="sidebar-section-container">
           {this.props.running //eslint-disable-line
             ? !this.props.stopping
-              ? <button className="stopStartButton" onClick={this.saveAndStopWallet}>Stop Wallet</button>
-              : <button className="stopStartButton" disabled>Wallet stopping...</button>
+              ? <button className="stopStartButton" onClick={this.saveAndStopWallet}>{lang.stopWallet}</button>
+              : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ?
               !this.props.walletInstalled
                 ?
                 <Link to="/downloads" id="a-tag-button-wrapper">
                   <button className="stopStartButton">
-                    Click to install Wallet
+                    {lang.clickInstallWallet}
                   </button>
                 </Link>
                 :
@@ -271,16 +271,16 @@ class Sidebar extends Component {
                   className="stopStartButton"
                   onClick={this.startWallet}
                 >
-                  Start Wallet
+                  {lang.startWallet}
                 </button>
-              : <button className="stopStartButton" disabled>Wallet starting...</button>
+              : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
           }
           <br />
           {this.state.newVersionAvailable && this.props.walletInstalled
             ?
             <Link to="/downloads" id="a-tag-button-wrapper">
               <button className="stopStartButton">
-                Click to update Wallet
+                {lang.clickUpdateWallet}
               </button>
             </Link>
             :

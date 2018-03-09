@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import glob from 'glob';
-import ErrorService from '../services/error.service';
+import {getErrorFromCode} from '../services/error.service';
 import { getPlatformWalletUri } from '../services/platform.service';
 import {
   getBlockchainInfo,
@@ -79,7 +79,7 @@ class WalletWrapper extends Component {
         off: true,
       });
     } else if (err.code === -28) {
-      event.emit('show', ErrorService.getErrorFromCode(err.code, err.message));
+      event.emit('show', getErrorFromCode(err.code, err.message));
       evaluateStatusDux({
         starting: true,
         running: false,
@@ -93,7 +93,7 @@ class WalletWrapper extends Component {
     } else if(err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
       event.emit('show', lang.socketDisconnect);
     } else {
-      event.emit('animate', ErrorService.getErrorFromCode(err.code));
+      event.emit('animate', getErrorFromCode(err.code));
     }
   }
 
@@ -204,7 +204,7 @@ class WalletWrapper extends Component {
       this.getInfo();
       this.getWalletInfo();
     } else if (this.props.stopping) {
-      event.emit('show', 'The wallet is saving data and stopping');
+      event.emit('show', lang.walletStopping);
       this.evaluateStatus();
     }
   }
@@ -218,7 +218,7 @@ class WalletWrapper extends Component {
       this.stopWallet();
     } else {
       console.log(this.props)
-      event.emit('animate', 'wallet is either starting or stopping, please wait for it to finish before trying to turn it off or on again');
+      event.emit('animate', lang.walletBusyState);
     }
   }
 
@@ -232,7 +232,7 @@ class WalletWrapper extends Component {
           stopping: false,
           off: true,
         });
-        event.emit('show', 'Starting wallet...');
+        event.emit('show', lang.startingWallet);
       } else {
         evaluateStatusDux({
           starting: false,
@@ -241,7 +241,7 @@ class WalletWrapper extends Component {
           off: true,
         });
         if (this.props.walletInstalled === false) {
-          event.emit('show', 'Could not start wallet. Is it in the correct directory?');
+          event.emit('show', lang.missingWalletDaemon);
         }
       }
     });
@@ -249,9 +249,8 @@ class WalletWrapper extends Component {
 
   stopWallet() {
     const { evaluateStatusDux } = this.props;
-    if (process.platform.indexOf('win') > -1) {
-      event.emit('animate', 'Stopping wallet...');
-    }
+
+    event.emit('animate', lang.stoppingWallet);
     wallet.walletstop().then((data) => {
       console.log(data)
       evaluateStatusDux({

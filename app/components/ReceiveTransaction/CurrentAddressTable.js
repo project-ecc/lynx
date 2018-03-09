@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-const homedir = require('os').homedir();
+
 const event = require('../../utils/eventhandler');
-import glob from 'glob';
+
 const lang = traduction();
-import ErrorService from '../../services/error.service';
+import {handleWalletError} from '../../services/error.service';
+import { formatNumber } from '../../services/wallet.service';
 
 const { clipboard } = require('electron');
 
@@ -41,7 +42,7 @@ class CurrentAddresses extends Component {
     wallet.listAllAccounts().then((data) => {
       this.setState({ existingAddresses: data, requesting: false });
     }).catch((err) => {
-      ErrorService.handleWalletError(err, this.props.history);
+      handleWalletError(err, this.props.history);
 
       if (this.state.requesting) {
         self.setState({ requesting: false });
@@ -66,7 +67,7 @@ class CurrentAddresses extends Component {
               <p className="header">{lang.address}</p>
             </div>
             <div className="col-md-3 trans_col">
-              <p className="header">{lang.amount}</p>
+              <p className="header">{formatNumber(lang.amount)}</p>
             </div>
             <div className="col-md-2 trans_col">
               <p className="header">{lang.confirmations}</p>

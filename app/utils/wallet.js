@@ -2,7 +2,7 @@ import Client from 'bitcoin-core';
 import shell from 'node-powershell';
 import fs from 'fs';
 
-import { getPlatformWalletUri,getConfUri } from '../services/platform.service';
+import { getPlatformWalletUri, getConfUri } from '../services/platform.service';
 const { exec, spawn } = require('child_process');
 
 
@@ -13,7 +13,12 @@ class Wallet {
     this._p = 'yourpassword';
     this.client = null;
 
-    this.loadClient()
+    this.loadClient().then((loaded) => {
+      console.log('client loaded' + loaded);
+    })
+    .catch((err)=>{
+      console.log();
+    });
 
   }
 
@@ -33,24 +38,28 @@ class Wallet {
     this._p = password;
   }
 
-  loadClient () {
-    readRpcCredentials().then((data) => {
-      if (data !== null) {
-        console.log(data)
-        this.username = data['username'];
-        this.password = data['password']
-      }
+  loadClient() {
+    return new Promise((resolve, reject) => {
+      readRpcCredentials().then((data) => {
+        if (data !== null) {
+          this.username = data.username;
+          this.password = data.password;
+        }
 
-      this.client = new Client({
-        host: '127.0.0.1',
-        port: 19119,
-        username: this.username,
-        password: this.password
+        this.client = new Client({
+          host: '127.0.0.1',
+          port: 19119,
+          username: this.username,
+          password: this.password
+        });
+        resolve(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
     });
+
   }
 
   async help() {
@@ -329,7 +338,7 @@ function readRpcCredentials () {
         {
           toReturn.password = myArray[2];
         }
-        console.log(toReturn);
+        // console.log(toReturn);
         resolve(toReturn);
       });
     })
