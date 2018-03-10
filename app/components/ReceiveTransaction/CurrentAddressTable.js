@@ -6,7 +6,6 @@ const event = require('../../utils/eventhandler');
 
 const lang = traduction();
 import {handleWalletError} from '../../services/error.service';
-import { formatNumber } from '../../services/wallet.service';
 
 const { clipboard } = require('electron');
 
@@ -67,7 +66,7 @@ class CurrentAddresses extends Component {
               <p className="header">{lang.address}</p>
             </div>
             <div className="col-md-3 trans_col">
-              <p className="header">{formatNumber(lang.amount)}</p>
+              <p className="header">{lang.amount}</p>
             </div>
             <div className="col-md-2 trans_col">
               <p className="header">{lang.confirmations}</p>

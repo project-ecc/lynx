@@ -2,7 +2,6 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-import { formatNumber } from '../../services/wallet.service';
 
 const settings = require('electron-settings');
 const event = require('../../utils/eventhandler');
@@ -51,7 +50,10 @@ class TransactionTable extends Component {
         }
       }).catch((err) => {
         if (err.message !== 'Loading block index...' && err.message !== 'connect ECONNREFUSED 127.0.0.1:19119') {
-          event.emit('animate', err.message);
+          if(wallet.client !== null){
+            event.emit('animate', err.message);
+          }
+
         }
       });
     }
@@ -247,7 +249,7 @@ class TransactionTable extends Component {
                     <p style={{ margin: '0px' }}><span className="desc1">{category}</span><span className="desc2"> ({t.address})</span></p>
                   </div>
                   <div className="col-md-3 trans_col" onClick={self.rowClicked.bind(self, index)}>
-                    <p style={{ margin: '0px' }}><span className="desc1">{formatNumber(t.amount)} {config.coinTicker}</span></p>
+                    <p style={{ margin: '0px' }}><span className="desc1">{t.amount} {config.coinTicker}</span></p>
                   </div>
                   <div className="col-md-2 trans_col" onClick={self.rowClicked.bind(self, index)}>
                     <p style={{ margin: '0px' }}>{self.renderStatus(t.confirmations)}</p>

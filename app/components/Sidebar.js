@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { updater } from '../utils/updater';
+import {updater} from '../utils/updater';
 import { traduction } from '../lang/lang';
+import fs from 'fs'
+import os from 'os'
 const { ipcRenderer } = require('electron');
 
+import { grabWalletDir } from '../services/platform.service';
 const usericon = require('../../resources/images/logo1.png');
 
 const lang = traduction();
@@ -43,7 +46,7 @@ class Sidebar extends Component {
         about: '',
         wallet: '',
       },
-      newVersionAvailable: false,
+      newVersionAvailable: false
     };
 
     this.saveAndStopWallet = this.saveAndStopWallet.bind(this);
@@ -53,8 +56,10 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
+    console.log(this.state.versionformatted)
     const self = this;
     this.checkStateMenu(this.state.pathname);
+
     // this.infoUpdate();
     // this.timerInfo = setInterval(() => {
     //   self.infoUpdate();
@@ -302,6 +307,7 @@ const mapStateToProps = state => {
     headers: state.wallet.headers,
     connections: state.wallet.connections,
     walletInstalled: state.wallet.walletInstalled,
+    versionformatted: state.wallet.versionformatted
   };
 };
 

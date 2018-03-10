@@ -1,11 +1,6 @@
 import wallet from '../utils/wallet';
 import {getErrorFromCode, handleWalletError} from './error.service';
 
-
-export function formatNumber(number) {
-  return number.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 8 });
-}
-
 export default {
   loadclient: () => {
     return wallet.loadClient();

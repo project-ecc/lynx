@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import glob from 'glob';
+import fs from 'fs';
 import {getErrorFromCode} from '../services/error.service';
-import { getPlatformWalletUri } from '../services/platform.service';
+import { getPlatformWalletUri, grabWalletDir } from '../services/platform.service';
 import {
   getBlockchainInfo,
   getInfo,
@@ -46,6 +47,8 @@ class WalletWrapper extends Component {
     this.startStopWalletHandler = this.startStopWalletHandler.bind(this);
     this.startWallet = this.startWallet.bind(this);
     this.stopWallet = this.stopWallet.bind(this);
+    this.formatVersion = this.formatVersion.bind(this);
+    this.updateWalletFromRedux = this.updateWalletFromRedux.bind(this);
   }
 
   componentDidMount() {
@@ -93,7 +96,7 @@ class WalletWrapper extends Component {
     } else if(err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
       event.emit('show', lang.socketDisconnect);
     } else {
-      event.emit('animate', getErrorFromCode(err.code));
+      event.emit('animate', getErrorFromCode(err.code, err.message));
     }
   }
 
@@ -113,6 +116,7 @@ class WalletWrapper extends Component {
     const { getInfoDux, setUnlockedUntilDux } = this.props;
     wallet.getInfo().then((data) => {
       getInfoDux({
+        versionformatted: this.formatVersion(data.version),
         version: data.version,
         protocolversion: data.protocolversion,
         walletversion: data.walletversion,
@@ -131,11 +135,67 @@ class WalletWrapper extends Component {
           unlocked_until: data.unlocked_until,
         });
       }
+      this.updateWalletFromRedux(this.formatVersion(data.version))
+        .then((data) => {
+          console.log(data)
+        }).catch((err) => {
+        console.log(err)
+      });
     }).catch((err) => {
+      console.log(err)
       this.processError(err);
     });
   }
 
+  updateWalletFromRedux (reduxVersion) {
+    let self = this;
+    return new Promise((resolve, reject) => {
+      fs.readFile(`${grabWalletDir()}wallet-version.txt`, 'utf8', (err, data) => {
+        if (err) { reject(err); } else {
+          const version = data.split(' ')[1];
+          if(version !== reduxVersion){
+            let toWrite = `Version ${reduxVersion}`;
+            fs.writeFile(`${grabWalletDir()}wallet-version.txt`, toWrite, 'utf8', (err) => {
+              if(!err)
+                resolve(true);
+              else resolve(false);
+            });
+          }
+        }
+      });
+    });
+  }
+
+  formatVersion(unformattedVersion){
+    let version = String(unformattedVersion).split('');
+    let formattedString = "";
+    while (true){
+      let sb = ["."];
+      while(sb.length < 3 && version.length > 0){
+        sb.push(version.pop());
+      }
+      if(sb.length > 1){
+        let tempSB = "";
+        for(var i = sb.length-1; i > 0; i--){
+            tempSB = tempSB + String(sb[i]);
+        }
+        tempSB = String(parseInt(tempSB));
+        tempSB = String(sb[0]) + tempSB;
+        formattedString = String(tempSB) + formattedString;
+      }
+      //console.log(formattedString);
+      if(formattedString.match(/\./g).length < 4 && version.length === 0){
+        formattedString = String("0") + String(formattedString);
+        break;
+      }
+      if(formattedString.match(/\./g).length >= 4 && version.length === 0){
+        formattedString = formattedString.substr(1);
+        break;
+      }
+    }
+    //console.log(formattedString)
+    return formattedString;
+  }
 
   getWalletInfo() {
     const { getWalletInfoDux } = this.props;

@@ -20,6 +20,7 @@ export const getInfo = data => {
   return {
     type: GET_INFO,
     payload: {
+      versionformatted: data.versionformatted,
       version: data.version,
       protocolversion: data.protocolversion,
       walletversion: data.walletversion,
@@ -98,6 +99,7 @@ const initialState = {
   bestblockhash: '',
 
   // getinfo
+  versionformatted: "",
   version: 0,
   protocolversion: 0,
   walletversion: 0,
@@ -130,6 +132,7 @@ export default (state = initialState, action) => {
       });
     case GET_INFO:
       return Object.assign({}, state, {
+        versionformatted: action.payload.versionformatted,
         version: action.payload.version,
         protocolversion: action.payload.protocolversion,
         walletversion: action.payload.walletversion,
