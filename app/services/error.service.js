@@ -139,7 +139,7 @@ export function getErrorFromCode (status, message = null) {
     case 401:
       return HTTPErrEnum.RPC_401_ERROR;
     default:
-      return 'An Error Occurred: ' + message;
+      return 'An Error Occurred: '+ message;
   }
 }
 export function handleWalletError (err, history) {

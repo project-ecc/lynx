@@ -96,7 +96,7 @@ class WalletWrapper extends Component {
     } else if(err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
       event.emit('show', lang.socketDisconnect);
     } else {
-      event.emit('animate', getErrorFromCode(err.code, err.message));
+      event.emit('show', getErrorFromCode(err.code, err.message));
     }
   }
 

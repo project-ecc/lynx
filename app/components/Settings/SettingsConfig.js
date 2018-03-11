@@ -6,10 +6,10 @@ import { getConfUri } from '../../services/platform.service';
 import WalletService from '../../services/wallet.service';
 import fs from 'fs';
 import fsPath from 'fs-path';
+import os from 'os';
 const lang = traduction();
 
 const event = require('../../utils/eventhandler');
-const STAKING_EXISTS_PATTERN = new RegExp('staking=(0|1)', 'g');
 
 class SettingsConfig extends Component {
 
@@ -190,7 +190,7 @@ class SettingsConfig extends Component {
       this.setState({ staking: /staking=1/g.test(data) });
 
       // staking is not in config at all--update it
-      if (!STAKING_EXISTS_PATTERN.test(data)) {
+      if (!/staking=(0|1)/g.test(data)) {
         this.changeStaking(directory, 0);
       }
     });
@@ -209,8 +209,8 @@ class SettingsConfig extends Component {
       // staking exists in the file--update the value
       // else add it to the end of the file
       var configContents;
-      if (STAKING_EXISTS_PATTERN.test(data)) {
-        configContents = data.replace(STAKING_EXISTS_PATTERN, `staking=${staking}`);
+      if (/staking=(0|1)/g.test(data)) {
+        configContents = data.replace(/staking=(0|1)/g, `staking=${staking}`);
       } else {
         configContents = `${data.trim()}${os.EOL}staking=${staking}`;
       }
