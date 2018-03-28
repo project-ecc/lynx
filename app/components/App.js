@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import Sidebar from './Sidebar';
-import BalanceBanner from './BalanceBanner';
+import BalanceBanner from '../containers/BalanceBanner';
 import WalletWrapper from '../utils/walletwrapper';
 
 const event = require('../utils/eventhandler');
@@ -42,10 +42,6 @@ event.on('animate', (message) => {
     }, 3500);
   });
 });
-
-// process.on('uncaughtException', function (error) => {
-//     console.log(error.message);
-// });
 
 export default class App extends Component<Props> {
   constructor(props) {

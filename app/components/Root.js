@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import Routes from '../routes';
 import { traduction } from '../lang/lang';
+import { getBlockchainInfo, getInfo, getWalletInfo } from '';
 
 require('jquery');
 
@@ -13,6 +14,16 @@ type RootType = {
 };
 
 export default function Root({ store, history }: RootType) {
+  store.dispatch(getBlockchainInfo());
+  store.dispatch(getInfo());
+  store.dispatch(getWalletInfo());
+
+  setTimeout(() => {
+    store.dispatch(getBlockchainInfo());
+    store.dispatch(getInfo());
+    store.dispatch(getWalletInfo());
+  }, 750);
+
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
