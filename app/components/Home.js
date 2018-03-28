@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import TransactionTable from './Transactions/TransactionTable';
-import { walletwrapper } from '../utils/walletwrapper';
 import { traduction } from '../lang/lang';
 
-import WalletService from '../services/wallet.service';
 import { getErrorFromCode } from '../services/error.service';
 
 const event = require('../utils/eventhandler');
+
 const lang = traduction();
 
 const lockedPad = require('../../resources/images/padclose.png');

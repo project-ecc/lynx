@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import Sidebar from './Sidebar';
 import BalanceBanner from '../containers/BalanceBanner';
-import WalletWrapper from '../utils/walletwrapper';
 
 const event = require('../utils/eventhandler');
-
 const splash = require('../../resources/images/splash-image.png');
 
 let lasttype = 'hide';
@@ -65,9 +63,7 @@ export default class App extends Component<Props> {
         <div className={`splash-image-container${this.state.splash ? '' : ' -disappear'}`}>
           <img className="splash-image" src={splash} />
         </div>
-        <WalletWrapper>
-          <Sidebar route={this.props.route} />
-        </WalletWrapper>
+        <Sidebar route={this.props.route} />
         <BalanceBanner route={this.props.route} />
         <div className="my_wrapper">
           {this.props.children}
