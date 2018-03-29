@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import Routes from '../routes';
-import { getBlockchainInfo, getInfo, getWalletInfo } from '../actions/WalletAction.js';
+import { updateWalletStatus } from '../actions/WalletAction';
 
 require('jquery');
 
@@ -12,16 +12,15 @@ type RootType = {
   history: {}
 };
 
-export default function Root({ store, history }: RootType) {
-  store.dispatch(getBlockchainInfo());
-  store.dispatch(getInfo());
-  store.dispatch(getWalletInfo());
+const updateTimer = store => setTimeout(() => {
+  store.dispatch(updateWalletStatus())
+  updateTimer(store);
+}, 750);
 
-  setTimeout(() => {
-    store.dispatch(getBlockchainInfo());
-    store.dispatch(getInfo());
-    store.dispatch(getWalletInfo());
-  }, 750);
+export default function Root({ store, history }: RootType) {
+  store.dispatch(updateWalletStatus());
+
+  updateTimer(store);
 
   return (
     <Provider store={store}>

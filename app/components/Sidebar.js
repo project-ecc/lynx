@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import {updater} from '../utils/updater';
+import { updater } from '../utils/updater';
 import { traduction } from '../lang/lang';
-import fs from 'fs'
-import os from 'os'
-const { ipcRenderer } = require('electron');
 
-import { grabWalletDir } from '../services/platform.service';
+const { ipcRenderer } = require('electron');
 const usericon = require('../../resources/images/logo1.png');
 
 const lang = traduction();
@@ -49,21 +46,12 @@ class Sidebar extends Component {
       newVersionAvailable: false
     };
 
-    this.saveAndStopWallet = this.saveAndStopWallet.bind(this);
-    this.startWallet = this.startWallet.bind(this);
     this.checkWalletVersion = this.checkWalletVersion.bind(this);
-    // this.infoUpdate = this.infoUpdate.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state.versionformatted)
-    const self = this;
     this.checkStateMenu(this.state.pathname);
 
-    // this.infoUpdate();
-    // this.timerInfo = setInterval(() => {
-    //   self.infoUpdate();
-    // }, 5000);
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
     }, 600000);
@@ -76,37 +64,20 @@ class Sidebar extends Component {
   }
 
   componentWillReceiveProps(props) {
-    // console.log(props.router.location.pathname);
     this.checkStateMenu(props.route.location.pathname);
     this.setState({ pathname: props.route.location.pathname });
   }
 
-  componentDidUpdate() {
-
-  }
-
   componentWillUnmount() {
-    // clearInterval(this.timerInfo);
     clearInterval(this.timerCheckWalletVersion);
   }
 
-  // infoUpdate() {
-  //   const results = this.props.getStateValues('blocks', 'headers', 'connections', 'starting', 'running', 'stopping', 'off', 'walletInstalled');
-  //   const newState = {};
-  //   for (let key in results) {
-  //     // console.log(key, results[key]);
-  //     newState[key] = results[key];
-  //   }
-  //   this.setState(newState);
-  // }
-
   async checkWalletVersion() {
-    const self = this;
     try {
       const exists = await updater.checkForWalletVersion();
       if (exists) {
         updater.checkWalletVersion((result) => {
-          self.setState(() => { return { newVersionAvailable: result, }; });
+          //          this.setState(() => { return { newVersionAvailable: result, }; });
         });
       }
     } catch (err) { console.log(err); }
@@ -165,14 +136,6 @@ class Sidebar extends Component {
       );
     }
     return null;
-  }
-
-  saveAndStopWallet() {
-    this.props.startStopWalletHandler();
-  }
-
-  startWallet() {
-    this.props.startStopWalletHandler();
   }
 
   render() {
@@ -260,7 +223,7 @@ class Sidebar extends Component {
         <div className="sidebar-section-container">
           {this.props.running //eslint-disable-line
             ? !this.props.stopping
-              ? <button className="stopStartButton" onClick={this.saveAndStopWallet}>{lang.stopWallet}</button>
+              ? <button className="stopStartButton" onClick={this.props.startStopWalletHandler}>{lang.stopWallet}</button>
               : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ?
@@ -274,7 +237,7 @@ class Sidebar extends Component {
                 :
                 <button
                   className="stopStartButton"
-                  onClick={this.startWallet}
+                  onClick={this.props.startStopWalletHandler}
                 >
                   {lang.startWallet}
                 </button>
@@ -297,18 +260,5 @@ class Sidebar extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    starting: state.wallet.starting,
-    running: state.wallet.running,
-    stopping: state.wallet.stopping,
-    off: state.wallet.off,
-    blocks: state.wallet.blocks,
-    headers: state.wallet.headers,
-    connections: state.wallet.connections,
-    walletInstalled: state.wallet.walletInstalled,
-    versionformatted: state.wallet.versionformatted
-  };
-};
+export default Sidebar;
 
-export default withRouter(connect(mapStateToProps)(Sidebar));

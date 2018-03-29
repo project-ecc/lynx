@@ -1,10 +1,12 @@
-import { GET_BLOCKCHAIN_INFO,
-GET_INFO,
-GET_WALLET_INFO,
-SET_UNLOCKED_UNTIL,
-EVALUATE_STATUS,
-IS_WALLET_INSTALLED,
-IS_INSTALLING_PRIVATE_KEY } from '../actions/WalletAction';
+import {
+  GET_BLOCKCHAIN_INFO,
+  GET_INFO,
+  GET_WALLET_INFO,
+  SET_UNLOCKED_UNTIL,
+  EVALUATE_STATUS,
+  IS_WALLET_INSTALLED,
+  IS_INSTALLING_PRIVATE_KEY
+} from '../actions/WalletAction';
 
 
 const initialState = {
@@ -43,17 +45,25 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case IS_WALLET_INSTALLED:
+      return {
+        ...state,
+        walletInstalled: action.payload.walletInstalled,
+      };
     case GET_BLOCKCHAIN_INFO:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         chain: action.payload.chain,
         bestblockhash: action.payload.bestblockhash,
-      });
+      };
     case IS_INSTALLING_PRIVATE_KEY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         importingKey: action.payload.importingKey
-      });
+      };
     case GET_INFO:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         versionformatted: action.payload.versionformatted,
         version: action.payload.version,
         protocolversion: action.payload.protocolversion,
@@ -67,27 +77,26 @@ export default (state = initialState, action) => {
         difficulty: action.payload.difficulty,
         encrypted: action.payload.encrypted,
         staking: action.payload.staking,
-      });
+      };
     case GET_WALLET_INFO:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         unconfirmed_balance: action.payload.unconfirmed_balance,
         immature_balance: action.payload.immature_balance,
-      });
+      };
     case SET_UNLOCKED_UNTIL:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         unlocked_until: action.payload.unlocked_until,
-      });
-    case IS_WALLET_INSTALLED:
-      return Object.assign({}, state, {
-        walletInstalled: action.payload.walletInstalled,
-      });
+      };
     case EVALUATE_STATUS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         starting: action.payload.starting,
         running: action.payload.running,
         stopping: action.payload.stopping,
         off: action.payload.off,
-      });
+      };
     default:
       return state;
   }

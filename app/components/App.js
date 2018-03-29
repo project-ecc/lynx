@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import Sidebar from './Sidebar';
+import Sidebar from '../containers/Sidebar';
 import BalanceBanner from '../containers/BalanceBanner';
 
 const event = require('../utils/eventhandler');
