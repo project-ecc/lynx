@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {updater} from '../utils/updater';
 import { traduction } from '../lang/lang';
+import config from '../../config.json';
 import fs from 'fs'
 import os from 'os'
 const { ipcRenderer } = require('electron');
 
-import { grabWalletDir } from '../services/platform.service';
+import { grabWalletDir, getPlatformFileName, formatDownloadURL, extractChecksum } from '../services/platform.service';
+import { downloadFile } from "../utils/downloader";
+
 const usericon = require('../../resources/images/logo1.png');
 
 const lang = traduction();
@@ -52,6 +55,7 @@ class Sidebar extends Component {
     this.saveAndStopWallet = this.saveAndStopWallet.bind(this);
     this.startWallet = this.startWallet.bind(this);
     this.checkWalletVersion = this.checkWalletVersion.bind(this);
+    this.downloadDaemon = this.downloadDaemon.bind(this);
     // this.infoUpdate = this.infoUpdate.bind(this);
   }
 
@@ -167,6 +171,50 @@ class Sidebar extends Component {
     return null;
   }
 
+  async downloadDaemon() {
+    const walletDirectory = grabWalletDir();
+    const releaseUrl = config.releaseUrl;
+    const platformFileName = getPlatformFileName();
+
+    this.downloading = true;
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      console.log('downloading daemon');
+
+      // download latest daemon info from server
+      const opts = {
+        url: releaseUrl
+      };
+
+      request(opts).then(async (data) => {
+        const parsed = JSON.parse(data);
+        const latestDaemon = parsed[0].name.split(' ')[1];
+        const zipChecksum = extractChecksum(platformFileName, parsed[0].body);
+        const downloadUrl = formatDownloadURL('eccoin', latestDaemon, platformFileName);
+
+        const downloaded = await downloadFile(downloadUrl,walletDirectory,'Eccoind.zip',zipChecksum, true);
+
+        if (downloaded) {
+
+          fs.writeFile(`${grabWalletDir()}wallet-version.txt`, version, (err) => {
+            if (err) throw err;
+            event.emit('hide');
+            event.emit('show', 'Wallet downloaded and ready to start.');
+          });
+
+          resolve(true);
+        } else {
+          reject(downloaded);
+        }
+
+      }).catch(error => {
+        console.log(error);
+        reject(false);
+      });
+    });
+  }
+
   saveAndStopWallet() {
     this.props.startStopWalletHandler();
   }
@@ -266,11 +314,10 @@ class Sidebar extends Component {
               ?
               !this.props.walletInstalled
                 ?
-                <Link to="/downloads" id="a-tag-button-wrapper">
-                  <button className="stopStartButton">
+
+                  <button className="stopStartButton" onClick={this.downloadDaemon}>
                     {lang.clickInstallWallet}
                   </button>
-                </Link>
                 :
                 <button
                   className="stopStartButton"
@@ -283,11 +330,11 @@ class Sidebar extends Component {
           <br />
           {this.state.newVersionAvailable && this.props.walletInstalled
             ?
-            <Link to="/downloads" id="a-tag-button-wrapper">
-              <button className="stopStartButton">
-                {lang.clickUpdateWallet}
-              </button>
-            </Link>
+
+            <button className="stopStartButton" onClick={this.downloadDaemon}>
+              {lang.clickUpdateWallet}
+            </button>
+
             :
             null
           }

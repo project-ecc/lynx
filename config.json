@@ -4,6 +4,7 @@
   "coinTicker": "CryptoUnited",
   "githubLink": "https://github.com/CryptoUnited/Sapling",
   "githubText" : "Sapling Github",
+  "releaseUrl" : "https://api.github.com/repos/project-ecc/eccoin/releases",
   "bitcointalkLink": "#",
   "bitcointalkText": "This is a place holder for BCT link",
   "linux32": "#",
