@@ -32,28 +32,31 @@ class WalletInstallerPartial extends React.Component {
       });
     });
 
-    event.on('verifying-file', (payload) => {
-      const walletPercent = payload.percent * 100;
+    event.on('downloaded-file', () => {
       this.setState({
         isInstalling: true,
-        progress: walletPercent.toFixed(2),
-        progressMessage: `Verifying wallet \n ${walletPercent.toFixed(2)}%`
+        progress: 100,
+        progressMessage: 'Downloaded wallet 100%'
+      });
+    });
+
+    event.on('verifying-file', () => {
+      this.setState({
+        isInstalling: true,
+        progressMessage: 'Verifying wallet...'
       });
     });
 
     event.on('unzipping-file', (payload) => {
-      const walletPercent = payload.percent * 100;
       this.setState({
         isInstalling: true,
-        progress: walletPercent.toFixed(2),
-        progressMessage: `${payload.message} \n ${walletPercent.toFixed(2)}%`
+        progressMessage: `${payload.message}`
       });
     });
 
     event.on('file-download-complete', () => {
       this.setState({
         isInstalling: false,
-        progress: 100,
         progressMessage: ''
       });
     });
