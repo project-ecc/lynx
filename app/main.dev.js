@@ -192,47 +192,6 @@ app.on('ready', async () => {
   autoUpdater.checkForUpdates();
 });
 
-ipcMain.on('wallet-download', (e, args) => {
-  DownloadManager.download({ url: args.url,
-    filename: args.filename,
-    progress(progress) {
-      e.sender.send('wallet-progress', progress);
-    } }, (error, url) => {
-    if (error) {
-      e.sender.send('wallet-downloaded', error);
-      console.log(`ERROR: ${url}`);
-      return;
-    }
-    if (process.platform === 'darwin') {
-      extract(`${grabWalletDir()}${args.filename}.zip`,
-        { dir: `${grabWalletDir()}` },
-        (err) => {
-          if (err) {
-            e.sender.send('wallet-downloaded', err);
-            console.log(err);
-          } else {
-            if (fs.existsSync(`${grabWalletDir()}${args.filename}.zip`)) {
-              fs.unlink(`${grabWalletDir()}${args.filename}.zip`, (error) => {
-                if (err) {
-                  alert(`An error ocurred updating${error.message}`);
-                  console.log(error);
-                  return;
-                }
-                console.log('File successfully deleted');
-              });
-            } else {
-              alert("This file doesn't exist, cannot delete");
-            }
-            console.log('unzip successfully.');
-          }
-        });
-    }
-
-    e.sender.send('wallet-downloaded');
-    console.log(`DONE: ${url}`);
-  });
-});
-
 ipcMain.on('wallet-version-created', (e, args) => {
   e.sender.send('wallet-version-updated');
 });
