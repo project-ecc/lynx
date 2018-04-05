@@ -71,8 +71,7 @@ class WalletInstallerPartial extends React.Component {
       const opts = {
         url: releaseUrl,
         headers: {
-          'User-Agent': 'request',
-          'Authorization': 'token b52b39dc1d5347415b9db87b2b4bb4adacd2fd81'
+          'User-Agent': 'request'
         },
       };
 
