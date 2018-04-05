@@ -1,8 +1,8 @@
-const homedir = require('os').homedir();
-
 import config from '../../config.json';
 
+const homedir = require('os').homedir();
 const releaseUrl = config.releaseUrl;
+const os = require('os');
 
 export function grabWalletDir() {
   if (process.platform === 'linux') {
@@ -31,15 +31,15 @@ export function getPlatformFileName() {
 
   if (process.platform === 'linux') {
 
-    return os.arch() === 'x32' ? daemonConfig.linux32 : daemonConfig.linux64;
+    return os.arch() === 'x32' ? config.linux32 : config.linux64;
 
   } else if (process.platform === 'darwin') {
 
-    return daemonConfig.osx;
+    return config.osx;
 
   } else if (process.platform.indexOf('win') > -1) {
 
-    os.arch() === 'x32' ? daemonConfig.win32 : daemonConfig.win64;
+    return os.arch() === 'x32' ? config.win32 : config.win64;
   }
 }
 

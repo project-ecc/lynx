@@ -4,11 +4,13 @@ import Sidebar from './Sidebar';
 import BalanceBanner from './BalanceBanner';
 import WalletWrapper from '../utils/walletwrapper';
 
+
 const event = require('../utils/eventhandler');
 
 const splash = require('../../resources/images/splash-image.png');
 
 let lasttype = 'hide';
+
 
 event.on('show', (message) => {
   if (lasttype === 'hide') {
@@ -52,7 +54,7 @@ export default class App extends Component<Props> {
     super(props);
 
     this.state = {
-      splash: true,
+      splash: true
     };
   }
   componentDidMount() {
@@ -79,7 +81,6 @@ export default class App extends Component<Props> {
         <div className="snack">
           <p id="snackMsg" />
         </div>
-
       </div>
     );
   }
