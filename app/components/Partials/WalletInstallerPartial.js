@@ -10,7 +10,10 @@ import { grabWalletDir, getPlatformFileName, formatDownloadURL, extractChecksum 
 import { downloadFile } from '../../utils/downloader';
 
 class WalletInstallerPartial extends React.Component {
-
+  static propTypes = {
+    isWalletInstalled: PropTypes.bool,
+    isNewVersionAvailable: PropTypes.bool
+  };
 
   constructor(props) {
     super(props);
@@ -91,6 +94,7 @@ class WalletInstallerPartial extends React.Component {
 
           fs.writeFile(`${grabWalletDir()}wallet-version.txt`, latestDaemon, (err) => {
             if (err) throw err;
+            event.emit('file-download-complete');
             event.emit('hide');
             event.emit('show', 'Wallet downloaded and ready to start.');
           });
@@ -109,11 +113,11 @@ class WalletInstallerPartial extends React.Component {
 
   render() {
 
-    if(this.state.isInstalling){
+    if(this.state.isInstalling) {
       return (
         <div>
           <div className="col-md-12">
-            <p style={{color: '#ffffff', textAlign: 'center' }}>{this.state.progressMessage}</p>
+            <p style={{color: '#ffffff', textAlign: 'center'}}>{this.state.progressMessage}</p>
             <div className="progress custom_progress">
               <div
                 className="progress-bar progress-bar-success progress-bar-striped"
@@ -121,18 +125,27 @@ class WalletInstallerPartial extends React.Component {
                 aria-valuenow="40"
                 aria-valuemin="0"
                 aria-valuemax="100"
-                style={{ width: `${this.state.progress}%`, backgroundColor: '#8DA557' }}
+                style={{width: `${this.state.progress}%`, backgroundColor: '#8DA557'}}
               />
             </div>
           </div>
         </div>
       );
-    } else {
+    } else if(this.props.isWalletInstalled && this.props.isNewVersionAvailable){
+      return (
+        <button className="stopStartButton" onClick={this.downloadDaemon}>
+          {lang.clickUpdateWallet}
+        </button>
+      );
+
+    } else if(!this.props.isWalletInstalled) {
       return (
         <button className="stopStartButton" onClick={this.downloadDaemon}>
           {lang.clickInstallWallet}
         </button>
       );
+    }else {
+      return (null);
     }
 
 

@@ -265,32 +265,22 @@ class Sidebar extends Component {
               : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ?
-              !this.props.walletInstalled
+              this.props.walletInstalled
                 ?
-
-                <WalletInstallerPartial progress={this.state.downloadPercent} isInstalling={this.state.daemonDownloading} downloadDaemon={this.downloadDaemon} />
-
-                :
                 <button
                   className="stopStartButton"
                   onClick={this.startWallet}
                 >
                   {lang.startWallet}
                 </button>
+                :
+                null
+
               : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
           }
 
           <br />
-          {this.state.newVersionAvailable && this.props.walletInstalled
-            ?
-
-            <button className="stopStartButton" onClick={this.downloadDaemon}>
-              {lang.clickUpdateWallet}
-            </button>
-
-            :
-            null
-          }
+          <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />
         </div>
       </div>
     );
