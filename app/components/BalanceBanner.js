@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import { traduction } from '../lang/lang';
 
 const config = require('../../config');
 const lang = traduction();
-
 
 class BalanceBanner extends Component {
   static propTypes = {
@@ -14,30 +11,6 @@ class BalanceBanner extends Component {
     unconfirmed_balance: PropTypes.number,
     stake: PropTypes.number,
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-      // balance: 0,
-      // unconfirmed: 0,
-      // stake: 0,
-    };
-    // this.getWalletInfo = this.getWalletInfo.bind(this);
-  }
-
-  componentDidMount() {
-    // this.setTimerFunctions();
-  }
-  componentWillUnmount() {
-    // clearInterval(this.timerInfo);
-  }
-
-
-  // setTimerFunctions() {
-  //   const self = this;
-  //   self.timerInfo = setInterval(() => {
-  //     self.getWalletInfo();
-  //   }, 5000);
-  // }
 
   render() {
     return (
@@ -79,12 +52,4 @@ class BalanceBanner extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    balance: state.wallet.balance,
-    stake: state.wallet.stake,
-    unconfirmed_balance: state.wallet.unconfirmed_balance,
-  };
-};
-
-export default withRouter(connect(mapStateToProps)(BalanceBanner));
+export default BalanceBanner;
