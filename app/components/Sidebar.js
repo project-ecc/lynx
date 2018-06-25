@@ -47,6 +47,7 @@ class Sidebar extends Component {
     };
 
     this.checkWalletVersion = this.checkWalletVersion.bind(this);
+    this.checkWalletState = this.checkWalletState.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +62,10 @@ class Sidebar extends Component {
     ipcRenderer.once('wallet-version-updated', (e, err) => {
       this.checkWalletVersion();
     });
+
+    this.timerCheckWalletState = setInterval(() => {
+      this.checkWalletState();
+    }, 3000);
   }
 
   componentWillReceiveProps(props) {
@@ -83,6 +88,10 @@ class Sidebar extends Component {
     } catch (err) { console.log(err); }
   }
 
+  checkWalletState() {
+    this.props.updateWalletStatus;
+  }
+
   checkStateMenu(pathname) {
     const aLinks = this.state.active;
     const aIcons = this.state.icons;
@@ -91,7 +100,7 @@ class Sidebar extends Component {
     aLinks.send = '';
     aLinks.receive = '';
     aLinks.transactions = '';
-    aLinks.security = '';
+    aLinks.statuspage = '';
     aLinks.about = '';
     aLinks.settings = '';
 
@@ -99,7 +108,7 @@ class Sidebar extends Component {
     aIcons.send = require('../../resources/images/send1.ico');
     aIcons.receive = require('../../resources/images/receive1.ico');
     aIcons.transactions = require('../../resources/images/trans1.ico');
-    aIcons.security = require('../../resources/images/backup1.ico');
+    aIcons.statuspage = require('../../resources/images/backup1.ico');
     aIcons.about = require('../../resources/images/about1.ico');
     aIcons.settings = require('../../resources/images/settings1.ico');
 
@@ -115,9 +124,9 @@ class Sidebar extends Component {
     } else if (pathname === '/transaction') {
       aLinks.transactions = 'sidebaritem_active';
       aIcons.transactions = require('../../resources/images/trans2.ico');
-    } else if (pathname === '/security') {
-      aLinks.security = 'sidebaritem_active';
-      aIcons.security = require('../../resources/images/backup2.ico');
+    } else if (pathname === '/statuspage') {
+      aLinks.statuspage = 'sidebaritem_active';
+      aIcons.statuspage = require('../../resources/images/backup2.ico');
     } else if (pathname === '/about') {
       aLinks.about = 'sidebaritem_active';
       aIcons.about = require('../../resources/images/about2.ico');
@@ -182,12 +191,12 @@ class Sidebar extends Component {
             </Link>
             {this.renderRectRound('/transaction')}
           </div>
-          <div className={`sidebaritem ${this.state.active.security}`}>
-            <Link to="/security" className={this.state.active.security}>
-              <img className="sidebaricon" src={this.state.icons.security} />
-              {lang.navBarSecurityButton}
+          <div className={`sidebaritem ${this.state.active.statuspage}`}>
+            <Link to="/statuspage" className={this.state.active.statuspage}>
+              <img className="sidebaricon" src={this.state.icons.statuspage} />
+              Status
             </Link>
-            {this.renderRectRound('/security')}
+            {this.renderRectRound('/statuspage')}
           </div>
           <div className={`sidebaritem ${this.state.active.about}`}>
             <Link to="/about" className={this.state.active.about}>
@@ -206,8 +215,6 @@ class Sidebar extends Component {
         </ul>
         <div className="connections sidebar-section-container">
           <p>{`${lang.nabBarNetworkInfoSyncing} ${progressBar.toFixed(2)}%`}</p>
-          <p>{`( Total Headers Synced: ${this.props.headers} )`}</p>
-          <p>{`( ${lang.nabBarNetworkInfoBlock} ${this.props.blocks} ${lang.conjuctionOf} ${this.props.headers} )`}</p>
           <div className="progress custom_progress">
             <div
               className="progress-bar progress-bar-success progress-bar-striped"
@@ -218,6 +225,7 @@ class Sidebar extends Component {
               style={{ width: `${progressBar.toFixed(2)}%`, backgroundColor: '#8DA557' }}
             />
           </div>
+          <p>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
           <p>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
         <div className="sidebar-section-container">

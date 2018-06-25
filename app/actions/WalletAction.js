@@ -113,7 +113,7 @@ export const isImportingPrivateKey = data => ({
 
 export const startStopWalletHandler = () => (dispatch, getstate) => {
   const state = getstate().wallet;
-  if (state.off || !state.running) {
+  if (state.off) {
     dispatch(startWallet(state));
   } else if (state.running) {
     dispatch(stopWallet());
@@ -130,7 +130,7 @@ const startWallet = (state) => (dispatch) => {
         starting: true,
         running: false,
         stopping: false,
-        off: true,
+        off: false,
       }));
       event.emit('show', lang.startingWallet);
     } else {
@@ -276,9 +276,51 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
         event.emit('show', err.message);
       }
     });
-    evaluateInstalled(state);
+    if (state.walletInstalled) {
+      wallet.getInfo().then((data) => {
+        dispatch(evaluateStatus({
+          starting: false,
+          running: true,
+          stopping: false,
+          off: false,
+        }));
+      }).catch((err) => {
+        dispatch(processError(err));
+      });
+    } else {
+      // no wallet is installed so it must be off
+      dispatch(evaluateStatus({
+        starting: false,
+        running: false,
+        stopping: false,
+        off: true,
+      }));
+    }
+
+   // evaluateInstalled(state);
   } else if (state.starting) {
-    evaluateInstalled(state);
+    if (state.walletInstalled) {
+      wallet.getInfo().then((data) => {
+        dispatch(evaluateStatus({
+          starting: false,
+          running: true,
+          stopping: false,
+          off: false,
+        }));
+      }).catch((err) => {
+        dispatch(processError(err));
+      });
+    } else {
+      // no wallet is installed so it must be off
+      dispatch(evaluateStatus({
+        starting: false,
+        running: false,
+        stopping: false,
+        off: true,
+      }));
+    }
+
+    //evaluateInstalled(state);
   } else if (state.running) {
     event.emit('hide');
     dispatch(getBlockchainInfo());
@@ -286,7 +328,27 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
     dispatch(getWalletInfo());
   } else if (state.stopping) {
     event.emit('show', lang.walletStopping);
-    evaluateInstalled(state);
+    if (state.walletInstalled) {
+      wallet.getInfo().then((data) => {
+        dispatch(evaluateStatus({
+          starting: false,
+          running: true,
+          stopping: false,
+          off: false,
+        }));
+      }).catch((err) => {
+        dispatch(processError(err));
+      });
+    } else {
+      // no wallet is installed so it must be off
+      dispatch(evaluateStatus({
+        starting: false,
+        running: false,
+        stopping: false,
+        off: true,
+      }));
+    }
+    //evaluateInstalled(state);
   }
 };
 

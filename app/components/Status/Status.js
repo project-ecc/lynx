@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import glob from 'glob';
@@ -10,15 +11,30 @@ import { traduction } from '../../lang/lang';
 const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
 const { clipboard } = require('electron');
-
+const appVersion = require('../../../package.json').version;
+const config = require('../../../config');
 const dialog = remote.require('electron').dialog;
-
 const lang = traduction();
 
-class Security extends Component {
+class StatusPage extends Component {
+  static propTypes = {
+    version: PropTypes.number,
+    subversion: PropTypes.string,
+    paytxfee: PropTypes.number,
+    relayfee: PropTypes.number,
+    blocks: PropTypes.number,
+    headers: PropTypes.number,
+    bestblockhash: PropTypes.string,
+    difficulty: PropTypes.number,
+    inboundpeers: PropTypes.number,
+    outboundpeers: PropTypes.number,
+    moneysupply: PropTypes.number,
+    staking: PropTypes.bool,
+    encrypted: PropTypes.bool,
+    unlocked_until: PropTypes.number,
+  };
   constructor(props) {
     super(props);
-
     this.state = {
       step: 0,
       pass1: '',
@@ -30,28 +46,25 @@ class Security extends Component {
       newPass: '',
       reenteredNewPass: '',
       changePassRequesting: false,
-      walletAddress: ''
+      walletAddress: '' 
     };
-
-    this.checkIfWalletEncrypted = this.checkIfWalletEncrypted.bind(this);
-    this.scorePassword = this.scorePassword.bind(this);
-    this.onChangePass1 = this.onChangePass1.bind(this);
-    this.onChangePass2 = this.onChangePass2.bind(this);
-    this.onClickNext1 = this.onClickNext1.bind(this);
-    this.onClickNext2 = this.onClickNext2.bind(this);
-    this.onClickBack = this.onClickBack.bind(this);
-    this.onClickBackupLocation = this.onClickBackupLocation.bind(this);
-    this.renderCircle = this.renderCircle.bind(this);
-    this.renderPageStep = this.renderPageStep.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-    this.handleCurrPassChange = this.handleCurrPassChange.bind(this);
-    this.handleNewPassChange = this.handleNewPassChange.bind(this);
-    this.handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
-    this.clearPassResetState = this.clearPassResetState.bind(this);
-    // this.onChangeWalletAddress = this.onChangeWalletAddress.bind(this);
-    // this.dumpPrivateKey = this.dumpPrivateKey.bind(this);
-    // this.renderDumpPrivateKey = this.renderDumpPrivateKey.bind(this);
   }
+
+    checkIfWalletEncrypted = this.checkIfWalletEncrypted.bind(this);
+    scorePassword = this.scorePassword.bind(this);
+    onChangePass1 = this.onChangePass1.bind(this);
+    onChangePass2 = this.onChangePass2.bind(this);
+    onClickNext1 = this.onClickNext1.bind(this);
+    onClickNext2 = this.onClickNext2.bind(this);
+    onClickBack = this.onClickBack.bind(this);
+    onClickBackupLocation = this.onClickBackupLocation.bind(this);
+    renderCircle = this.renderCircle.bind(this);
+    renderPageStep = this.renderPasswordStep.bind(this);
+    changePassword = this.changePassword.bind(this);
+    handleCurrPassChange = this.handleCurrPassChange.bind(this);
+    handleNewPassChange = this.handleNewPassChange.bind(this);
+    handleNewPassReenterChange = this.handleNewPassReenterChange.bind(this);
+    clearPassResetState = this.clearPassResetState.bind(this);
 
   componentDidMount() {
     this.checkIfWalletEncrypted();
@@ -148,30 +161,6 @@ class Security extends Component {
     this.setState({ step: 1, pass1: '', passStrength: '' });
   }
 
-  // onChangeWalletAddress(event) {
-  //   this.setState({ walletAddress: event.target.value });
-  // }
-  //
-  // dumpPrivateKey() {
-  //   WalletService.dumpPrivateKey(this.state.walletAddress).then((response) => {
-  //     console.log(response)
-  //     if (typeof response !== 'undefined') {
-  //       if (typeof response.code !== 'undefined') {
-  //         const message = ErrorService.getErrorFromCode(response.code);
-  //         event.emit('animate', message);
-  //       } else {
-  //         event.emit('animate', lang.privateKeyCopied);
-  //         clipboard.writeText(response);
-  //       }
-  //     } else {
-  //       console.log(response)
-  //       event.emit('animate', 'An Error Occurred');
-  //     }
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-
   onClickBackupLocation() {
     dialog.showOpenDialog({
       properties: ['openDirectory']
@@ -262,15 +251,8 @@ class Security extends Component {
     });
   }
 
-  renderPageStep() {
-    if (this.state.step === 0) {
-      return (
-        <div className="page">
-          <p className="title">{lang.backup1CreateYourPassword}</p>
-          <p>This feature is unavailable while the wallet is not running.</p>
-        </div>
-      );
-    } else if (this.state.step === 1) {
+  renderPasswordStep() {
+    if (this.state.step === 1) {
       let passColor = '#f44336';
 
       if (this.state.passStrength === lang.backup1PasswordGood) {
@@ -359,7 +341,6 @@ class Security extends Component {
                 <button className="nextButton" onClick={this.onClickBackupLocation}>{lang.backup3SetBackupLocation}</button>
 
               </div>
-              {/*{this.renderDumpPrivateKey()}*/}
             </div>
           </div>
         </div>
@@ -367,46 +348,36 @@ class Security extends Component {
     }
   }
 
-  // renderDumpPrivateKey() {
-  //   if (this.props.unlocked_until !== 0) {
-  //     return (
-  //       <div className="col-md-6">
-  //         <p className="desc -space-top">{lang.dumpPrivKeyMessage}
-  //           <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
-  //         </p>
-  //         <input
-  //           className="input"
-  //           placeholder={lang.dumpPrivKeyInput}
-  //           type="text"
-  //           onChange={this.onChangeWalletAddress}
-  //           value={this.state.walletAddress}
-  //         />
-  //         <button className="nextButton" onClick={this.dumpPrivateKey}>{lang.dumpPrivKeyButton}</button>
-  //       </div>
-  //     );
-  //   }
-  //   return (
-  //     <div className="col-md-6">
-  //       <p className="desc -space-top">{lang.dumpPrivKeyMessage}
-  //         <span className="desc_green"> {lang.dumpPrivKeyMessage2}</span>
-  //       </p>
-  //       <h3 >Wallet must be unlocked!</h3>
-  //
-  //     </div>
-  //   );
-  // }
-
   render() {
+    console.log(this.props);
     return (
-      <div className="backup">
-        <div className={`circle circle_left ${this.renderCircle(1)}`}>1</div>
-        <div className={`circle circle_center ${this.renderCircle(2)}`}>2</div>
-        <div className={`circle circle_right ${this.renderCircle(3)}`}>3</div>
-        <div className="line" />
-        <div className="backup_inner">
-          <p>{this.state.step ? `${lang.backup1Step} ${this.state.step} ${lang.conjuctionOf} 3` : null}</p>
+      <div>
+        <p className="title">{config.guiName} Status</p>
+        <p>Version: {appVersion}</p>
+        <p>Release Date:</p>
+
+        <p className="title">{config.coinName} Node Status</p>
+        <p>Version: {`${this.props.version}`}</p>
+        <p>Subversion: {`${this.props.subversion}`}</p>
+        <p>Release Date: </p>
+        <p>Pay Tx Fee: {`${this.props.paytxfee}`}</p>
+        <p>Relay Fee: {`${this.props.relayfee}`}</p>
+
+        <p className="title">{config.coinName} Network Status</p>
+        <p>Blocks: {`${this.props.blocks}`}</p>
+        <p>Headers: {`${this.props.headers}`}</p>
+        <p>Best Block Hash: {`${this.props.bestblockhash}`}</p>
+        <p>Difficulty: {`${this.props.difficulty}`}</p>
+        <p>Inbound Peers: {`${this.props.inboundpeers}`}</p>
+        <p>Outbound Peers: {`${this.props.outboundpeers}`}</p>
+        <p>Available Staking Rewards: {`${this.props.moneysupply}`} - 25000000000</p>
+
+        <p className="title">{config.coinName} Wallet Status</p>
+        <p>Staking: {`${this.props.staking}`}</p>
+        <p>Encrypted: {`${this.props.encrypted}`}</p>
+        <p>{lang.backup1CreateYourPassword}</p>
+        <p>{this.state.step ? `${lang.backup1Step} ${this.state.step} ${lang.conjuctionOf} 3` : null}</p>
           {this.renderPageStep()}
-        </div>
         <div className="tip">
           <p className="tip_title">{lang.backupTipBold}</p>
           <p className="tip_desc">{lang.backupTipMessage}</p>
@@ -415,10 +386,4 @@ class Security extends Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    unlocked_until: state.wallet.unlocked_until,
-  };
-};
-export default withRouter(connect(mapStateToProps)(Security));
+export default StatusPage;

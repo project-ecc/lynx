@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router';
 import App from './components/App';
 import Home from './components/Home';
 import About from './components/About/About';
-import Security from './components/Security/Security';
+import StatusPage from './components/Status/Status';
 import Receive from './components/ReceiveTransaction/Receive';
 import Transaction from './components/Transactions/Transaction';
 import Send from './components/SendTransactions/Send';
@@ -21,7 +21,7 @@ export default function Routes({route}) {
         <Route path="/about" component={About} />
         <Route path="/receive" component={Receive} />
         <Route path="/send" component={Send} />
-        <Route path="/security" component={Security} />
+        <Route path="/statuspage" component={StatusPage} />
         <Route path="/" component={Home} />
       </Switch>
     </App>
