@@ -4,12 +4,15 @@
   "coinTicker": "CryptoUnited",
   "githubLink": "https://github.com/CryptoUnited/Sapling",
   "githubText" : "Sapling Github",
+  "releaseUrl" : "https://api.github.com/repos/project-ecc/eccoin/releases",
   "bitcointalkLink": "#",
   "bitcointalkText": "This is a place holder for BCT link",
-  "linux32": "#",
-  "linux64": "#",
-  "win32": "#",
-  "win64": "#",
-  "osx": "#",
-  "downloadFileName": "daemon-name"
+  "linux32": "linux32",
+  "linux64": "linux64",
+  "win32": "win32",
+  "win64": "win64",
+  "osx": "mac",
+  "daemonFolder": "eccoin-wallet",
+  "resourceFolder": "eccoin",
+  "daemonName": "eccoind"
 }

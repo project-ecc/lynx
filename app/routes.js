@@ -9,13 +9,11 @@ import Receive from './components/ReceiveTransaction/Receive';
 import Transaction from './components/Transactions/Transaction';
 import Send from './components/SendTransactions/Send';
 import Settings from './components/Settings/Settings';
-import Downloads from './components/Downloads/Downloads';
 
 export default function Routes({route}) {
   return (
     <App route={route}>
       <Switch>
-        <Route path="/downloads" component={Downloads} />
         <Route path="/settings" component={Settings} />
         <Route path="/transaction" component={Transaction} />
         <Route path="/about" component={About} />

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import WalletInstallerPartial from './Partials/WalletInstallerPartial';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updater } from '../utils/updater';
 import { traduction } from '../lang/lang';
 
+const event = require('../utils/eventhandler');
 const { ipcRenderer } = require('electron');
 const usericon = require('../../resources/images/logo1.png');
 
@@ -43,7 +45,9 @@ class Sidebar extends Component {
         about: '',
         wallet: '',
       },
-      newVersionAvailable: false
+      newVersionAvailable: false,
+      daemonDownloading: false,
+      downloadPercent: 0
     };
 
     this.checkWalletVersion = this.checkWalletVersion.bind(this);
@@ -51,6 +55,8 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
+    console.log(this.state.versionformatted)
+    const self = this;
     this.checkStateMenu(this.state.pathname);
 
     this.timerCheckWalletVersion = setInterval(() => {
@@ -59,6 +65,7 @@ class Sidebar extends Component {
 
     this.checkWalletVersion();
 
+
     ipcRenderer.once('wallet-version-updated', (e, err) => {
       this.checkWalletVersion();
     });
@@ -66,6 +73,7 @@ class Sidebar extends Component {
     this.timerCheckWalletState = setInterval(() => {
       this.checkWalletState();
     }, 3000);
+
   }
 
   componentWillReceiveProps(props) {
@@ -235,33 +243,22 @@ class Sidebar extends Component {
               : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ?
-              !this.props.walletInstalled
+              this.props.walletInstalled
                 ?
-                <Link to="/downloads" id="a-tag-button-wrapper">
-                  <button className="stopStartButton">
-                    {lang.clickInstallWallet}
-                  </button>
-                </Link>
-                :
                 <button
                   className="stopStartButton"
                   onClick={this.props.startStopWalletHandler}
                 >
                   {lang.startWallet}
                 </button>
+                :
+                null
+
               : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
           }
+
           <br />
-          {this.state.newVersionAvailable && this.props.walletInstalled
-            ?
-            <Link to="/downloads" id="a-tag-button-wrapper">
-              <button className="stopStartButton">
-                {lang.clickUpdateWallet}
-              </button>
-            </Link>
-            :
-            null
-          }
+          <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />
         </div>
       </div>
     );

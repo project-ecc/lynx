@@ -3,10 +3,12 @@ import $ from 'jquery';
 import Sidebar from '../containers/Sidebar';
 import BalanceBanner from '../containers/BalanceBanner';
 
+
 const event = require('../utils/eventhandler');
 const splash = require('../../resources/images/splash-image.png');
 
 let lasttype = 'hide';
+
 
 event.on('show', (message) => {
   if (lasttype === 'hide') {
@@ -46,7 +48,7 @@ export default class App extends Component<Props> {
     super(props);
 
     this.state = {
-      splash: true,
+      splash: true
     };
   }
   componentDidMount() {
@@ -71,7 +73,6 @@ export default class App extends Component<Props> {
         <div className="snack">
           <p id="snackMsg" />
         </div>
-
       </div>
     );
   }
