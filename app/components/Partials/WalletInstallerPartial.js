@@ -84,8 +84,8 @@ class WalletInstallerPartial extends React.Component {
       request(opts).then(async (data) => {
         const parsed = JSON.parse(data);
         const latestDaemon = parsed[0].name.split(' ')[1];
-        const zipChecksum = extractChecksum(getPlatformName, parsed[0].body);
-        const downloadUrl = formatDownloadURL('eccoin', 'v' + latestDaemon, getPlatformName);
+        const zipChecksum = extractChecksum(getPlatformName(), parsed[0].body);
+        const downloadUrl = formatDownloadURL('eccoin', 'v' + latestDaemon, getPlatformName());
         console.log(downloadUrl);
 
         const downloaded = await downloadFile(downloadUrl, walletDirectory, 'Eccoind.zip', zipChecksum, true);

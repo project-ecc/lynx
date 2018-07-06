@@ -2,7 +2,7 @@ import glob from 'glob';
 import fs from 'fs';
 import wallet from '../utils/wallet';
 import { getErrorFromCode } from '../services/error.service';
-import { getPlatformWalletUri, grabWalletDir } from '../services/platform.service';
+import { getPlatformWalletUri, getPlatformFileName, getPlatformName, grabWalletDir } from '../services/platform.service';
 import { traduction } from '../lang/lang';
 
 const event = require('../utils/eventhandler');
@@ -29,6 +29,25 @@ export const getBlockchainInfo = () => (dispatch) => {
     dispatch(processError(err));
   });
 };
+
+export const getInfoGet = data => ({
+  type: GET_INFO,
+  payload: {
+    versionformatted: data.versionformatted,
+    version: data.version,
+    protocolversion: data.protocolversion,
+    walletversion: data.walletversion,
+    balance: data.balance,
+    newmint: data.newmint,
+    stake: data.stake,
+    blocks: data.blocks,
+    headers: data.headers,
+    connections: data.connections,
+    difficulty: data.difficulty,
+    encrypted: data.encrypted,
+    staking: data.staking,
+  }
+});
 
 export const getInfo = () => (dispatch) => {
   wallet.getInfo().then(data => {
@@ -265,7 +284,7 @@ const evaluateInstalled = (state) => (dispatch) => {
 
 export const updateWalletStatus = () => (dispatch, getstate) => {
   const state = getstate().wallet;
-  if (state.off) {
+  if (state.off && state.walletInstalled === false) {
     glob(`${getPlatformWalletUri()}`, (err, files) => {
       if (!files.length) {
         dispatch(isWalletInstalled(false));

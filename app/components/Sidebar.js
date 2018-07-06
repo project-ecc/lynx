@@ -55,8 +55,6 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.versionformatted)
-    const self = this;
     this.checkStateMenu(this.state.pathname);
 
     this.timerCheckWalletVersion = setInterval(() => {
@@ -73,7 +71,6 @@ class Sidebar extends Component {
     this.timerCheckWalletState = setInterval(() => {
       this.checkWalletState();
     }, 3000);
-
   }
 
   componentWillReceiveProps(props) {

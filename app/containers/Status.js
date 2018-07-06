@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import StatusPage from '../components/Status/Status';
+import { getInfoGet } from '../actions/WalletAction';
 
 const mapStateToProps = state => {
   return {
@@ -21,5 +22,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(StatusPage));
+const mapDispatchToProps = dispatch => {
+  return {
+    getInfoGet: () => dispatch(getInfoGet()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StatusPage));
 
