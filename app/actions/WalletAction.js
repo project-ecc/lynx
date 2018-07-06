@@ -284,7 +284,7 @@ const evaluateInstalled = (state) => (dispatch) => {
 
 export const updateWalletStatus = () => (dispatch, getstate) => {
   const state = getstate().wallet;
-  if (state.off && state.walletInstalled === false) {
+  if (state.off) {
     glob(`${getPlatformWalletUri()}`, (err, files) => {
       if (!files.length) {
         dispatch(isWalletInstalled(false));
