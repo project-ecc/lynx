@@ -6,7 +6,7 @@ import { traduction } from '../../lang/lang';
 const event = require('../../utils/eventhandler');
 const lang = traduction();
 import config from '../../../config.json';
-import { grabWalletDir, getPlatformFileName, formatDownloadURL, extractChecksum } from '../../services/platform.service';
+import { grabWalletDir, getPlatformFileName, formatDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
 import { downloadFile } from '../../utils/downloader';
 
 class WalletInstallerPartial extends React.Component {
@@ -84,8 +84,8 @@ class WalletInstallerPartial extends React.Component {
       request(opts).then(async (data) => {
         const parsed = JSON.parse(data);
         const latestDaemon = parsed[0].name.split(' ')[1];
-        const zipChecksum = extractChecksum(platformFileName, parsed[0].body);
-        const downloadUrl = formatDownloadURL('eccoin', 'v' + latestDaemon, platformFileName);
+        const zipChecksum = extractChecksum(getPlatformName, parsed[0].body);
+        const downloadUrl = formatDownloadURL('eccoin', 'v' + latestDaemon, getPlatformName);
         console.log(downloadUrl);
 
         const downloaded = await downloadFile(downloadUrl, walletDirectory, 'Eccoind.zip', zipChecksum, true);

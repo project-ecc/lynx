@@ -68,6 +68,22 @@ export function getPlatformFileName() {
   }
 }
 
+
+export function getPlatformName() {
+  if (process.platform === 'linux') {
+
+    return os.arch() === 'x32' ? "linux32" : "linux64";
+
+  } else if (process.platform === 'darwin') {
+
+    return "mac";
+
+  } else if (process.platform.indexOf('win') > -1) {
+
+    return os.arch() === 'x32' ? "win32" : "win64";
+  }
+}
+
 /**
  * returns the coin Dir which contains the block Db, wallet.dat and conf files.
  * @returns {string}
