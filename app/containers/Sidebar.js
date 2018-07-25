@@ -2,11 +2,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Sidebar from '../components/Sidebar';
-import { startStopWalletHandler } from '../actions/WalletAction';
-import { updateWalletStatus } from '../actions/WalletAction'; 
+import { startStopWalletHandler, updateWalletStatus } from '../actions/WalletAction';
 
 const mapDispatchToProps = dispatch => {
-  return{
+  return {
     startStopWalletHandler: () => dispatch(startStopWalletHandler()),
     updateWalletStatus: () => dispatch(updateWalletStatus()),
   };

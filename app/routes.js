@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router';
 import App from './components/App';
 import Home from './components/Home';
 import About from './components/About/About';
-import StatusPage from './components/Status/Status';
+import StatusPage from './containers/Status';
 import Receive from './components/ReceiveTransaction/Receive';
 import Transaction from './components/Transactions/Transaction';
 import Send from './components/SendTransactions/Send';

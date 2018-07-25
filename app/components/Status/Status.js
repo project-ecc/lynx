@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import glob from 'glob';
 import wallet from '../../utils/wallet';
 import WalletService from '../../services/wallet.service';
-import {handleWalletError} from '../../services/error.service';
+import { getErrorFromCode } from '../../services/error.service';
 import { traduction } from '../../lang/lang';
 
 const event = require('../../utils/eventhandler');
@@ -46,11 +46,10 @@ class StatusPage extends Component {
       newPass: '',
       reenteredNewPass: '',
       changePassRequesting: false,
-      walletAddress: '' 
+      walletAddress: ''
     };
+    this.onClickBackupLocation = this.onClickBackupLocation.bind(this);
   }
-
-  onClickBackupLocation = this.onClickBackupLocation.bind(this);
 
   componentDidMount() {
     this.props.getInfoGet;
@@ -69,16 +68,15 @@ class StatusPage extends Component {
         if(data === null) {
           event.emit('animate', lang.backupOk);
         } else {
-          event.emit('animate', ErrorService.getErrorFromCode(data.code, data.message));
+          event.emit('animate', getErrorFromCode(data.code, data.message));
         }
       }).catch((err) => {
-        event.emit('animate', ErrorService.getErrorFromCode(-99));
+        event.emit('animate', getErrorFromCode(-99));
       });
     });
   }
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <p className="title">{config.guiName} Status</p>

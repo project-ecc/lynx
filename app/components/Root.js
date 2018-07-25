@@ -15,7 +15,7 @@ type RootType = {
 const updateTimer = store => setTimeout(() => {
   store.dispatch(updateWalletStatus())
   updateTimer(store);
-}, 750);
+}, 3000);
 
 export default function Root({ store, history }: RootType) {
   store.dispatch(updateWalletStatus());
