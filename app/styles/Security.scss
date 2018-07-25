@@ -1,3 +1,17 @@
+.status-row {
+  margin-bottom: 15px;
+}
+
+.status-panel {
+  min-height: 160px;
+}
+
+.status-panel-bottom {
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  border-color: gray;
+}
+
 .backup  {
   position: relative;
   min-height: 50vh;

@@ -26,8 +26,6 @@ class StatusPage extends Component {
     headers: PropTypes.number,
     bestblockhash: PropTypes.string,
     difficulty: PropTypes.number,
-    inboundpeers: PropTypes.number,
-    outboundpeers: PropTypes.number,
     moneysupply: PropTypes.number,
     staking: PropTypes.bool,
     encrypted: PropTypes.bool,
@@ -79,29 +77,36 @@ class StatusPage extends Component {
   render() {
     return (
       <div>
-        <p className="title">{config.guiName} Status</p>
-        <p>Version: {appVersion}</p>
-        <p>Release Date:</p>
-
-        <p className="title">{config.coinName} Node Status</p>
-        <p>Version: {`${this.props.version}`}</p>
-        <p>Subversion: {`${this.props.subversion}`}</p>
-        <p>Release Date: </p>
-        <p>Pay Tx Fee: {`${this.props.paytxfee}`}</p>
-        <p>Relay Fee: {`${this.props.relayfee}`}</p>
-
-        <p className="title">{config.coinName} Network Status</p>
-        <p>Blocks: {`${this.props.blocks}`}</p>
-        <p>Headers: {`${this.props.headers}`}</p>
-        <p>Best Block Hash: {`${this.props.bestblockhash}`}</p>
-        <p>Difficulty: {`${this.props.difficulty}`}</p>
-        <p>Inbound Peers: {`${this.props.inboundpeers}`}</p>
-        <p>Outbound Peers: {`${this.props.outboundpeers}`}</p>
-        <p>Available Staking Rewards: {`${this.props.moneysupply}`} - 25000000000</p>
-
-        <p className="title">{config.coinName} Wallet Status</p>
-        <p>Staking: {`${this.props.staking}`}</p>
-        <p>Encrypted: {`${this.props.encrypted}`}</p>
+        <div className="row stauts-row status-panel-bottom">
+          <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
+            <p className="title">{config.guiName} Status</p>
+            <p>Version: {appVersion}</p>
+          </div>
+          <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
+            <p className="title">{config.coinName} Node Status</p>
+            <p>Version: {`${this.props.version}`}</p>
+            <p>Subversion: {`${this.props.subversion}`}</p>
+            <p>Pay Tx Fee: {`${this.props.paytxfee}`}</p>
+            <p>Relay Fee: {`${this.props.relayfee}`}</p>
+          </div>
+        </div>
+        <div className="row status-row status-panel-bottom">
+          <div className="col-md-12 col-md-12 col-lg-12 status-panel">
+            <p className="title">{config.coinName} Network Status</p>
+            <p>Blocks: {`${this.props.blocks}`}</p>
+            <p>Headers: {`${this.props.headers}`}</p>
+            <p>Best Block Hash: {`${this.props.bestblockhash}`}</p>
+            <p>Difficulty: {`${this.props.difficulty}`}</p>
+            <p>Available Rewards: {25000000000 - `${this.props.moneysupply}`}</p>
+          </div>
+        </div>
+        <div className="row status-row">
+          <div className="col-md-12 col-md-12 col-lg-12 status-panel">
+            <p className="title">{config.coinName} Wallet Status</p>
+            <p>Staking: {`${this.props.staking}`}</p>
+            <p>Encrypted: {`${this.props.encrypted}`}</p>
+          </div>
+        </div>
       </div>
     );
   }

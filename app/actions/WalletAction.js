@@ -42,10 +42,13 @@ export const getInfoGet = data => ({
     stake: data.stake,
     blocks: data.blocks,
     headers: data.headers,
+    moneysupply: data.moneysupply,
     connections: data.connections,
     difficulty: data.difficulty,
     encrypted: data.encrypted,
     staking: data.staking,
+    paytxfee: data.paytxfee,
+    relayfee: data.relayfee,
   }
 });
 
@@ -63,10 +66,13 @@ export const getInfo = () => (dispatch) => {
         stake: data.stake,
         blocks: data.blocks,
         headers: data.headers,
+        moneysupply: data.moneysupply,
         connections: data.connections,
         difficulty: data.difficulty,
         encrypted: data.encrypted,
         staking: data.staking,
+        paytxfee: data.paytxfee,
+        relayfee: data.relayfee,
       }
     });
     if (data.encrypted) {

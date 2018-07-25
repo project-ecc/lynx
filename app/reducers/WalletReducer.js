@@ -34,9 +34,12 @@ const initialState = {
   headers: 0,
   connections: 0,
   difficulty: 0,
+  moneysupply: 0,
   encrypted: false,
   unlocked_until: 0,
   staking: false,
+  paytxfee: 0,
+  relayfee: 0,
 
   // getwalletinfo
   unconfirmed_balance: 0,
@@ -73,10 +76,13 @@ export default (state = initialState, action) => {
         stake: action.payload.stake,
         blocks: action.payload.blocks,
         headers: action.payload.headers,
+        moneysupply: action.payload.moneysupply,
         connections: action.payload.connections,
         difficulty: action.payload.difficulty,
         encrypted: action.payload.encrypted,
         staking: action.payload.staking,
+        paytxfee: action.payload.paytxfee,
+        relayfee: action.payload.relayfee,
       };
     case GET_WALLET_INFO:
       return {

@@ -14,8 +14,6 @@ const mapStateToProps = state => {
     headers: state.wallet.headers,
     bestblockhash: state.wallet.bestblockhash,
     difficulty: state.wallet.difficulty,
-    inboundpeers: state.wallet.inboundpeers,
-    outboundpeers: state.wallet.outboundpeers,
     moneysupply: state.wallet.moneysupply,
     staking: state.wallet.staking,
     encrypted: state.wallet.encrypted
