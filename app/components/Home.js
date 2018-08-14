@@ -6,6 +6,7 @@ import TransactionTable from './Transactions/TransactionTable';
 import { traduction } from '../lang/lang';
 
 import { getErrorFromCode } from '../services/error.service';
+import WalletService from '../services/wallet.service'
 
 const event = require('../utils/eventhandler');
 

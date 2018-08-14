@@ -264,7 +264,7 @@ class Wallet {
   }
 
   walletstart(cb) {
-    const path = getPlatformWalletUri();
+    let path = getPlatformWalletUri();
     console.log(path);
     if (process.platform === 'linux') {
       runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {

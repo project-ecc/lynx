@@ -8,7 +8,7 @@ const remote = require('electron').remote;
 const config = require('../../../config');
 import { getConfUri, getDebugUri } from '../../services/platform.service';
 
-
+import $ from 'jquery';
 const shell = remote.shell;
 const app = remote.app;
 
@@ -88,6 +88,9 @@ class SettingsDebug extends Component {
 
   onenter() {
     this.handleNewCommand();
+    $("#console").animate({
+      scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
+    }, 1000);
   }
 
   handleKeyUp(event) {
@@ -178,6 +181,10 @@ class SettingsDebug extends Component {
           });
 
           this.setState({ commandList: currentList, navigation: currentList.length });
+
+          $("#console").animate({
+            scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
+          }, 100);
         }).catch((error) => {
           currentList.push({
             time,
@@ -231,7 +238,7 @@ class SettingsDebug extends Component {
       <div>
         <p className="btn_console" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</p>
         <div className="row console_body">
-          <div className="col-md-12 console_wrapper">
+          <div id="console" className="col-md-12 console_wrapper">
             {this.renderHelpMsg()}
             {this.state.commandList.map((cmd, index) => {
               let res = cmd.res;
