@@ -375,7 +375,7 @@ class Sidebar extends Component {
           <p>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
           <p>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
-        <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white'}}>
+        <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
           { this.props.running //eslint-disable-line
             ? this.props.unlocked_until === 0
               ? <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Unlock Wallet</span>
