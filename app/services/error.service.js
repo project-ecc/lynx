@@ -70,7 +70,7 @@ const WalletErrEnum = Object.freeze({
 const HTTPErrEnum = Object.freeze({
   RPC_401_ERROR: l.invalidCredentials
 });
-export function getErrorFromCode (status, message = null) {
+export function getErrorFromCode(status, message = null) {
   console.log(status)
   switch (status) {
     //General errors

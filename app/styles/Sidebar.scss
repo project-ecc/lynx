@@ -79,7 +79,7 @@
   /* bottom: 10px; */
   width: 100%;
   z-index: 10;
-  text-align: center;
+  text-align: left;
   font-size: 1em;
   color: #fff;
 }
@@ -91,9 +91,8 @@
 
 .custom_progress {
   height: 10px !important;
-  border-radius: 10px !important;
-  width: 90% !important;
-  margin-left: 5% !important;
+  width: 100% !important;
+  margin-left: 0% !important;
   margin-bottom: 2.5px !important;
 }
 

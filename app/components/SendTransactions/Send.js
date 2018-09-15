@@ -6,6 +6,7 @@ import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import glob from 'glob';
 import {handleWalletError} from '../../services/error.service';
+import {getErrorFromCode} from "../../services/error.service";
 
 const event = require('../../utils/eventhandler');
 const lang = traduction();
@@ -227,7 +228,7 @@ class Send extends Component {
       }
     }).catch((err) => {
       self.setState({ dialog: false, address: '', amount: ''});
-      event.emit('animate', ErrorService.getErrorFromCode(err.code));
+      event.emit('animate', getErrorFromCode(err.code));
     });
   }
 

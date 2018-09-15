@@ -3,13 +3,16 @@
   "coinName": "CryptoUnited",
   "coinTicker": "CryptoUnited",
   "githubLink": "https://github.com/CryptoUnited/Sapling",
-  "githubText" : "Sapling Github",
-  "bitcointalkLink": "#",
-  "bitcointalkText": "This is a place holder for BCT link",
+  "githubText": "Sapling Github",
+  "releaseUrl" : "https://api.github.com/repos/<accountname>/<reponame>/releases",
+  "bitcointalkLink": "<bitcointalk link>",
+  "bitcointalkText": "Sapling Bitcointalk",
   "linux32": "#",
   "linux64": "#",
   "win32": "#",
   "win64": "#",
   "osx": "#",
-  "downloadFileName": "daemon-name"
+  "daemonFolder": "name of folder for daemon",
+  "resourceFolder": "<defaultdatadir>",
+  "daemonName": "<daemon name> ex: bitcoind"
 }

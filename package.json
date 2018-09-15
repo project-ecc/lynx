@@ -1,7 +1,7 @@
 {
   "name": "Sapling",
   "productName": "Sapling",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Electron application providing the graphical user interface for a bitcoin based cryptocurrency",
   "scripts": {
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
@@ -88,7 +88,7 @@
     "cross-env": "^5.0.0",
     "cross-spawn": "^5.1.0",
     "css-loader": "^0.28.3",
-    "electron": "1.7.11",
+    "electron": "~>1.7.12",
     "electron-builder": "^19.8.0",
     "electron-devtools-installer": "^2.2.0",
     "enzyme": "^2.9.1",
@@ -142,6 +142,7 @@
     "bitcoin-core": "git://github.com/cryptounited/bitcoin-core.git",
     "bootstrap": "^3.3.7",
     "bootstrap-material-design": "^0.5.10",
+    "checksum": "^0.1.1",
     "child_process": "^1.0.2",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
@@ -157,6 +158,7 @@
     "jquery": "^3.2.1",
     "lowdb": "^0.16.2",
     "node-powershell": "^3.3.1",
+    "npm": "^6.4.1",
     "path": "^0.12.7",
     "project-version": "^1.0.0",
     "react": "^15.6.2",
@@ -165,6 +167,7 @@
     "react-loader-display": "^3.1.0",
     "react-loading": "^0.1.4",
     "react-motion": "^0.5.2",
+    "react-progressbar.js": "^0.2.0",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
@@ -172,6 +175,7 @@
     "react-smooth-collapse": "^1.3.2",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
+    "request-progress": "^3.0.0",
     "source-map-support": "^0.4.15"
   },
   "devEngines": {

@@ -265,6 +265,7 @@ class Wallet {
 
   walletstart(cb) {
     let path = getPlatformWalletUri();
+    console.log(path);
     if (process.platform === 'linux') {
       runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
         return cb(true);
@@ -273,12 +274,12 @@ class Wallet {
           cb(false);
         });
     } else if (process.platform === 'darwin') {
-      console.log(path)
+      console.log(path);
       runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
         return cb(true);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         cb(false);
       });
     } else if (process.platform.indexOf('win') > -1) {
@@ -349,6 +350,7 @@ function runExec(cmd, timeout, cb) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
+        console.log(error);
         reject(error);
       } else {
         resolve('program exited without an error');

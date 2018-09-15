@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import WalletInstallerPartial from './Partials/WalletInstallerPartial';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import {updater} from '../utils/updater';
+import { updater } from '../utils/updater';
 import { traduction } from '../lang/lang';
-import fs from 'fs'
-import os from 'os'
-const { ipcRenderer } = require('electron');
+import {getErrorFromCode} from "../services/error.service";
+import WalletService from '../services/wallet.service'
 
-import { grabWalletDir } from '../services/platform.service';
+const event = require('../utils/eventhandler');
+const { ipcRenderer } = require('electron');
 const usericon = require('../../resources/images/logo1.png');
+const lockedPad = require('../../resources/images/padclose.png');
+const unlockedPad = require('../../resources/images/padopen.png');
 
 const lang = traduction();
 
@@ -46,70 +49,69 @@ class Sidebar extends Component {
         about: '',
         wallet: '',
       },
-      newVersionAvailable: false
+      newVersionAvailable: false,
+      daemonDownloading: false,
+      downloadPercent: 0,
+      select: 'all',
+      dialog: false,
+      timeL: '',
+      passPhrase: '',
+      stakeUnlock: false
     };
 
-    this.saveAndStopWallet = this.saveAndStopWallet.bind(this);
-    this.startWallet = this.startWallet.bind(this);
     this.checkWalletVersion = this.checkWalletVersion.bind(this);
-    // this.infoUpdate = this.infoUpdate.bind(this);
+    this.checkWalletState = this.checkWalletState.bind(this);
+    this.showWalletUnlockDialog = this.showWalletUnlockDialog.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.showWalletUnlockDialog = this.showWalletUnlockDialog.bind(this);
+    this.cancelDialog = this.cancelDialog.bind(this);
+    this.confirmDialog = this.confirmDialog.bind(this);
+    this.onPassPhraseChange = this.onPassPhraseChange.bind(this);
+    this.onTimeLChange = this.onTimeLChange.bind(this);
+    this.checkboxChange = this.checkboxChange.bind(this);
   }
 
   componentDidMount() {
-    console.log(this.state.versionformatted)
-    const self = this;
     this.checkStateMenu(this.state.pathname);
 
-    // this.infoUpdate();
-    // this.timerInfo = setInterval(() => {
-    //   self.infoUpdate();
-    // }, 5000);
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
     }, 600000);
 
     this.checkWalletVersion();
 
+
     ipcRenderer.once('wallet-version-updated', (e, err) => {
       this.checkWalletVersion();
     });
+
+    this.timerCheckWalletState = setInterval(() => {
+      this.checkWalletState();
+    }, 3000);
   }
 
   componentWillReceiveProps(props) {
-    // console.log(props.router.location.pathname);
     this.checkStateMenu(props.route.location.pathname);
     this.setState({ pathname: props.route.location.pathname });
   }
 
-  componentDidUpdate() {
-
-  }
-
   componentWillUnmount() {
-    // clearInterval(this.timerInfo);
     clearInterval(this.timerCheckWalletVersion);
   }
 
-  // infoUpdate() {
-  //   const results = this.props.getStateValues('blocks', 'headers', 'connections', 'starting', 'running', 'stopping', 'off', 'walletInstalled');
-  //   const newState = {};
-  //   for (let key in results) {
-  //     // console.log(key, results[key]);
-  //     newState[key] = results[key];
-  //   }
-  //   this.setState(newState);
-  // }
-
   async checkWalletVersion() {
-    const self = this;
     try {
       const exists = await updater.checkForWalletVersion();
       if (exists) {
         updater.checkWalletVersion((result) => {
-          self.setState(() => { return { newVersionAvailable: result, }; });
+          //          this.setState(() => { return { newVersionAvailable: result, }; });
         });
       }
     } catch (err) { console.log(err); }
+  }
+
+  checkWalletState() {
+    this.props.updateWalletStatus;
   }
 
   checkStateMenu(pathname) {
@@ -120,7 +122,7 @@ class Sidebar extends Component {
     aLinks.send = '';
     aLinks.receive = '';
     aLinks.transactions = '';
-    aLinks.security = '';
+    aLinks.statuspage = '';
     aLinks.about = '';
     aLinks.settings = '';
 
@@ -128,7 +130,7 @@ class Sidebar extends Component {
     aIcons.send = require('../../resources/images/send1.ico');
     aIcons.receive = require('../../resources/images/receive1.ico');
     aIcons.transactions = require('../../resources/images/trans1.ico');
-    aIcons.security = require('../../resources/images/backup1.ico');
+    aIcons.statuspage = require('../../resources/images/backup1.ico');
     aIcons.about = require('../../resources/images/about1.ico');
     aIcons.settings = require('../../resources/images/settings1.ico');
 
@@ -144,9 +146,9 @@ class Sidebar extends Component {
     } else if (pathname === '/transaction') {
       aLinks.transactions = 'sidebaritem_active';
       aIcons.transactions = require('../../resources/images/trans2.ico');
-    } else if (pathname === '/security') {
-      aLinks.security = 'sidebaritem_active';
-      aIcons.security = require('../../resources/images/backup2.ico');
+    } else if (pathname === '/statuspage') {
+      aLinks.statuspage = 'sidebaritem_active';
+      aIcons.statuspage = require('../../resources/images/backup2.ico');
     } else if (pathname === '/about') {
       aLinks.about = 'sidebaritem_active';
       aIcons.about = require('../../resources/images/about2.ico');
@@ -167,12 +169,129 @@ class Sidebar extends Component {
     return null;
   }
 
-  saveAndStopWallet() {
-    this.props.startStopWalletHandler();
+  handleChange(event) {
+    this.setState({ select: event.target.value });
   }
 
-  startWallet() {
-    this.props.startStopWalletHandler();
+  onPassPhraseChange(event) {
+    this.setState({ passPhrase: event.target.value });
+  }
+
+  onTimeLChange(event) {
+    this.setState({ timeL: event.target.value });
+  }
+
+  showWalletUnlockDialog() {
+    this.setState(() => {
+      return { dialog: true };
+    });
+  }
+  checkboxChange(evt) {
+    if (this.state.checked !== evt.target.checked) {
+      this.setState({
+        stakeUnlock: evt.target.checked
+      });
+    }
+  }
+
+  renderDialogBody() {
+    if (this.props.unlocked_until === 0) {
+      return (
+        <div>
+          <div className="header">
+            <p className="title">{lang.overviewModalAuthTitle}</p>
+          </div>
+          <div className="body">
+            <p className="desc">{lang.ovweviewModalAuthDesc}</p>
+            <div className="row">
+              <div className="col-md-10 col-md-offset-1 input-group">
+                <input className="form-control inputText" type="password" value={this.state.passPhrase} onChange={this.onPassPhraseChange} placeholder={lang.walletPassPhrase} />
+              </div>
+              <div className="col-md-10 col-md-offset-1 input-group" style={{ marginTop: '15px' }}>
+                <input className="form-control inputText" type="number" value={this.state.timeL} onChange={this.onTimeLChange} placeholder={lang.secondsUnlocked} />
+              </div>
+              <div className="col-md-10 col-md-offset-1 input-group" style={{ marginTop: '15px' }}>
+                <div className="form-check">
+                  <input style={{marginRight: '10px'}} className="form-check-input" type="checkbox" value="" id="defaultCheck1" checked={this.state.stakeUnlock} onChange={this.checkboxChange} />
+                  <label className="form-check-label" htmlFor="defaultCheck1">
+                    {lang.unlockForStatking}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <div className="header">
+            <p className="title">{lang.popupMessageConfirmationRequired}</p>
+          </div>
+          <div className="body">
+            <p className="desc">{lang.ovweviewModalLockQuestion}</p>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  renderDialog() {
+    if (!this.state.dialog) {
+      return null;
+    } else {
+      return (
+        <div className="mancha">
+          <div className="dialog">
+            {this.renderDialogBody()}
+            <div className="footer">
+              <p className="button btn_cancel" onClick={this.cancelDialog}>{lang.cancel}</p>
+              <p className="button btn_confirm" onClick={this.confirmDialog}>{lang.confirm}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  cancelDialog() {
+    this.setState({ dialog: false, passPhrase: '', timeL: '' });
+  }
+
+  confirmDialog() {
+    const self = this;
+    if (this.props.unlocked_until === 0) {
+      const passPhrase = this.state.passPhrase;
+      let timeL = this.state.timeL;
+      const staking = this.state.stakeUnlock;
+      if (timeL === 0 || timeL.length === 0) {
+        timeL = 300000;
+      }
+      WalletService.unlockWallet(passPhrase, timeL, staking).then((data) => {
+        if (data === null) {
+          event.emit('animate', `${lang.walletUnlockedFor} ${timeL} ${lang.seconds}`);
+        } else {
+          event.emit('animate', getErrorFromCode(data.code));
+        }
+        self.setState({ dialog: false, passPhrase: '', timeL: '' });
+      }).catch((err) => {
+        const message = getErrorFromCode(err.code);
+        event.emit('animate', message);
+        self.setState({ dialog: false, passPhrase: '', timeL: '' });
+      });
+    } else {
+      WalletService.lockWallet().then((data) => {
+        if (data === null) {
+          event.emit('animate', lang.walletLocked);
+        } else {
+          event.emit('animate', lang.walletLockedError);
+        }
+      }).catch((err) => {
+        console.log(err);
+        event.emit('animate', lang.walletLockedError);
+      });
+      self.setState({ dialog: false, passPhrase: '', timeL: '' });
+    }
   }
 
   render() {
@@ -186,7 +305,7 @@ class Sidebar extends Component {
     }
 
     return (
-      <div className="sidebar">
+      <div className="sidebar" style={{zIndex: '10'}}>
         <div className="userimage">
           <img src={usericon} />
         </div>
@@ -219,12 +338,12 @@ class Sidebar extends Component {
             </Link>
             {this.renderRectRound('/transaction')}
           </div>
-          <div className={`sidebaritem ${this.state.active.security}`}>
-            <Link to="/security" className={this.state.active.security}>
-              <img className="sidebaricon" src={this.state.icons.security} />
-              {lang.navBarSecurityButton}
+          <div className={`sidebaritem ${this.state.active.statuspage}`}>
+            <Link to="/statuspage" className={this.state.active.statuspage}>
+              <img className="sidebaricon" src={this.state.icons.statuspage} />
+              Status
             </Link>
-            {this.renderRectRound('/security')}
+            {this.renderRectRound('/statuspage')}
           </div>
           <div className={`sidebaritem ${this.state.active.about}`}>
             <Link to="/about" className={this.state.active.about}>
@@ -243,8 +362,6 @@ class Sidebar extends Component {
         </ul>
         <div className="connections sidebar-section-container">
           <p>{`${lang.nabBarNetworkInfoSyncing} ${progressBar.toFixed(2)}%`}</p>
-          <p>{`( Total Headers Synced: ${this.props.headers} )`}</p>
-          <p>{`( ${lang.nabBarNetworkInfoBlock} ${this.props.blocks} ${lang.conjuctionOf} ${this.props.headers} )`}</p>
           <div className="progress custom_progress">
             <div
               className="progress-bar progress-bar-success progress-bar-striped"
@@ -255,60 +372,46 @@ class Sidebar extends Component {
               style={{ width: `${progressBar.toFixed(2)}%`, backgroundColor: '#8DA557' }}
             />
           </div>
+          <p>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
           <p>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
+        </div>
+        <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
+          { this.props.running //eslint-disable-line
+            ? this.props.unlocked_until === 0
+              ? <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Unlock Wallet</span>
+              : <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Lock Wallet</span> :
+            null
+          }
         </div>
         <div className="sidebar-section-container">
           {this.props.running //eslint-disable-line
             ? !this.props.stopping
-              ? <button className="stopStartButton" onClick={this.saveAndStopWallet}>{lang.stopWallet}</button>
+              ? <button className="stopStartButton" onClick={this.props.startStopWalletHandler}>{lang.stopWallet}</button>
               : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ?
-              !this.props.walletInstalled
+              this.props.walletInstalled
                 ?
-                <Link to="/downloads" id="a-tag-button-wrapper">
-                  <button className="stopStartButton">
-                    {lang.clickInstallWallet}
-                  </button>
-                </Link>
-                :
                 <button
                   className="stopStartButton"
-                  onClick={this.startWallet}
+                  onClick={this.props.startStopWalletHandler}
                 >
                   {lang.startWallet}
                 </button>
+                :
+                null
+
               : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
           }
+
           <br />
-          {this.state.newVersionAvailable && this.props.walletInstalled
-            ?
-            <Link to="/downloads" id="a-tag-button-wrapper">
-              <button className="stopStartButton">
-                {lang.clickUpdateWallet}
-              </button>
-            </Link>
-            :
-            null
-          }
+          <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />
         </div>
+        {this.renderDialog()}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    starting: state.wallet.starting,
-    running: state.wallet.running,
-    stopping: state.wallet.stopping,
-    off: state.wallet.off,
-    blocks: state.wallet.blocks,
-    headers: state.wallet.headers,
-    connections: state.wallet.connections,
-    walletInstalled: state.wallet.walletInstalled,
-    versionformatted: state.wallet.versionformatted
-  };
-};
+export default Sidebar;
 
-export default withRouter(connect(mapStateToProps)(Sidebar));

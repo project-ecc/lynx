@@ -8,7 +8,7 @@ const remote = require('electron').remote;
 const config = require('../../../config');
 import { getConfUri, getDebugUri } from '../../services/platform.service';
 
-
+import $ from 'jquery';
 const shell = remote.shell;
 const app = remote.app;
 
@@ -20,15 +20,6 @@ class SettingsDebug extends Component {
     super(props);
     this.state = {
       command_input: '',
-      currentHeight: 0,
-      networkbestblock: 0,
-      numpeers: 0,
-      sslversion: '',
-      builddate: '',
-      startuptime: '',
-      lastblocktime: '',
-      testnet: false,
-      version: '',
       consoleOpen: false,
       commandList: [],
       responseList: [],
@@ -43,43 +34,6 @@ class SettingsDebug extends Component {
   }
 
   componentDidMount() {
-    this.getInfo();
-  }
-
-  getInfo() {
-    const self = this;
-    wallet.getInfo().then((data) => {
-      self.setState({
-        testnet: data.testnet,
-        version: data.version,
-      });
-    }).catch((err) => {
-      self.setState({
-        testnet: false,
-        version: '',
-      });
-      if (err.message !== 'Loading block index...' && err.message !== 'connect ECONNREFUSED 127.0.0.1:19119') {
-        event.emit('animate', err.message);
-      }
-    });
-
-    wallet.getblockcount().then((height) => {
-      self.setState({ currentHeight: height });
-    }).catch((error) => {
-      self.setState({currentHeight: 0 });
-    });
-
-    wallet.getpeerinfo().then((peers) => {
-      let bestHeight = 0
-      for (let i = 0; i < peers.length; i++) {
-        if (peers[i]['startingheight'] > bestHeight) {
-          bestHeight = peers[i]['startingheight'];
-        }
-      }
-      self.setState({ networkbestblock: bestHeight, numpeers: peers.length });
-    }).catch((error) => {
-      self.setState({ networkbestblock: 0, numpeers: 0 });
-    });
   }
 
   handleInputChange(event) {
@@ -134,6 +88,9 @@ class SettingsDebug extends Component {
 
   onenter() {
     this.handleNewCommand();
+    $("#console").animate({
+      scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
+    }, 1000);
   }
 
   handleKeyUp(event) {
@@ -224,6 +181,10 @@ class SettingsDebug extends Component {
           });
 
           this.setState({ commandList: currentList, navigation: currentList.length });
+
+          $("#console").animate({
+            scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
+          }, 100);
         }).catch((error) => {
           currentList.push({
             time,
@@ -246,94 +207,11 @@ class SettingsDebug extends Component {
     if (!this.state.consoleOpen) {
       return (
         <div>
-          <p className="btn_console" onClick={this.switchLayout.bind(this)}>{lang.console}</p>
           <div className="col-md-12">
-            <p className="subtitle">{config.guiName}</p>
+            <p className="subtitle">Debug Console</p>
             <div className="row">
               <div className="col-md-4">
-                <p className="desc">Version:</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{appVersion}</p>
-              </div>
-            </div>
-            <p className="subtitle">{config.coinName}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugClientName}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.version}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugSslVersion}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.sslversion}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugBuildDate}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.builddate}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugStartupTime}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.startuptime}</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-12">
-            <p className="subtitle">{lang.network}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugNumberOfConnections}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.numpeers}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugTestNet}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc"><input style={{pointerEvents:'none', marginLeft: '-2px'}} className="radios" type="radio" checked={this.state.testnet}/></p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-12">
-            <p className="subtitle">{lang.settingsDebugBlockChain}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugCurrentNumberOfBlocks}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.currentHeight}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugEstimatedTotalBlocks}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.networkbestblock}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-4">
-                <p className="desc">{lang.settingsDebugLastBlockTime}</p>
-              </div>
-              <div className="col-md-4">
-                <p className="desc">{this.state.lastblocktime}</p>
+                <p className="btn_files_open" onClick={this.switchLayout.bind(this)}>{lang.console}</p>
               </div>
             </div>
           </div>
@@ -360,7 +238,7 @@ class SettingsDebug extends Component {
       <div>
         <p className="btn_console" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</p>
         <div className="row console_body">
-          <div className="col-md-12 console_wrapper">
+          <div id="console" className="col-md-12 console_wrapper">
             {this.renderHelpMsg()}
             {this.state.commandList.map((cmd, index) => {
               let res = cmd.res;
@@ -428,9 +306,7 @@ class SettingsDebug extends Component {
           <div className="panel panel-default">
             <div className="panel-body">
               <div className="row">
-
                 {this.renderBody()}
-
               </div>
             </div>
           </div>
