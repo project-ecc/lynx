@@ -88,7 +88,7 @@
     "cross-env": "^5.0.0",
     "cross-spawn": "^5.1.0",
     "css-loader": "^0.28.3",
-    "electron": "~>1.7.12",
+    "electron": "~>1.8.2-beta5 ",
     "electron-builder": "^19.8.0",
     "electron-devtools-installer": "^2.2.0",
     "enzyme": "^2.9.1",
@@ -140,7 +140,7 @@
   },
   "dependencies": {
     "bitcoin-core": "git://github.com/cryptounited/bitcoin-core.git",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "~>4.1.2 ",
     "bootstrap-material-design": "^0.5.10",
     "checksum": "^0.1.1",
     "child_process": "^1.0.2",
