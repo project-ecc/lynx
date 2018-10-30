@@ -140,7 +140,7 @@
   },
   "dependencies": {
     "bitcoin-core": "git://github.com/cryptounited/bitcoin-core.git",
-    "bootstrap": "~>4.1.2 ",
+    "bootstrap": ">=4.1.2 ",
     "bootstrap-material-design": "^0.5.10",
     "checksum": "^0.1.1",
     "child_process": "^1.0.2",
