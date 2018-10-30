@@ -235,7 +235,7 @@ class SettingsDebug extends Component {
       );
     }
     return (
-      <div>
+      <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12">
         <p className="btn_console" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</p>
         <div className="row console_body">
           <div id="console" className="col-md-12 console_wrapper">

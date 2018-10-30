@@ -23,16 +23,8 @@ export default class About extends Component {
             <div className="panel-body text-center larger-text">
               <div className="col-md-12 col-lg-12 col-xs-12">
                 <h2>{config.coinName}</h2>
-              </div>
-              <div className="col-md-6 col-lg-6 col-xs-6">
-                <img src={bitcoinImage} style={{ width: '25%' }} alt="" />
-                <h3><a style={{ cursor: 'pointer' }} onClick={this.openLink.bind(this, config.bitcointalkLink)}>{config.bitcointalkText}</a></h3>
-              </div>
-              <div className="col-md-6 col-lg-6 col-xs-6">
-                <img src={githubImage} style={{ width: '25%' }} alt="" />
-                <div className="section">
-                  <h3><a style={{ cursor: 'pointer' }} onClick={this.openLink.bind(this, config.githubLink)}> {config.githubText} </a></h3>
-                </div>
+                <img src={bitcoinImage} style={{ width: '15%', margin: '0 50px 0 0', cursor: 'pointer'}} alt="" onClick={this.openLink.bind(this, config.bitcointalkLink)}/>
+                <img src={githubImage} style={{ width: '15%', cursor: 'pointer' }} alt="" onClick={this.openLink.bind(this, config.githubLink)}/>
               </div>
             </div>
           </div>
