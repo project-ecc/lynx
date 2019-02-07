@@ -139,14 +139,14 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "bitcoin-core": "git://github.com/cryptounited/bitcoin-core.git",
+    "eccoin-js": "git://github.com/project-ecc/eccoin-js.git",
     "bootstrap": ">=4.1.2 ",
     "bootstrap-material-design": "^0.5.10",
     "checksum": "^0.1.1",
     "child_process": "^1.0.2",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
-    "electron-download-manager": "git+https://github.com/cryptounited/electron-download-manager.git",
+    "electron-download-manager": "git+https://github.com/project-ecc/electron-download-manager.git",
     "electron-settings": "^3.1.1",
     "electron-updater": "^2.20.2",
     "events": "^1.1.1",

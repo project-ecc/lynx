@@ -1,6 +1,9 @@
 const fs = require('fs');
 const request = require('request-promise-native');
 import { grabWalletDir } from '../services/platform.service';
+import config from '../../config.json';
+
+const releaseUrl = config.releaseUrl;
 
 export default class Updater {
 
@@ -13,7 +16,7 @@ export default class Updater {
       if (err) { throw err; } else {
         const version = data.split(' ')[1];
         const opts = {
-          url: 'https://api.github.com/repos/Greg-Griffith/eccoin/releases/latest',
+          url: releaseUrl,
           headers: {
             'User-Agent': 'request'
           },

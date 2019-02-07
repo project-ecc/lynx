@@ -1,4 +1,4 @@
-import Client from 'bitcoin-core';
+import Client from 'eccoin-js';
 import shell from 'node-powershell';
 import fs from 'fs';
 

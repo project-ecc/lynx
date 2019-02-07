@@ -30,7 +30,7 @@ export function grabWalletDir() {
  */
 
 export function formatDownloadURL(product, version, platform) {
-  return `https://github.com/project-ecc/${product}/releases/download/${version}/${product}-${version}-${platform}.zip`;
+  return config.humanReleaseUrl + `/download/${product}${version}/${product}-v${version}-${platform}.zip`;
 }
 
 
