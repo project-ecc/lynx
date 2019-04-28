@@ -22,7 +22,8 @@ const mapStateToProps = state => {
     connections: state.wallet.connections,
     walletInstalled: state.wallet.walletInstalled,
     versionformatted: state.wallet.versionformatted,
-    unlocked_until: state.wallet.unlocked_until
+    unlocked_until: state.wallet.unlocked_until,
+    encrypted: state.wallet.encrypted
   };
 };
 
