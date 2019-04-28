@@ -104,7 +104,6 @@ class Sidebar extends Component {
       const exists = await updater.checkForWalletVersion();
       if (exists) {
         updater.checkWalletVersion((result) => {
-          //          this.setState(() => { return { newVersionAvailable: result, }; });
         });
       }
     } catch (err) { console.log(err); }
@@ -414,4 +413,3 @@ class Sidebar extends Component {
 }
 
 export default Sidebar;
-
