@@ -1,7 +1,7 @@
 {
   "name": "Lynx",
   "productName": "Lynx",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Electron application providing the graphical user interface for a bitcoin based cryptocurrency",
   "scripts": {
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
@@ -37,7 +37,7 @@
   },
   "browserslist": "electron 1.6",
   "repository": "git+https://github.com/project-ecc/lynx.git",
-  "author": "Greg Griffith <griffith@cryptounited.com> (https://github.com/greg-griffith)",
+  "author": "Eccoin Developers (https://github.com/project-ecc/lynx)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/project-ecc/lynx/issues"
