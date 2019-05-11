@@ -14,7 +14,7 @@ export default class Updater {
   checkWalletVersion(cb) {
     return fs.readFile(`${grabWalletDir()}wallet-version.txt`, 'utf8', (err, data) => {
       if (err) { throw err; } else {
-        const version = data.split(' ')[1];
+        const version = data.split(' ')[1].trim();
         const opts = {
           url: releaseUrl,
           headers: {
