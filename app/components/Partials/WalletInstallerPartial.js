@@ -99,6 +99,12 @@ class WalletInstallerPartial extends React.Component {
             event.emit('show', 'Wallet downloaded and ready to start.');
           });
 
+          const platFileName = getPlatformFileName();
+          fs.rename(walletDirectory + "eccoin-"+ latestDaemon +"/bin/eccoind", walletDirectory + platFileName, function (err) {
+            if (err) throw err
+            console.log('Successfully renamed - AKA moved!')
+          })
+
           resolve(true);
         } else {
           reject(downloaded);

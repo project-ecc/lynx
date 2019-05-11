@@ -30,7 +30,10 @@ export function grabWalletDir() {
  */
 
 export function formatDownloadURL(product, version, platform) {
-  return config.humanReleaseUrl + `/download/${product}${version}/${product}-v${version}-${platform}.zip`;
+  if (platform == "win32" || platform == "win64"){
+    return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.zip`;
+  }
+  return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.tar.gz`;
 }
 
 
@@ -137,4 +140,3 @@ export function getConfUri() {
 export function getDebugUri() {
   return `${grabCoinDir()}debug.log`;
 }
-

@@ -23,7 +23,7 @@ export default class Updater {
         };
         return request(opts).then((response) => {
           const parsed = JSON.parse(response);
-          const githubVersion = parsed.name.split(' ')[1];
+          const githubVersion = parsed[0].name.split(' ')[1];
           if (version !== githubVersion) {
             cb(true);
           } else {

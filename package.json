@@ -176,7 +176,8 @@
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
     "request-progress": "^3.0.0",
-    "source-map-support": "^0.4.15"
+    "source-map-support": "^0.4.15",
+    "tar": "^4.4.8"
   },
   "devEngines": {
     "node": ">=6.x",

@@ -1,9 +1,14 @@
 const fs = require('fs');
 const request = require('request-promise-native');
 const progress = require('request-progress');
-const checksum = require('checksum');
+const crypto = require('crypto');
 const extract = require('extract-zip');
 const event = require('../utils/eventhandler');
+const zlib = require('zlib');
+const tar = require('tar');
+
+import { getPlatformName, getPlatformFileName } from '../services/platform.service';
+
 /**
  * This function downloads files and can either unzip them or validate them against a checksum value (cs)
  * @param srcUrl
@@ -67,8 +72,15 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
 
       event.emit('unzipping-file', { message: 'Unzipping..' });
       if(unzip) {
-        const unzipped = await unzipFile(fileName, destFolder, true);
-        if(!unzipped) reject(unzipped);
+        if (getPlatformName() == "win32" || getPlatformName() == "win64") {
+          const unzipped = await unzipFile(fileName, destFolder, true);
+          if(!unzipped) reject(unzipped);
+        }
+        else {
+          console.log("about to unpack tar file");
+          const unzipped = await unpackFile(fileName, destFolder, true);
+          if(!unzipped) reject(unzipped);
+        }
       }
       event.emit('unzipping-file', { message: 'Unzip Complete' });
 
@@ -114,6 +126,45 @@ export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
     });
   });
 }
+
+/**
+ * This function unpacks a tar file in the download function.
+ * @param fileToUnzip
+ * @param targetDirectory
+ * @param deleteOldZip
+ * @returns {Promise}
+ */
+export function unpackFile(fileToUnpack, targetDirectory, deleteOldZip = false) {
+  return new Promise((resolve, reject) =>{
+    // extracting a directory
+    tar.x(  // or tar.extract(
+      {
+        file: fileToUnpack,
+        cwd: targetDirectory
+      }
+    ).then(_=> {
+        event.emit('unzipping-file', { message: 'Unpacked!' });
+        console.log('unpacked successfully.');
+        if(deleteOldZip){
+          if (fs.existsSync(fileToUnpack)) {
+            fs.unlink(fileToUnpack, (deleteFileError) => {
+              if (deleteFileError) {
+                console.log(deleteFileError);
+                reject(deleteFileError)
+              } else {
+                event.emit('unzipping-file', { message: 'Cleaning up..' });
+                console.log('File successfully deleted');
+
+                resolve(true);
+              }
+            });
+          }
+        }
+        resolve(true);
+      });
+  });
+}
+
 /**
  * This function validates the checksum of a file against an inputted checksum
  * @param fileName
@@ -123,14 +174,18 @@ export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
 export function validateChecksum (fileName, toValidateAgainst) {
   return new Promise((resolve, reject) =>{
     event.emit('verifying-file');
-    checksum.file(fileName, (error, sum) => {
 
-      console.log(`checksum from file ${sum}`);
+    var shasum = crypto.createHash('sha256');
+    console.log(fileName)
+    var s = fs.ReadStream(fileName);
+    s.on('data', function(d) { shasum.update(d); });
+    s.on('end', function() {
+      var sha256 = shasum.digest('hex');
+      console.log(`checksum from file ${sha256}`);
       console.log(`validating against ${toValidateAgainst}`);
-      console.log('Done downloading verifying');
-
+      console.log('Done downloading. verifying...');
       event.emit('verifying-file');
-      if (toValidateAgainst === sum) {
+      if (toValidateAgainst === sha256) {
         resolve(true);
       } else {
         reject('Checksums do not match!');
