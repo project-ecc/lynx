@@ -6,7 +6,7 @@ import { traduction } from '../../lang/lang';
 const event = require('../../utils/eventhandler');
 const lang = traduction();
 import config from '../../../config.json';
-import { grabWalletDir, getPlatformFileName, formatDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
+import { grabWalletDir, getPlatformFileName, getPlatformFileExtension, formatDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
 import { downloadFile } from '../../utils/downloader';
 
 class WalletInstallerPartial extends React.Component {
@@ -100,7 +100,8 @@ class WalletInstallerPartial extends React.Component {
           });
 
           const platFileName = getPlatformFileName();
-          fs.rename(walletDirectory + "eccoin-"+ latestDaemon +"/bin/eccoind", walletDirectory + platFileName, function (err) {
+          const fileExtension = getPlatformFileExtension();
+          fs.rename(walletDirectory + "eccoin-"+ latestDaemon +"/bin/eccoind" + fileExtension, walletDirectory + platFileName, function (err) {
             if (err) throw err
             console.log('Successfully renamed - AKA moved!')
           })

@@ -71,6 +71,21 @@ export function getPlatformFileName() {
   }
 }
 
+export function getPlatformFileExtension() {
+  if (process.platform === 'linux') {
+
+    return "";
+
+  } else if (process.platform === 'darwin') {
+
+    return "";
+
+  } else if (process.platform.indexOf('win') > -1) {
+
+    return ".exe";
+  }
+}
+
 
 export function getPlatformName() {
   if (process.platform === 'linux') {
