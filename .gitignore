@@ -62,6 +62,7 @@ typings/
 .idea/
 dll/
 package-lock.json
+build/
 flow-typed/npm/*
 app/dist/*
 app/main.prod.js
