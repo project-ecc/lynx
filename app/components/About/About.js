@@ -36,8 +36,7 @@ export default class About extends Component {
                 <p>If you like this project and want to show your support for future development of this and other free software, you may send a donation to</p>
               </div>
               <div className="col-md-12 col-lg-12 col-xs-12">
-                <p>BTC: 1LWdVxMkdYDSJKoLEXddUKFh5b2AWqu4M6</p>
-                <p>BCH: 1LWdVxMkdYDSJKoLEXddUKFh5b2AWqu4M6</p>
+                <p>ECC: ESnoQdpHH5vLafzj9nvXqRugPSkd2ZNrch</p>
               </div>
             </div>
           </div>
