@@ -63,7 +63,7 @@ export function getPlatformFileName() {
 
   } else if (process.platform === 'darwin') {
 
-    return `${config.daemonName}.app`;
+    return `${config.daemonName}`;
 
   } else if (process.platform.indexOf('win') > -1) {
 
@@ -94,7 +94,7 @@ export function getPlatformName() {
 
   } else if (process.platform === 'darwin') {
 
-    return "mac";
+    return "osx64";
 
   } else if (process.platform.indexOf('win') > -1) {
 
@@ -131,7 +131,7 @@ export function getPlatformWalletUri() {
     return `${grabWalletDir()}${getPlatformFileName()}`;
   } else if (process.platform === 'darwin') {
     // OSX
-    return `${grabWalletDir()}${getPlatformFileName()}/Contents/MacOS/${config.daemonName}`;
+    return `${grabWalletDir()}${getPlatformFileName()}`;
   } else if (process.platform.indexOf('win') > -1) {
     // Windows
     return `${grabWalletDir()}${getPlatformFileName()}`;
