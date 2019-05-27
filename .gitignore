@@ -62,4 +62,8 @@ typings/
 .idea/
 dll/
 package-lock.json
-Sapling.iml
+build/
+flow-typed/npm/*
+app/dist/*
+app/main.prod.js
+app/main.prod.js.map

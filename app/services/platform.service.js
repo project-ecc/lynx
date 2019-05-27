@@ -30,7 +30,10 @@ export function grabWalletDir() {
  */
 
 export function formatDownloadURL(product, version, platform) {
-  return config.humanReleaseUrl + `/download/${product}${version}/${product}-v${version}-${platform}.zip`;
+  if (platform == "win32" || platform == "win64"){
+    return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.zip`;
+  }
+  return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.tar.gz`;
 }
 
 
@@ -60,11 +63,26 @@ export function getPlatformFileName() {
 
   } else if (process.platform === 'darwin') {
 
-    return `${config.daemonName}.app`;
+    return `${config.daemonName}`;
 
   } else if (process.platform.indexOf('win') > -1) {
 
     return os.arch() === 'x32' ? `${config.daemonName}-win32.exe` : `${config.daemonName}-win64.exe`;
+  }
+}
+
+export function getPlatformFileExtension() {
+  if (process.platform === 'linux') {
+
+    return "";
+
+  } else if (process.platform === 'darwin') {
+
+    return "";
+
+  } else if (process.platform.indexOf('win') > -1) {
+
+    return ".exe";
   }
 }
 
@@ -76,7 +94,7 @@ export function getPlatformName() {
 
   } else if (process.platform === 'darwin') {
 
-    return "mac";
+    return "osx64";
 
   } else if (process.platform.indexOf('win') > -1) {
 
@@ -113,7 +131,7 @@ export function getPlatformWalletUri() {
     return `${grabWalletDir()}${getPlatformFileName()}`;
   } else if (process.platform === 'darwin') {
     // OSX
-    return `${grabWalletDir()}${getPlatformFileName()}/Contents/MacOS/${config.daemonName}`;
+    return `${grabWalletDir()}${getPlatformFileName()}`;
   } else if (process.platform.indexOf('win') > -1) {
     // Windows
     return `${grabWalletDir()}${getPlatformFileName()}`;
@@ -137,4 +155,3 @@ export function getConfUri() {
 export function getDebugUri() {
   return `${grabCoinDir()}debug.log`;
 }
-

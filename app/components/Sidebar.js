@@ -8,6 +8,7 @@ import { updater } from '../utils/updater';
 import { traduction } from '../lang/lang';
 import {getErrorFromCode} from "../services/error.service";
 import WalletService from '../services/wallet.service'
+import wallet from '../utils/wallet';
 
 const event = require('../utils/eventhandler');
 const { ipcRenderer } = require('electron');
@@ -27,6 +28,7 @@ class Sidebar extends Component {
     blocks: PropTypes.number,
     headers: PropTypes.number,
     connections: PropTypes.number,
+    encrypted: PropTypes.bool,
     walletInstalled: PropTypes.bool,
   };
   constructor(props) {
@@ -69,6 +71,7 @@ class Sidebar extends Component {
     this.onPassPhraseChange = this.onPassPhraseChange.bind(this);
     this.onTimeLChange = this.onTimeLChange.bind(this);
     this.checkboxChange = this.checkboxChange.bind(this);
+    this.checkIfEncrypted = this.checkIfEncrypted.bind(this);
   }
 
   componentDidMount() {
@@ -99,12 +102,28 @@ class Sidebar extends Component {
     clearInterval(this.timerCheckWalletVersion);
   }
 
+  checkIfEncrypted(){
+    wallet.help().then((data) => {
+      if (data.indexOf('walletlock') > -1) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catch((err) => {
+      console.log("error checking if encrypted: ", err);
+      var self = this;
+      setTimeout(function(){
+        self.checkIfEncrypted();
+      }, 1000);
+    });
+  }
+
   async checkWalletVersion() {
     try {
       const exists = await updater.checkForWalletVersion();
       if (exists) {
         updater.checkWalletVersion((result) => {
-          //          this.setState(() => { return { newVersionAvailable: result, }; });
+            this.state.newVersionAvailable = result;
         });
       }
     } catch (err) { console.log(err); }
@@ -303,7 +322,6 @@ class Sidebar extends Component {
     if (progressBar >= 100 && this.props.blocks < this.props.headers) {
       progressBar = 99.99;
     }
-
     return (
       <div className="sidebar" style={{zIndex: '10'}}>
         <div className="userimage">
@@ -375,14 +393,16 @@ class Sidebar extends Component {
           <p>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
           <p>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
-        <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
-          { this.props.running //eslint-disable-line
-            ? this.props.unlocked_until === 0
-              ? <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Unlock Wallet</span>
-              : <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Lock Wallet</span> :
-            null
-          }
-        </div>
+        { this.props.running && this.props.encrypted //eslint-disable-line
+          ? this.props.unlocked_until === 0
+            ? <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
+                <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Unlock Wallet</span>
+              </div>
+            : <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
+                <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Lock Wallet</span>
+              </div>
+          : null
+        }
         <div className="sidebar-section-container">
           {this.props.running //eslint-disable-line
             ? !this.props.stopping
@@ -414,4 +434,3 @@ class Sidebar extends Component {
 }
 
 export default Sidebar;
-

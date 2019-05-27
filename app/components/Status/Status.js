@@ -48,7 +48,6 @@ class StatusPage extends Component {
     this.openModalForEncryption = this.openModalForEncryption.bind(this);
     this.openModalToChangePassword = this.openModalToChangePassword.bind(this);
     this.cancelModal = this.cancelModal.bind(this);
-    this.checkIfEncrypted = this.checkIfEncrypted.bind(this);
     this._handleGenericFormChange = this._handleGenericFormChange.bind(this);
   }
 
@@ -64,21 +63,6 @@ class StatusPage extends Component {
     });
   }
 
-  checkIfEncrypted(){
-    wallet.help().then((data) => {
-      if (data.indexOf('walletlock') > -1) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((err) => {
-      console.log("error checking if encrypted: ", err);
-      var self = this;
-      setTimeout(function(){
-        self.checkIfEncrypted();
-      }, 1000);
-    });
-  }
   async encryptWallet(){
 
     let message = ''

@@ -38,7 +38,7 @@ class CurrentAddresses extends Component {
   getAllAddresses() {
     const self = this;
     self.setState({ requesting: true });
-    wallet.listAllAccounts().then((data) => {
+    wallet.listaddresses().then((data) => {
       this.setState({ existingAddresses: data, requesting: false });
     }).catch((err) => {
       handleWalletError(err, this.props.history);
@@ -54,22 +54,14 @@ class CurrentAddresses extends Component {
     let data = [];
     if (this.state.existingAddresses !== null){
       data = this.state.existingAddresses;
+      console.log(data)
     }
     return (
       <div>
         <div className="addresses_table">
           <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-            <div className="col-md-2 trans_col">
-              <p className="header">{lang.account}</p>
-            </div>
             <div className="col-md-5 trans_col">
               <p className="header">{lang.address}</p>
-            </div>
-            <div className="col-md-3 trans_col">
-              <p className="header">{lang.amount}</p>
-            </div>
-            <div className="col-md-2 trans_col">
-              <p className="header">{lang.confirmations}</p>
             </div>
           </div>
           {data.map((address, index) => {
@@ -78,19 +70,10 @@ class CurrentAddresses extends Component {
               cr = 'stripped';
             }
             return (
-              <div key={`address_${index}`} onClick={self.rowClick.bind(self, address.address)}>
+              <div key={`address_${index}`} onClick={self.rowClick.bind(self, address)}>
                 <div className={`row trans_row ${cr}`}>
-                  <div className="col-md-2 trans_col">
-                    <p style={{ margin: '0px' }}><span className="desc1">{address.account}</span></p>
-                  </div>
                   <div className="col-md-5 trans_col">
-                    <p style={{ margin: '0px' }}><span className="desc1">{address.address}</span></p>
-                  </div>
-                  <div className="col-md-3 trans_col">
-                    <p style={{ margin: '0px' }}><span className="desc1">{address.amount}</span></p>
-                  </div>
-                  <div className="col-md-2 trans_col">
-                    <p style={{ margin: '0px' }}><span className="desc1">{address.confirmations}</span></p>
+                    <p style={{ margin: '0px' }}><span className="desc1">{address}</span></p>
                   </div>
                 </div>
               </div>

@@ -137,9 +137,9 @@ class Wallet {
     });
   }
 
-  async listAllAccounts() {
+  async listaddresses() {
     return new Promise((resolve, reject) => {
-      this.client.listReceivedByAddress(0, true).then((addresses) => {
+      this.client.listAddresses().then((addresses) => {
         return resolve(addresses);
       }).catch((err) => {
         return reject(err);
@@ -264,7 +264,6 @@ class Wallet {
 
   walletstart(cb) {
     let path = getPlatformWalletUri();
-    console.log(path);
     if (process.platform === 'linux') {
       runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
         return cb(true);

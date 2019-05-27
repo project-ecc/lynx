@@ -31,19 +31,12 @@ export default class About extends Component {
         </div>
         <div className="col-md-12">
           <div className="panel panel-default">
-            <div className="panel-body text-center larger-text">
-              <div className="col-md-12 col-lg-12 col-xs-12 " style={{ marginBottom: '25px' }}>
-                <h4>This User Interface for {config.coinName} is built off of the Sapling code base created by <a style={{ cursor: 'pointer' }} onClick={this.openLink.bind(this, 'https://www.cryptounited.io/')}>CryptoUnited 2017-2018 &#169;</a></h4>
-                <p>The Sapling github can be found <a style={{ cursor: 'pointer' }} onClick={this.openLink.bind(this, 'https://www.github.com/cryptounited/sapling')}> HERE. </a></p>
-              </div>
-            </div>
             <div className="panel-body larger-text">
               <div className="col-md-12 col-lg-12 col-xs-12">
                 <p>If you like this project and want to show your support for future development of this and other free software, you may send a donation to</p>
               </div>
               <div className="col-md-12 col-lg-12 col-xs-12">
-                <p>BTC: 1LWdVxMkdYDSJKoLEXddUKFh5b2AWqu4M6</p> 
-                <p>BCH: 1LWdVxMkdYDSJKoLEXddUKFh5b2AWqu4M6</p>
+                <p>ECC: ESnoQdpHH5vLafzj9nvXqRugPSkd2ZNrch</p>
               </div>
             </div>
           </div>
