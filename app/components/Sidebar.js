@@ -72,6 +72,7 @@ class Sidebar extends Component {
     this.onTimeLChange = this.onTimeLChange.bind(this);
     this.checkboxChange = this.checkboxChange.bind(this);
     this.checkIfEncrypted = this.checkIfEncrypted.bind(this);
+    this.buttonClick = this.buttonClick.bind(this);
   }
 
   componentDidMount() {
@@ -83,7 +84,6 @@ class Sidebar extends Component {
 
     this.checkWalletVersion();
 
-
     ipcRenderer.once('wallet-version-updated', (e, err) => {
       this.checkWalletVersion();
     });
@@ -91,6 +91,11 @@ class Sidebar extends Component {
     this.timerCheckWalletState = setInterval(() => {
       this.checkWalletState();
     }, 3000);
+  }
+
+  buttonClick() {
+      this.props.startStopWalletHandler();
+      this.checkWalletState();
   }
 
   componentWillReceiveProps(props) {
@@ -406,21 +411,12 @@ class Sidebar extends Component {
         <div className="sidebar-section-container">
           {this.props.running //eslint-disable-line
             ? !this.props.stopping
-              ? <button className="stopStartButton" onClick={this.props.startStopWalletHandler}>{lang.stopWallet}</button>
+              ? <button className="stopStartButton" onClick={this.buttonClick}>{lang.stopWallet}</button>
               : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
-              ?
-              this.props.walletInstalled
-                ?
-                <button
-                  className="stopStartButton"
-                  onClick={this.props.startStopWalletHandler}
-                >
-                  {lang.startWallet}
-                </button>
-                :
-                null
-
+              ? this.props.walletInstalled
+                ? <button className="stopStartButton" onClick={this.buttonClick}>{lang.startWallet}</button>
+                : null
               : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
           }
 
