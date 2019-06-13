@@ -130,13 +130,9 @@ class Wallet {
     });
   }
 
-  async getTransactions(account, count, skip) {
+  async getTransactions(count, skip) {
     return new Promise((resolve, reject) => {
-      let a = account;
-      if (a === null) {
-        a = '*';
-      }
-      this.client.listTransactions(a, count, skip).then((transactions) => {
+      this.client.listTransactions(count, skip).then((transactions) => {
         return resolve(transactions);
       }).catch((err) => {
         return reject(err);
