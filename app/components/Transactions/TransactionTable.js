@@ -44,7 +44,7 @@ class TransactionTable extends Component {
 
       self.setState({ requesting: true });
 
-      wallet.getTransactions(null, countTras, 0).then((data) => {
+      wallet.getTransactions(countTras, 0).then((data) => {
         if (this.state.requesting) {
           self.setState({ transactions: data, requesting: false });
         }
@@ -103,7 +103,7 @@ class TransactionTable extends Component {
     const p = self.state.page + 1;
     self.setState({ requesting: true, page: p });
 
-    wallet.getTransactions(null, countTras, countTras * p).then((data) => {
+    wallet.getTransactions(countTras, countTras * p).then((data) => {
       if (self.state.requesting) {
         if (data.length > 0) {
           for (let i = 0; i < data.length; i += 1) {
@@ -134,7 +134,7 @@ class TransactionTable extends Component {
       let p = self.state.page - 1;
       self.setState({ requesting: true, page: p });
 
-      wallet.getTransactions(null, countTras, countTras * p).then((data) => {
+      wallet.getTransactions(countTras, countTras * p).then((data) => {
         if (self.state.requesting) {
           if (data.length > 0) {
             for (let i = 0; i < data.length; i += 1) {

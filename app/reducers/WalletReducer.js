@@ -2,6 +2,7 @@ import {
   GET_BLOCKCHAIN_INFO,
   GET_INFO,
   GET_WALLET_INFO,
+  GET_MINING_INFO,
   SET_UNLOCKED_UNTIL,
   EVALUATE_STATUS,
   IS_WALLET_INSTALLED,
@@ -37,6 +38,7 @@ const initialState = {
   moneysupply: 0,
   encrypted: false,
   unlocked_until: 0,
+  mining: false,
   staking: false,
   paytxfee: 0,
   relayfee: 0,
@@ -80,7 +82,6 @@ export default (state = initialState, action) => {
         connections: action.payload.connections,
         difficulty: action.payload.difficulty,
         encrypted: action.payload.encrypted,
-        staking: action.payload.staking,
         paytxfee: action.payload.paytxfee,
         relayfee: action.payload.relayfee,
       };
@@ -89,6 +90,12 @@ export default (state = initialState, action) => {
         ...state,
         unconfirmed_balance: action.payload.unconfirmed_balance,
         immature_balance: action.payload.immature_balance,
+      };
+    case GET_MINING_INFO:
+      return {
+        ...state,
+        mining: action.payload.generate,
+        staking: action.payload.generatepos,
       };
     case SET_UNLOCKED_UNTIL:
       return {

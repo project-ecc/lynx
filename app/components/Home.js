@@ -12,9 +12,6 @@ const event = require('../utils/eventhandler');
 
 const lang = traduction();
 
-const lockedPad = require('../../resources/images/padclose.png');
-const unlockedPad = require('../../resources/images/padopen.png');
-
 class Home extends Component {
   static propTypes = {
     unlocked_until: PropTypes.number,

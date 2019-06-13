@@ -6,10 +6,13 @@ import { getPlatformWalletUri, getPlatformFileName, getPlatformName, grabWalletD
 import { traduction } from '../lang/lang';
 
 const event = require('../utils/eventhandler');
+const walletUri = getPlatformWalletUri();
+var firstRun = true;
 
 export const GET_BLOCKCHAIN_INFO = 'GET_BLOCKCHAIN_INFO';
 export const GET_INFO = 'GET_INFO';
 export const GET_WALLET_INFO = 'GET_WALLET_INFO';
+export const GET_MINING_INFO = 'GET_MINING_INFO';
 export const SET_UNLOCKED_UNTIL = 'SET_UNLOCKED_UNTIL';
 export const EVALUATE_STATUS = 'EVALUATE_STATUS';
 export const IS_WALLET_INSTALLED = 'IS_WALLET_INSTALLED';
@@ -46,6 +49,7 @@ export const getInfoGet = data => ({
     connections: data.connections,
     difficulty: data.difficulty,
     encrypted: data.encrypted,
+    mining: data.mining,
     staking: data.staking,
     paytxfee: data.paytxfee,
     relayfee: data.relayfee,
@@ -104,6 +108,19 @@ export const getWalletInfo = () => (dispatch) => {
     dispatch(processError(err));
   });
 };
+export const getMiningInfo = () => (dispatch) => {
+  wallet.getMiningInfo().then(data => {
+    dispatch({
+      type: GET_MINING_INFO,
+      payload: {
+        generate: data.generate,
+        generatepos: data.generatepos,
+      },
+    });
+  }).catch((err) => {
+    dispatch(processError(err));
+  });
+};
 
 export const setUnlockedUntil = data => ({
   type: SET_UNLOCKED_UNTIL,
@@ -143,20 +160,25 @@ export const startStopWalletHandler = () => (dispatch, getstate) => {
   } else if (state.running) {
     dispatch(stopWallet());
   } else {
+    console.log(state);
     event.emit('animate', lang.walletBusyState);
   }
 };
 
+export const stakingStatusHandler = () => (dispatch) => {
+  dispatch(getMiningInfo());
+};
+
 const startWallet = (state) => (dispatch) => {
+  dispatch(evaluateStatus({
+    starting: true,
+    running: false,
+    stopping: false,
+    off: false,
+  }));
   wallet.walletstart((result) => {
     console.log(result);
     if (result) {
-      dispatch(evaluateStatus({
-        starting: true,
-        running: false,
-        stopping: false,
-        off: false,
-      }));
       event.emit('show', lang.startingWallet);
     } else {
       console.log(result);
@@ -238,12 +260,13 @@ const formatVersion = (unformattedVersion) => {
 
 const processError = (err) => (dispatch) => {
   if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119')) {
-    dispatch(evaluateStatus({
-      starting: false,
-      running: false,
-      stopping: false,
-      off: true,
-    }));
+      console.log(err);
+      dispatch(evaluateStatus({
+        starting: false,
+        running: false,
+        stopping: false,
+        off: true,
+      }));
   } else if (err.code === -28) {
     event.emit('show', getErrorFromCode(err.code, err.message));
     dispatch(evaluateStatus({
@@ -263,44 +286,23 @@ const processError = (err) => (dispatch) => {
   }
 };
 
-const evaluateInstalled = (state) => (dispatch) => {
-  // check to see if it is running if it is running
-  if (state.walletInstalled) {
-    wallet.getInfo().then((data) => {
-      dispatch(evaluateStatus({
-        starting: false,
-        running: true,
-        stopping: false,
-        off: false,
-      }));
-    }).catch((err) => {
-      dispatch(processError(err));
-    });
-  } else {
-    // no wallet is installed so it must be off
-    dispatch({
-      starting: false,
-      running: false,
-      stopping: false,
-      off: true,
-    });
-  }
-};
-
-
 export const updateWalletStatus = () => (dispatch, getstate) => {
   const state = getstate().wallet;
-  if (state.off) {
-    glob(`${getPlatformWalletUri()}`, (err, files) => {
-      if (!files.length) {
-        dispatch(isWalletInstalled(false));
-      } else if (files.length) {
-        dispatch(isWalletInstalled(true));
-      } else {
-        console.log(err);
-        event.emit('show', err.message);
-      }
-    });
+  if (state.walletInstalled && firstRun){
+      wallet.getInfo().then((data) => {
+        dispatch(evaluateStatus({
+          starting: false,
+          running: true,
+          stopping: false,
+          off: false,
+        }));
+      }).catch((err) => {
+        dispatch(processError(err));
+      });
+      firstRun = false;
+      return;
+  }
+  if (state.starting) {
     if (state.walletInstalled) {
       wallet.getInfo().then((data) => {
         dispatch(evaluateStatus({
@@ -312,46 +314,16 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
       }).catch((err) => {
         dispatch(processError(err));
       });
-    } else {
-      // no wallet is installed so it must be off
-      dispatch(evaluateStatus({
-        starting: false,
-        running: false,
-        stopping: false,
-        off: true,
-      }));
     }
-
-   // evaluateInstalled(state);
-  } else if (state.starting) {
-    if (state.walletInstalled) {
-      wallet.getInfo().then((data) => {
-        dispatch(evaluateStatus({
-          starting: false,
-          running: true,
-          stopping: false,
-          off: false,
-        }));
-      }).catch((err) => {
-        dispatch(processError(err));
-      });
-    } else {
-      // no wallet is installed so it must be off
-      dispatch(evaluateStatus({
-        starting: false,
-        running: false,
-        stopping: false,
-        off: true,
-      }));
-    }
-
-    //evaluateInstalled(state);
-  } else if (state.running) {
+  }
+  else if (state.running) {
     event.emit('hide');
     dispatch(getBlockchainInfo());
     dispatch(getInfo());
     dispatch(getWalletInfo());
-  } else if (state.stopping) {
+    dispatch(getMiningInfo());
+  }
+  else if (state.stopping) {
     event.emit('show', lang.walletStopping);
     if (state.walletInstalled) {
       wallet.getInfo().then((data) => {
@@ -364,16 +336,18 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
       }).catch((err) => {
         dispatch(processError(err));
       });
-    } else {
-      // no wallet is installed so it must be off
-      dispatch(evaluateStatus({
-        starting: false,
-        running: false,
-        stopping: false,
-        off: true,
-      }));
     }
-    //evaluateInstalled(state);
+  }
+  else if (state.off) {
+    glob(walletUri, (err, files) => {
+      if (!files.length) {
+        dispatch(isWalletInstalled(false));
+      } else if (files.length) {
+        dispatch(isWalletInstalled(true));
+      } else {
+        console.log(err);
+        event.emit('show', err.message);
+      }
+    });
   }
 };
-

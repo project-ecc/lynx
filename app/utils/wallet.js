@@ -115,7 +115,6 @@ class Wallet {
   }
 
   async getWalletInfo() {
-
     return this.client.getWalletInfo().then(res => {
       return Promise.resolve(res);
     }).catch((err) => {
@@ -123,13 +122,17 @@ class Wallet {
     });
   }
 
-  async getTransactions(account, count, skip) {
+  async getMiningInfo() {
+    return this.client.getMiningInfo().then(res => {
+      return Promise.resolve(res);
+    }).catch((err) => {
+      return Promise.reject(new Error(err))
+    });
+  }
+
+  async getTransactions(count, skip) {
     return new Promise((resolve, reject) => {
-      let a = account;
-      if (a === null) {
-        a = '*';
-      }
-      this.client.listTransactions(a, count, skip).then((transactions) => {
+      this.client.listTransactions(count, skip).then((transactions) => {
         return resolve(transactions);
       }).catch((err) => {
         return reject(err);
@@ -192,6 +195,15 @@ class Wallet {
   async getpeerinfo() {
     const result = await this.client.getPeerInfo();
     return result;
+  }
+
+  async setgeneratepos() {
+    try {
+      const result = await this.client.setGeneratepos();
+      return result;
+    } catch (err) {
+      return err;
+    }
   }
 
   async encryptWallet(passphrase) {

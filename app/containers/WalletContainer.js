@@ -7,6 +7,7 @@ import {
   getInfo,
   setUnlockedUntil,
   getWalletInfo,
+  getMiningInfo,
   evaluateStatus,
   isWalletInstalled,
   isImportingPrivateKey
@@ -36,6 +37,9 @@ const mapDispatchToProps = dispatch => {
     },
     getWalletInfoDux: (data) => {
       dispatch(getWalletInfo(data));
+    },
+    getMiningInfoDux: (data) => {
+      dispatch(getMiningInfo(data));
     },
     setUnlockedUntilDux: (data) => {
       dispatch(setUnlockedUntil(data));
