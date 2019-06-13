@@ -12,6 +12,7 @@ var firstRun = true;
 export const GET_BLOCKCHAIN_INFO = 'GET_BLOCKCHAIN_INFO';
 export const GET_INFO = 'GET_INFO';
 export const GET_WALLET_INFO = 'GET_WALLET_INFO';
+export const GET_MINING_INFO = 'GET_MINING_INFO';
 export const SET_UNLOCKED_UNTIL = 'SET_UNLOCKED_UNTIL';
 export const EVALUATE_STATUS = 'EVALUATE_STATUS';
 export const IS_WALLET_INSTALLED = 'IS_WALLET_INSTALLED';
@@ -48,6 +49,7 @@ export const getInfoGet = data => ({
     connections: data.connections,
     difficulty: data.difficulty,
     encrypted: data.encrypted,
+    mining: data.mining,
     staking: data.staking,
     paytxfee: data.paytxfee,
     relayfee: data.relayfee,
@@ -106,6 +108,19 @@ export const getWalletInfo = () => (dispatch) => {
     dispatch(processError(err));
   });
 };
+export const getMiningInfo = () => (dispatch) => {
+  wallet.getMiningInfo().then(data => {
+    dispatch({
+      type: GET_MINING_INFO,
+      payload: {
+        generate: data.generate,
+        generatepos: data.generatepos,
+      },
+    });
+  }).catch((err) => {
+    dispatch(processError(err));
+  });
+};
 
 export const setUnlockedUntil = data => ({
   type: SET_UNLOCKED_UNTIL,
@@ -148,6 +163,10 @@ export const startStopWalletHandler = () => (dispatch, getstate) => {
     console.log(state);
     event.emit('animate', lang.walletBusyState);
   }
+};
+
+export const stakingStatusHandler = () => (dispatch) => {
+  dispatch(getMiningInfo());
 };
 
 const startWallet = (state) => (dispatch) => {
@@ -302,6 +321,7 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
     dispatch(getBlockchainInfo());
     dispatch(getInfo());
     dispatch(getWalletInfo());
+    dispatch(getMiningInfo());
   }
   else if (state.stopping) {
     event.emit('show', lang.walletStopping);

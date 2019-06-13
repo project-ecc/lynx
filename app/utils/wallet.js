@@ -115,8 +115,15 @@ class Wallet {
   }
 
   async getWalletInfo() {
-
     return this.client.getWalletInfo().then(res => {
+      return Promise.resolve(res);
+    }).catch((err) => {
+      return Promise.reject(new Error(err))
+    });
+  }
+
+  async getMiningInfo() {
+    return this.client.getMiningInfo().then(res => {
       return Promise.resolve(res);
     }).catch((err) => {
       return Promise.reject(new Error(err))
@@ -192,6 +199,15 @@ class Wallet {
   async getpeerinfo() {
     const result = await this.client.getPeerInfo();
     return result;
+  }
+
+  async setgeneratepos() {
+    try {
+      const result = await this.client.setGeneratepos();
+      return result;
+    } catch (err) {
+      return err;
+    }
   }
 
   async encryptWallet(passphrase) {

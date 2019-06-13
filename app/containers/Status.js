@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import StatusPage from '../components/Status/Status';
-import { getInfoGet } from '../actions/WalletAction';
+import { getInfoGet, stakingStatusHandler } from '../actions/WalletAction';
 
 const mapStateToProps = state => {
   return {
@@ -23,8 +23,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getInfoGet: () => dispatch(getInfoGet()),
+    stakingStatusHandler: () => dispatch(stakingStatusHandler()),
   };
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StatusPage));
-

@@ -26,7 +26,6 @@ class SettingsConfig extends Component {
     super(props);
 
     this.state = {
-      staking: false,
       dns: false,
       storage: false,
       encrypted: false,
@@ -37,9 +36,6 @@ class SettingsConfig extends Component {
       password: ''
     };
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.toggleStaking = this.toggleStaking.bind(this);
-    this.changeStaking = this.changeStaking.bind(this);
-    this.getInfo = this.getInfo.bind(this);
     this.updateOrCreateConfig = this.updateOrCreateConfig.bind(this);
     this.readRpcCredentials = this.readRpcCredentials.bind(this);
     this.save = this.save.bind(this);
@@ -180,64 +176,6 @@ class SettingsConfig extends Component {
     });
   }
 
-  getInfo(directory) {
-    fs.readFile(directory, 'utf8', (err, data) => {
-      if (err) {
-        return console.log(err);
-      }
-
-      // user is either staking or not (either staking is 0, or not in config)
-      this.setState({ staking: /staking=1/g.test(data) });
-
-      // staking is not in config at all--update it
-      if (!/staking=(0|1)/g.test(data)) {
-        this.changeStaking(directory, 0);
-      }
-    });
-  }
-
-  getConfigInfo() {
-    this.getInfo(getConfUri());
-  }
-
-  changeStaking(directory, staking) {
-    fs.readFile(directory, 'utf8', (err, data) => {
-      if (err) {
-        console.log(err);
-      }
-
-      // staking exists in the file--update the value
-      // else add it to the end of the file
-      var configContents;
-      if (/staking=(0|1)/g.test(data)) {
-        configContents = data.replace(/staking=(0|1)/g, `staking=${staking}`);
-      } else {
-        configContents = `${data.trim()}${os.EOL}staking=${staking}`;
-      }
-
-      fs.writeFile(directory, configContents, 'utf8', (err) => {
-        if (err) {
-          console.log(err);
-        }
-        this.getConfigInfo();
-      });
-    });
-  }
-
-  toggleStaking(event) {
-    event.persist();
-    // Grab the event stack.
-    const toggleState = event.target.value;
-    this.changeStaking(getConfUri(), toggleState);
-    //
-    // WalletService.reload((data)=>{
-    //   console.log(data)
-    // })
-    // .catch((err) => {
-    //   console.log(err)
-    // })
-  }
-
   renderSaveButton (){
     if(!this.props.running){
       return (
@@ -261,20 +199,7 @@ class SettingsConfig extends Component {
               <p className="title">Configuration</p>
               <div className="row">
                 <div className="col-md-12">
-                  <p className="title">Staking configuration</p>
-
-                  <div className="row">
-                    <div className="col-md-6 col-sm-6 col-xs-6"><h5>Staking</h5></div>
-                    <div className="col-md-3 col-sm-3 col-xs-3">On<br/><input onChange={this.toggleStaking} type="radio" value={1} name="staking" checked={this.state.staking} /></div>
-                    <div className="col-md-3 col-sm-3 col-xs-3">Off<br/><input onChange={this.toggleStaking} type="radio" value={0} name="staking" checked={!this.state.staking} /></div>
-                  </div>
-                </div>
-              </div>
-              <br/>
-              <div className="row">
-                <div className="col-md-12">
                   <p className="title">RPC configuration (Stop wallet to make changes)</p>
-
                   <div className="row">
                     <div className="col-md-4">
                       <div className="input-group full-width" style={{width:'100%'}}>
@@ -293,7 +218,6 @@ class SettingsConfig extends Component {
                 </div>
               </div>
               {this.renderSaveButton()}
-
             </div>
           </div>
         </div>

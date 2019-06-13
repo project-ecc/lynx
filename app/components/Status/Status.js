@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
 import WalletService from '../../services/wallet.service';
+import fs from 'fs';
+import os from 'os';
 import { getErrorFromCode } from '../../services/error.service';
+import { getConfUri } from '../../services/platform.service';
 import { traduction } from '../../lang/lang';
 import wallet from '../../utils/wallet';
 
@@ -15,10 +18,8 @@ const lang = traduction();
 
 class StatusPage extends Component {
   static propTypes = {
+    stakingStatusHandler: PropTypes.func,
     version: PropTypes.number,
-    subversion: PropTypes.string,
-    paytxfee: PropTypes.number,
-    relayfee: PropTypes.number,
     blocks: PropTypes.number,
     headers: PropTypes.number,
     bestblockhash: PropTypes.string,
@@ -41,7 +42,8 @@ class StatusPage extends Component {
       passPhraseError: '',
       currPass: '',
       changePassRequesting: false,
-      loading: false
+      loading: false,
+      stakingInConfig: false
     };
     this.onClickBackupLocation = this.onClickBackupLocation.bind(this);
     this.encryptWallet = this.encryptWallet.bind(this);
@@ -49,6 +51,10 @@ class StatusPage extends Component {
     this.openModalToChangePassword = this.openModalToChangePassword.bind(this);
     this.cancelModal = this.cancelModal.bind(this);
     this._handleGenericFormChange = this._handleGenericFormChange.bind(this);
+    this.getConfigInfo = this.getConfigInfo.bind(this);
+    this.changeStaking = this.changeStaking.bind(this);
+    this.toggleStakingConfig = this.toggleStakingConfig.bind(this);
+    this.toggleStakingLive = this.toggleStakingLive.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +67,63 @@ class StatusPage extends Component {
     this.setState({
       [name]: value
     });
+  }
+
+  getConfigInfo() {
+    const directory = getConfUri();
+    fs.readFile(directory, 'utf8', (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+      // user is either staking or not (either staking is 0, or not in config)
+      this.setState({ stakingInConfig: /staking=1/g.test(data) });
+      // staking is not in config at all--update it
+      if (!/staking=(0|1)/g.test(data)) {
+        this.changeStaking(directory, 0);
+      }
+    });
+  }
+
+  changeStaking(directory, staking) {
+    fs.readFile(directory, 'utf8', (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+
+      // staking exists in the file--update the value
+      // else add it to the end of the file
+      var configContents;
+      if (/staking=(0|1)/g.test(data)) {
+        configContents = data.replace(/staking=(0|1)/g, `staking=${staking}`);
+      } else {
+        configContents = `${data.trim()}${os.EOL}staking=${staking}`;
+      }
+
+      fs.writeFile(directory, configContents, 'utf8', (err) => {
+        if (err) {
+          console.log(err);
+        }
+        this.getConfigInfo();
+      });
+    });
+  }
+
+  toggleStakingConfig() {
+    if (this.state.stakingInConfig){
+        this.changeStaking(getConfUri(), 0);
+    }
+    else{
+        this.changeStaking(getConfUri(), 1);
+    }
+  }
+  toggleStakingLive() {
+      wallet.setgeneratepos().then((res, reject) => {
+          console.log(res)
+          console.log(reject)
+      }).catch((err) => {
+        event.emit('animate', getErrorFromCode(err.code));
+      });
+      this.props.stakingStatusHandler();
   }
 
   async encryptWallet(){
@@ -225,15 +288,12 @@ class StatusPage extends Component {
       <div>
         <div className="row stauts-row status-panel-bottom">
           <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
-            <p className="title">{config.guiName} Status</p>
+            <p className="title">{config.guiName} Version</p>
             <p>Version: {appVersion}</p>
           </div>
           <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
-            <p className="title">{config.coinName} Node Status</p>
+            <p className="title">{config.coinName} Version</p>
             <p>Version: {`${this.props.version}`}</p>
-            <p>Subversion: {`${this.props.subversion}`}</p>
-            <p>Pay Tx Fee: {`${this.props.paytxfee}`}</p>
-            <p>Relay Fee: {`${this.props.relayfee}`}</p>
           </div>
         </div>
         <div className="row status-row status-panel-bottom">
@@ -249,9 +309,22 @@ class StatusPage extends Component {
         <div className="row status-row">
           <div className="col-md-12 col-md-12 col-lg-12 status-panel">
             <p className="title">{config.coinName} Wallet Status</p>
-            <p>Staking: {`${this.props.staking}`}</p>
+            <div className="row">
+                <div className="col-md-3 col-sm-3 col-xs-3">
+                    <p>Staking: {`${this.props.staking}`}</p>
+                </div>
+                <div className="col-md-3 col-sm-3 col-xs-3">
+                    {!this.props.staking
+                        ? <button className="button btn_confirm" onClick={this.toggleStakingLive}>Start Staking</button>
+                        : <button className="button btn_confirm" onClick={this.toggleStakingLive}>Stop Staking</button>}
+                </div>
+                <div className="col-md-3 col-sm-3 col-xs-3">
+                    {!this.state.stakingInConfig
+                        ? <button className="button btn_confirm" onClick={this.toggleStakingConfig}>Enable Staking on Wallet Start</button>
+                        : <button className="button btn_confirm" onClick={this.toggleStakingConfig}>Disable Staking on Wallet Start</button>}
+                </div>
+            </div>
             <p>Encrypted: {`${this.props.encrypted}`} {!this.props.encrypted ? <button className="button btn_confirm" onClick={this.openModalForEncryption}>Encrypt Wallet</button> : <button className="button btn_confirm" onClick={this.openModalToChangePassword}>Change Wallet Password</button>}</p>
-
           </div>
         </div>
         {this.renderDialog()}
