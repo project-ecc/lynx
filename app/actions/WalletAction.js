@@ -338,13 +338,20 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
       });
     }
   }
-  else if (state.off) {
-    glob(walletUri, (err, files) => {
-      if (!files.length) {
+  else if (state.off && state.walletInstalled == false) 
+  {
+    glob(walletUri, (err, files) =>
+    {
+      if (!files.length)
+      {
         dispatch(isWalletInstalled(false));
-      } else if (files.length) {
+      }
+      else if (files.length)
+      {
         dispatch(isWalletInstalled(true));
-      } else {
+      }
+      else
+      {
         console.log(err);
         event.emit('show', err.message);
       }
