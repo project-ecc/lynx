@@ -178,9 +178,18 @@ class SettingsDebug extends Component {
                 if (startIndex != index)
                 {
                     let newIndex = "";
+                    let firstIndex = true;
                     for (let partial = startIndex; partial <= index; partial++)
                     {
-                        newIndex = newIndex + String(preCommandParsed[partial])
+                        if (firstIndex)
+                        {
+                            newIndex = newIndex + String(preCommandParsed[partial])
+                            firstIndex = false;
+                        }
+                        else
+                        {
+                            newIndex = newIndex + " " + String(preCommandParsed[partial])
+                        }
                     }
                     commandParsed.push(newIndex);
                     startIndex = index;
