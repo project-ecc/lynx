@@ -66,6 +66,10 @@ class WalletInstallerPartial extends React.Component {
   }
 
   async downloadDaemon() {
+    this.setState({
+        isInstalling: true,
+        progressMessage: 'Attempting to download...'
+    });
     const walletDirectory = grabWalletDir();
     const releaseUrl = config.releaseUrl;
     const platformFileName = getPlatformFileName();
