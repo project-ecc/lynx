@@ -19,20 +19,15 @@ export default class About extends Component {
       <div className={'row about'}>
         <div className="col-md-12">
           <p className="title">{lang.aboutTitle}</p>
-          <div className="panel panel-default">
-            <div className="panel-body text-center larger-text">
-              <div className="col-md-12 col-lg-12 col-xs-12">
-                <h2>{config.coinName}</h2>
-                <img src={bitcoinImage} style={{ width: '15%', margin: '0 50px 0 0', cursor: 'pointer'}} alt="" onClick={this.openLink.bind(this, config.bitcointalkLink)}/>
-                <img src={githubImage} style={{ width: '15%', cursor: 'pointer' }} alt="" onClick={this.openLink.bind(this, config.githubLink)}/>
-              </div>
-            </div>
-          </div>
         </div>
         <div className="col-md-12">
           <div className="panel panel-default">
             <div className="panel-body larger-text">
               <div className="col-md-12 col-lg-12 col-xs-12">
+                <p>
+                This application is open source. Check us out on github 
+                <img src={githubImage} style={{ width: '5%', cursor: 'pointer' }} alt="" onClick={this.openLink.bind(this, config.githubLink)}/>
+                </p>
                 <p>If you like this project and want to show your support for future development of this and other free software, you may send a donation to</p>
               </div>
               <div className="col-md-12 col-lg-12 col-xs-12">

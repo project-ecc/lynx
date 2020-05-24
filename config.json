@@ -5,7 +5,6 @@
   "githubLink": "https://github.com/project-ecc/Lynx",
   "releaseUrl": "https://api.github.com/repos/project-ecc/eccoin/releases",
   "humanReleaseUrl" : "https://github.com/project-ecc/eccoin/releases",
-  "bitcointalkLink": "https://bitcointalk.org/index.php?topic=1006830.msg10926361#msg10926361",
   "daemonFolder": "eccoin-wallet",
   "resourceFolder": "eccoin",
   "daemonName": "eccoind",
