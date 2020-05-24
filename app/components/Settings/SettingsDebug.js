@@ -150,28 +150,82 @@ class SettingsDebug extends Component {
 
   handleNewCommand() {
 
-    if (this.state.command_input !== '') {
+    if (this.state.command_input !== '')
+    {
       const currentList = this.state.commandList;
       const time = (((new Date()).toTimeString()).split(' '))[0];
       try {
         const input = this.state.command_input;
         this.setState({ command_input: '' });
 
-        const commandParsed = input.split(' ');
+        let preCommandParsed = input.split(' ');
+        console.log(preCommandParsed);
+        let stringStart = false;
+        let startIndex = 0;
+        let commandParsed = [];
+        for (let index = 0; index < preCommandParsed.length; index++)
+        {
+            let current = preCommandParsed[index];
+            console.log(current)
+            if (stringStart == false && (current[0] === "'" || current[0] === '"'))
+            {
+                stringStart = true;
+                startIndex = index;
+            }
+            if (stringStart == true && (current[current.length - 1] === "'" || current[current.length - 1 ] === '"'))
+            {
+                stringStart = false;
+                if (startIndex != index)
+                {
+                    let newIndex = "";
+                    for (let partial = startIndex; partial <= index; partial++)
+                    {
+                        newIndex = newIndex + String(preCommandParsed[partial])
+                    }
+                    commandParsed.push(newIndex);
+                    startIndex = index;
+                    continue;
+                }
+                else
+                {
+                    commandParsed.push(current);
+                    startIndex = index;
+                }
+            }
+            else if (stringStart == false)
+            {
+                commandParsed.push(current);
+            }
+        }
+        console.log(commandParsed);
         const method = commandParsed[0];
         const parameters = [];
 
-        for (let i = 1; i < commandParsed.length; i++) {
+        for (let i = 1; i < commandParsed.length; i++)
+        {
           let p = commandParsed[i];
-          if (!isNaN(p)) { // is number
-            if (p % 1 === 0) { // integer
+          if (p[0] === '"' || p[0] === "'")
+          {
+              p = p.substr(1, p.length);
+          }
+          if (p[p.length - 1] === '"' || p[p.length - 1] === "'")
+          {
+              p = p.substr(0, p.length - 1);
+          }
+          if (!isNaN(p)) // is number
+          {
+            if (p % 1 === 0) // integer
+            {
               p = parseInt(p);
-            } else  { // float
+            }
+            else // float
+            {
               p = parseFloat(p);
             }
           }
           parameters.push(p);
         }
+        console.log(parameters);
 
         wallet.command([{ method, parameters }]).then((response) => {
           currentList.push({
