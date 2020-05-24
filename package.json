@@ -1,7 +1,7 @@
 {
   "name": "Lynx",
   "productName": "Lynx",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Electron application providing the graphical user interface for a bitcoin based cryptocurrency",
   "scripts": {
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
