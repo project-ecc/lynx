@@ -188,6 +188,22 @@ const startWallet = (state) => (dispatch) => {
         stopping: false,
         off: true,
       }));
+      glob(walletUri, (err, files) =>
+      {
+        if (!files.length)
+        {
+          dispatch(isWalletInstalled(false));
+        }
+        else if (files.length)
+        {
+          dispatch(isWalletInstalled(true));
+        }
+        else
+        {
+          console.log(err);
+          event.emit('show', err.message);
+        }
+      });
       if (state.walletInstalled === false) {
         event.emit('show', lang.missingWalletDaemon);
       }
@@ -338,7 +354,7 @@ export const updateWalletStatus = () => (dispatch, getstate) => {
       });
     }
   }
-  else if (state.off && state.walletInstalled == false) 
+  else if (state.off && state.walletInstalled == false)
   {
     glob(walletUri, (err, files) =>
     {
