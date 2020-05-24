@@ -41,7 +41,7 @@ class BalanceBanner extends Component {
             <div className="total-container text-center">
               <p className="subtitle">{lang.overviewTotal}</p>
               <p className="borderBot">
-                <span className="desc-banner">{this.props.stake + this.props.balance + this.props.unconfirmed_balance}</span>
+                <span className="desc-banner">{Number(this.props.stake) + Number(this.props.balance) + Number(this.props.unconfirmed_balance)}</span>
                 <span className="desc2"> {config.coinTicker}</span>
               </p>
             </div>
