@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SettingsMain from './SettingsMain';
 import SettingsDisplay from './SettingsDisplay';
 import SettingsDebug from './SettingsDebug';
 import SettingsConfig from './SettingsConfig';
@@ -22,24 +21,20 @@ export default class SettingsPage extends Component {
   renderTab() {
     if (this.state.tab === 0)
     {
-        return <SettingsMain />;
+        return <SettingsDisplay />;
     }
     else if (this.state.tab === 1)
     {
-        return <SettingsDisplay />;
-    }
-    else if (this.state.tab === 2)
-    {
         return <SettingsDebug />;
     }
-    else if (this.state.tab === 3)
+    else if (this.state.tab === 2)
     {
         return <SettingsConfig />;
     }
   }
 
   renderMenu() {
-    const menu = [lang.settingsMain, lang.settingsDisplay, lang.settingsDebug, "Config"];
+    const menu = [lang.settingsDisplay, lang.settingsDebug, "Config"];
     const self = this;
     return (
       <div className="row" style={{ marginLeft: '0px', marginRight: '0px' }}>
