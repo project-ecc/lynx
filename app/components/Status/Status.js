@@ -23,8 +23,8 @@ class StatusPage extends Component {
     blocks: PropTypes.number,
     headers: PropTypes.number,
     bestblockhash: PropTypes.string,
-    difficulty: PropTypes.number,
-    moneysupply: PropTypes.number,
+    difficulty: PropTypes.string,
+    moneysupply: PropTypes.string,
     staking: PropTypes.bool,
     encrypted: PropTypes.bool,
     unlocked_until: PropTypes.number,
@@ -303,7 +303,7 @@ class StatusPage extends Component {
             <p>Headers: {`${this.props.headers}`}</p>
             <p>Best Block Hash: {`${this.props.bestblockhash}`}</p>
             <p>Difficulty: {`${this.props.difficulty}`}</p>
-            <p>Available Rewards: {25000000000 - `${this.props.moneysupply}`}</p>
+            <p>Available Rewards: {25000000000 - `${Number(this.props.moneysupply)}`}</p>
           </div>
         </div>
         <div className="row status-row">
