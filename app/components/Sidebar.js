@@ -327,6 +327,11 @@ class Sidebar extends Component {
     if (progressBar >= 100 && this.props.blocks < this.props.headers) {
       progressBar = 99.99;
     }
+    let progressStyle = {visibility: 'hidden'}
+    if (this.props.running)
+    {
+        progressStyle = {visibility: 'visible'}
+    }
     return (
       <div className="sidebar" style={{zIndex: '10'}}>
         <div className="userimage">
@@ -383,7 +388,7 @@ class Sidebar extends Component {
             {this.renderRectRound('/settings')}
           </div>
         </ul>
-        <div className="connections sidebar-section-container">
+        <div className="connections sidebar-section-container" style={progressStyle}>
           <p>{`${lang.nabBarNetworkInfoSyncing} ${progressBar.toFixed(2)}%`}</p>
           <div className="progress custom_progress">
             <div
@@ -395,8 +400,8 @@ class Sidebar extends Component {
               style={{ width: `${progressBar.toFixed(2)}%`, backgroundColor: '#8DA557' }}
             />
           </div>
-          <p>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
-          <p>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
+          <p style={progressStyle}>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
+          <p style={progressStyle}>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
         { this.props.running && this.props.encrypted //eslint-disable-line
           ? this.props.unlocked_until === 0
