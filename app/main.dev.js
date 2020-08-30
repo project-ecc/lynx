@@ -23,6 +23,7 @@ const { logo } = require('./base-sixty-four');
 const extract = require('extract-zip');
 const fs = require('fs');
 const config = require('../config.json');
+
 const iconPath = nativeImage.createFromDataURL(logo);
 
 let tray = null;

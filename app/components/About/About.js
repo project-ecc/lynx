@@ -3,6 +3,7 @@ import bitcoinImage from '../../../resources/images/bitcoin.png';
 import slackImage from '../../../resources/images/slack.png';
 import githubImage from '../../../resources/images/github.png';
 import { traduction } from '../../lang/lang';
+
 const config = require('../../../config');
 
 const shell = require('electron').shell;
@@ -25,8 +26,8 @@ export default class About extends Component {
             <div className="panel-body larger-text">
               <div className="col-md-12 col-lg-12 col-xs-12">
                 <p>
-                This application is open source. Check us out on github
-                <img src={githubImage} style={{ width: '5%', cursor: 'pointer' }} alt="" onClick={this.openLink.bind(this, config.githubLink)}/>
+                  This application is open source. Check us out on github
+                  <img src={githubImage} style={{ width: '5%', cursor: 'pointer' }} alt="" onClick={this.openLink.bind(this, config.githubLink)} />
                 </p>
                 <p>If you like this project and want to show your support for future development of this and other free software, you may send a donation to</p>
               </div>

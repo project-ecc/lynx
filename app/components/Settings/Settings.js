@@ -34,7 +34,7 @@ export default class SettingsPage extends Component {
   }
 
   renderMenu() {
-    const menu = [lang.settingsDisplay, lang.settingsDebug, "Config"];
+    const menu = [lang.settingsDisplay, lang.settingsDebug, 'Config'];
     const self = this;
     return (
       <div className="row" style={{ marginLeft: '0px', marginRight: '0px' }}>

@@ -5,10 +5,11 @@ import AddressBook from './AddressBook';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import glob from 'glob';
-import {handleWalletError} from '../../services/error.service';
-import {getErrorFromCode} from "../../services/error.service";
+import { handleWalletError } from '../../services/error.service';
+import { getErrorFromCode } from '../../services/error.service';
 
 const event = require('../../utils/eventhandler');
+
 const lang = traduction();
 
 class Send extends Component {
@@ -33,7 +34,7 @@ class Send extends Component {
     this.onPassPhraseChange = this.onPassPhraseChange.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.checkIfWalletEncrypted();
   }
 
@@ -161,7 +162,7 @@ class Send extends Component {
   }
 
   wlock() {
-    let self = this;
+    const self = this;
 
     $('.loading').show();
     $('.btn_confirm').addClass('disable');
@@ -181,7 +182,7 @@ class Send extends Component {
     });
   }
 
-  wunlock(keepGoing, newSeconds){
+  wunlock(keepGoing, newSeconds) {
     const self = this;
     const passPhrase = this.state.passPhrase;
 
@@ -189,7 +190,7 @@ class Send extends Component {
       if (data !== null && data.code === -14) { // wrong password
         $('.loading').hide();
         $('.btn_confirm').removeClass('disable');
-        self.setState({passPhraseError: lang.walletWrongPass});
+        self.setState({ passPhraseError: lang.walletWrongPass });
       } else if (data !== null && data.code === 'ECONNREFUSED') { // connection refused
         event.emit('animate', lang.notificationWalletDownOrSyncing);
         self.setState({ dialog: false, address: '', amount: '' });
@@ -223,16 +224,16 @@ class Send extends Component {
           self.wunlock(false, self.state.utl);
         }, 3000);
       } else {
-        self.setState({ dialog: false, address: '', amount: ''});
+        self.setState({ dialog: false, address: '', amount: '' });
         event.emit('animate', lang.moneySent);
       }
     }).catch((err) => {
-      self.setState({ dialog: false, address: '', amount: ''});
+      self.setState({ dialog: false, address: '', amount: '' });
       event.emit('animate', getErrorFromCode(err.code));
     });
   }
 
-  renderDialog(){
+  renderDialog() {
     if (!this.state.dialog) {
       return null;
     }
@@ -245,7 +246,7 @@ class Send extends Component {
         <div className="dialog">
           <div className="header">
             <p className="title">{lang.popupMessageConfirmationRequired}</p>
-             <ReactLoading className="loading" type="bars" color="#444"/>
+            <ReactLoading className="loading" type="bars" color="#444" />
           </div>
           <div className="body">
             <p className="desc">{lang.popupMessageSendConfirmation1} <span className="desc2">{this.state.amount}</span> {lang.popupMessageSendConfirmation2} <span className="desc2">{this.state.address}</span> ?</p>

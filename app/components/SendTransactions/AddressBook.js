@@ -45,7 +45,7 @@ class AddressBook extends Component {
   _handleToggleAddAddress() {
     const self = this;
 
-    self.setState({requesting: true});
+    self.setState({ requesting: true });
 
     wallet.validate(this.state.address).then((isAddressValid) => {
         if (isAddressValid.isvalid) {
@@ -76,7 +76,7 @@ class AddressBook extends Component {
   rowClicked(friend, opt) {
     const self = this;
     if (opt === 'add') {
-      event.emit('animate',lang.notificationAddressCopiedBelow);
+      event.emit('animate', lang.notificationAddressCopiedBelow);
       this.props.friendClicked(friend);
     } else {
       const friendArray = this.state.friendList;
@@ -97,7 +97,7 @@ class AddressBook extends Component {
       <div>
         <div>
           <div className="input-group">
-            <span className="input-group-btn" style={{verticalAlign: 'middle'}}>
+            <span className="input-group-btn" style={{ verticalAlign: 'middle' }}>
               <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleToggleAddAddress}>Add to Address Book</button>
             </span>
             <div>
@@ -107,7 +107,7 @@ class AddressBook extends Component {
           </div>
         </div>
         <div className="friends_table">
-          <div className="row" style={{marginLeft:"0",marginRight:"0"}}>
+          <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
             <div className="col-md-5 trans_col">
               <p className="header">{lang.sendName}</p>
             </div>

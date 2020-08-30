@@ -1,5 +1,5 @@
 import wallet from '../utils/wallet';
-import {getErrorFromCode, handleWalletError} from './error.service';
+import { getErrorFromCode, handleWalletError } from './error.service';
 
 export default {
   loadclient: () => {
@@ -35,9 +35,9 @@ export default {
   checkDaemonStatus: () => {
     return wallet.getInfo();
   },
-  generateId: function(length){
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  generateId(length) {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     for (let i = 0; i < length; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));

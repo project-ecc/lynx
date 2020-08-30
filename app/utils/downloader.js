@@ -1,3 +1,5 @@
+import { getPlatformName, getPlatformFileName } from '../services/platform.service';
+
 const fs = require('fs');
 const request = require('request-promise-native');
 const progress = require('request-progress');
@@ -6,8 +8,6 @@ const extract = require('extract-zip');
 const event = require('../utils/eventhandler');
 const zlib = require('zlib');
 const tar = require('tar');
-
-import { getPlatformName, getPlatformFileName } from '../services/platform.service';
 
 /**
  * This function downloads files and can either unzip them or validate them against a checksum value (cs)
@@ -26,7 +26,7 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
 
     const fileName = destFolder + destFileName;
 
-    if(!fs.existsSync(destFolder)){
+    if (!fs.existsSync(destFolder)) {
       fs.mkdirSync(destFolder);
     }
 
@@ -52,9 +52,9 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
       // console.log('progress', state);
       event.emit('downloading-file', state);
     })
-    .on('error', function (err) {
+    .on('error', (err) => {
       console.log(`Error extracting  zip ${err}`);
-      if(fs.existsSync(destFileName)){
+      if (fs.existsSync(destFileName)) {
         fs.unlink(destFileName);
       }
       resolve(err);
@@ -99,7 +99,7 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
  * @returns {Promise}
  */
 export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
-  return new Promise((resolve, reject) =>{
+  return new Promise((resolve, reject) => {
     extract(fileToUnzip, { dir: targetDirectory }, (err) => {
       if (err) {
         console.log(err);
@@ -107,12 +107,12 @@ export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
       } else {
         event.emit('unzipping-file', { message: 'Unzipped!' });
         console.log('unzip successfully.');
-        if(deleteOldZip){
+        if (deleteOldZip) {
           if (fs.existsSync(fileToUnzip)) {
             fs.unlink(fileToUnzip, (deleteFileError) => {
               if (deleteFileError) {
                 console.log(deleteFileError);
-                reject(deleteFileError)
+                reject(deleteFileError);
               } else {
                 event.emit('unzipping-file', { message: 'Cleaning up..' });
                 console.log('File successfully deleted');

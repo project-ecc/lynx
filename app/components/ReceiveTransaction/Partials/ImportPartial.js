@@ -5,9 +5,10 @@ import SmoothCollapse from 'react-smooth-collapse';
 import { traduction } from '../../../lang/lang';
 import WalletService from '../../../services/wallet.service';
 import { isImportingPrivateKey } from '../../../reducers/WalletReducer';
+
 const lang = traduction();
 const event = require('../../../utils/eventhandler');
-var Loader=require('react-loader-display').loader;
+const Loader = require('react-loader-display').loader;
 
 // const dialog = require('electron').remote.require('electron').dialog;
 

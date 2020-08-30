@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import fs from 'fs';
 import PropTypes from 'prop-types';
-const request = require('request-promise-native');
 import { traduction } from '../../lang/lang';
-const event = require('../../utils/eventhandler');
-const lang = traduction();
 import config from '../../../config.json';
 import { grabWalletDir, getPlatformFileName, getPlatformFileExtension, formatDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
 import { downloadFile } from '../../utils/downloader';
+
+const request = require('request-promise-native');
+const event = require('../../utils/eventhandler');
+
+const lang = traduction();
 
 class WalletInstallerPartial extends React.Component {
   static propTypes = {
@@ -25,7 +27,7 @@ class WalletInstallerPartial extends React.Component {
     this.downloadDaemon = this.downloadDaemon.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     event.on('downloading-file', (payload) => {
       const walletPercent = payload.percent * 100;
       this.setState({
@@ -67,8 +69,8 @@ class WalletInstallerPartial extends React.Component {
 
   async downloadDaemon() {
     this.setState({
-        isInstalling: true,
-        progressMessage: 'Attempting to download...'
+      isInstalling: true,
+      progressMessage: 'Attempting to download...'
     });
     const walletDirectory = grabWalletDir();
     const releaseUrl = config.releaseUrl;
@@ -95,7 +97,6 @@ class WalletInstallerPartial extends React.Component {
         const downloaded = await downloadFile(downloadUrl, walletDirectory, 'Eccoind.zip', zipChecksum, true);
 
         if (downloaded) {
-
           fs.writeFile(`${grabWalletDir()}wallet-version.txt`, latestDaemon, (err) => {
             if (err) throw err;
             event.emit('file-download-complete');
@@ -105,16 +106,15 @@ class WalletInstallerPartial extends React.Component {
 
           const platFileName = getPlatformFileName();
           const fileExtension = getPlatformFileExtension();
-          fs.rename(walletDirectory + "eccoin-"+ latestDaemon +"/bin/eccoind" + fileExtension, walletDirectory + platFileName, function (err) {
-            if (err) throw err
-            console.log('Successfully renamed - AKA moved!')
-          })
+          fs.rename(`${walletDirectory}eccoin-${latestDaemon}/bin/eccoind${fileExtension}`, walletDirectory + platFileName, (err) => {
+            if (err) throw err;
+            console.log('Successfully renamed - AKA moved!');
+          });
 
           resolve(true);
         } else {
           reject(downloaded);
         }
-
       }).catch(error => {
         console.log(error);
         reject(false);
@@ -123,12 +123,11 @@ class WalletInstallerPartial extends React.Component {
   }
 
   render() {
-
-    if(this.state.isInstalling) {
+    if (this.state.isInstalling) {
       return (
         <div>
           <div className="col-md-12">
-            <p style={{color: '#ffffff', textAlign: 'center'}}>{this.state.progressMessage}</p>
+            <p style={{ color: '#ffffff', textAlign: 'center' }}>{this.state.progressMessage}</p>
             <div className="progress custom_progress">
               <div
                 className="progress-bar progress-bar-success progress-bar-striped"
@@ -136,30 +135,26 @@ class WalletInstallerPartial extends React.Component {
                 aria-valuenow="40"
                 aria-valuemin="0"
                 aria-valuemax="100"
-                style={{width: `${this.state.progress}%`, backgroundColor: '#8DA557'}}
+                style={{ width: `${this.state.progress}%`, backgroundColor: '#8DA557' }}
               />
             </div>
           </div>
         </div>
       );
-    } else if(this.props.isWalletInstalled && this.props.isNewVersionAvailable){
+    } else if (this.props.isWalletInstalled && this.props.isNewVersionAvailable) {
       return (
         <button className="stopStartButton" onClick={this.downloadDaemon}>
           {lang.clickUpdateWallet}
         </button>
       );
-
-    } else if(!this.props.isWalletInstalled) {
+    } else if (!this.props.isWalletInstalled) {
       return (
         <button className="stopStartButton" onClick={this.downloadDaemon}>
           {lang.clickInstallWallet}
         </button>
       );
-    }else {
-      return (null);
     }
-
-
+    return (null);
   }
 }
 

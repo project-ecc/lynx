@@ -3,6 +3,7 @@ import shell from 'node-powershell';
 import fs from 'fs';
 
 import { getPlatformWalletUri, getConfUri } from '../services/platform.service';
+
 const { exec, spawn } = require('child_process');
 
 
@@ -59,7 +60,6 @@ class Wallet {
         reject(err);
       });
     });
-
   }
 
   async help() {
@@ -118,7 +118,7 @@ class Wallet {
     return this.client.getWalletInfo().then(res => {
       return Promise.resolve(res);
     }).catch((err) => {
-      return Promise.reject(new Error(err))
+      return Promise.reject(new Error(err));
     });
   }
 
@@ -126,7 +126,7 @@ class Wallet {
     return this.client.getMiningInfo().then(res => {
       return Promise.resolve(res);
     }).catch((err) => {
-      return Promise.reject(new Error(err))
+      return Promise.reject(new Error(err));
     });
   }
 
@@ -150,7 +150,7 @@ class Wallet {
     });
   }
 
-  async importPrivateKey(privateKey){
+  async importPrivateKey(privateKey) {
     const result = await this.client.importPrivKey(privateKey);
     return result;
   }
@@ -242,7 +242,7 @@ class Wallet {
     }
   }
 
-  async dumpPrivateKey(walletAddress){
+  async dumpPrivateKey(walletAddress) {
     try {
       return await this.client.dumpPrivKey(walletAddress);
     } catch (err) {

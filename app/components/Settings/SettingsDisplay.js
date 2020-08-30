@@ -27,12 +27,11 @@ class SettingsDisplay extends Component {
     this.btnConfirmRestart = this.btnConfirmRestart.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.loadSettings();
   }
 
-  loadSettings(){
-
+  loadSettings() {
     if (settings.has('settings.display')) {
       const ds = settings.get('settings.display');
       this.setState(ds);
@@ -86,7 +85,7 @@ class SettingsDisplay extends Component {
     this.loadSettings();
   }
 
-  btnConfirm(){
+  btnConfirm() {
     settings.set('settings.display', {
       tray_icon: this.state.tray_icon,
       minimise_to_tray: this.state.minimise_to_tray,
@@ -155,7 +154,7 @@ class SettingsDisplay extends Component {
                         <option value="zh_cn">简体中文—中国 (Chinese - CN)</option>
                         <option value="zh_hk">繁體中文-中華人民共和國香港特別行政區 (Chinese - HK)</option>
                         <option value="nl">Nederlands (Dutch)</option>
-							          <option value="en">English</option>
+                        <option value="en">English</option>
                         <option value="fr">Français (French)</option>
                         <option value="de">Deutsch (German)</option>
                         <option value="el">ελληνικά (Greek)</option>

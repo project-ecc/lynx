@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+import { getConfUri, getDebugUri } from '../../services/platform.service';
+
+import $ from 'jquery';
 
 const event = require('../../utils/eventhandler');
 const appVersion = require('../../../package.json').version;
 const remote = require('electron').remote;
 const config = require('../../../config');
-import { getConfUri, getDebugUri } from '../../services/platform.service';
 
-import $ from 'jquery';
 const shell = remote.shell;
 const app = remote.app;
 
@@ -42,7 +43,7 @@ class SettingsDebug extends Component {
     const name = target.name;
 
     let n = this.state.navigation;
-    if (value.length === 0){
+    if (value.length === 0) {
       n = this.state.commandList.length;
     }
 
@@ -77,28 +78,27 @@ class SettingsDebug extends Component {
           </div>
         </div>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   switchLayout() {
-    this.setState({consoleOpen: !this.state.consoleOpen});
+    this.setState({ consoleOpen: !this.state.consoleOpen });
   }
 
   onenter() {
     this.handleNewCommand();
-    $("#console").animate({
+    $('#console').animate({
       scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
     }, 1000);
   }
 
   handleKeyUp(event) {
-    if (event.keyCode === 17){ // CTRL
+    if (event.keyCode === 17) { // CTRL
       this.setState({
         ctrlKeyDown: false
       });
-    } else if (event.keyCode === 76){ // L
+    } else if (event.keyCode === 76) { // L
       this.setState({
         lKeyDown: false
       });
@@ -245,7 +245,7 @@ class SettingsDebug extends Component {
 
           this.setState({ commandList: currentList, navigation: currentList.length });
 
-          $("#console").animate({
+          $('#console').animate({
             scrollTop: $('#console')[0].scrollHeight - $('#console')[0].clientHeight
           }, 100);
         }).catch((error) => {
@@ -317,7 +317,7 @@ class SettingsDebug extends Component {
                       <p>{cmd.time}</p>
                     </div>
                     <div id="commands-list" className="commands_list col-md-11">
-                      <p><span style={{ fontWeight: '400' }}>{cmd.desc}</span>: <span style={{fontWeight: '300', fontSize: '0.9em' }}>{res}</span></p>
+                      <p><span style={{ fontWeight: '400' }}>{cmd.desc}</span>: <span style={{ fontWeight: '300', fontSize: '0.9em' }}>{res}</span></p>
                     </div>
                   </div>
                 );
@@ -351,13 +351,13 @@ class SettingsDebug extends Component {
         <div className="row">
           <div className="col-md-12 console_buttons">
             <div className="col-md-10" style={{ padding: '0px' }}>
-              <input className="command_input" type="text" name="command_input" value={this.state.command_input} onChange={this.handleInputChange.bind(this)} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp}/>
+              <input className="command_input" type="text" name="command_input" value={this.state.command_input} onChange={this.handleInputChange.bind(this)} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />
             </div>
             <div className="col-md-2" style={{ paddingLeft: '5px', paddingRight: '18px' }}>
               <p className="enter_btn" onClick={this.onenter.bind(this)}>Enter</p>
             </div>
           </div>
-      </div>
+        </div>
       </div>
     );
   }

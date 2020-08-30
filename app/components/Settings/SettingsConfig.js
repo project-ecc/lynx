@@ -7,6 +7,7 @@ import WalletService from '../../services/wallet.service';
 import fs from 'fs';
 import fsPath from 'fs-path';
 import os from 'os';
+
 const lang = traduction();
 
 const event = require('../../utils/eventhandler');
@@ -43,7 +44,7 @@ class SettingsConfig extends Component {
   }
 
   componentDidMount() {
-    this.readRpcCredentials().then((data)=> {
+    this.readRpcCredentials().then((data) => {
       this.setState({
         username: data.username,
         password: data.password
@@ -51,7 +52,7 @@ class SettingsConfig extends Component {
     })
     .catch((err) => {
       console.log(err);
-      event.emit('animate', 'conf file not loaded')
+      event.emit('animate', 'conf file not loaded');
     });
     this.getConfigInfo();
   }

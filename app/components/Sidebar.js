@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updater } from '../utils/updater';
 import { traduction } from '../lang/lang';
-import {getErrorFromCode} from "../services/error.service";
-import WalletService from '../services/wallet.service'
+import { getErrorFromCode } from '../services/error.service';
+import WalletService from '../services/wallet.service';
 import wallet from '../utils/wallet';
 
 const event = require('../utils/eventhandler');
@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-  }, 600000);
+    }, 600000);
 
     this.checkWalletVersion();
 
@@ -94,8 +94,8 @@ class Sidebar extends Component {
   }
 
   buttonClick() {
-      this.props.startStopWalletHandler();
-      this.checkWalletState();
+    this.props.startStopWalletHandler();
+    this.checkWalletState();
   }
 
   componentWillReceiveProps(props) {

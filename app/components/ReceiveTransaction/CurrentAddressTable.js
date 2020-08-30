@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+import { handleWalletError } from '../../services/error.service';
 
 const event = require('../../utils/eventhandler');
 
 const lang = traduction();
-import {handleWalletError} from '../../services/error.service';
 
 const { clipboard } = require('electron');
 
@@ -18,7 +18,7 @@ class CurrentAddresses extends Component {
     this.rowClick = this.rowClick.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     if (!this.state.requesting) {
       this.getAllAddresses();
     }
@@ -52,9 +52,9 @@ class CurrentAddresses extends Component {
   render() {
     const self = this;
     let data = [];
-    if (this.state.existingAddresses !== null){
+    if (this.state.existingAddresses !== null) {
       data = this.state.existingAddresses;
-      console.log(data)
+      console.log(data);
     }
     return (
       <div>

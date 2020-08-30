@@ -13,6 +13,7 @@ const event = require('../../utils/eventhandler');
 const remote = require('electron').remote;
 const appVersion = require('../../../package.json').version;
 const config = require('../../../config');
+
 const dialog = remote.require('electron').dialog;
 const lang = traduction();
 
@@ -92,7 +93,7 @@ class StatusPage extends Component {
 
       // staking exists in the file--update the value
       // else add it to the end of the file
-      var configContents;
+      let configContents;
       if (/staking=(0|1)/g.test(data)) {
         configContents = data.replace(/staking=(0|1)/g, `staking=${staking}`);
       } else {
@@ -234,7 +235,7 @@ class StatusPage extends Component {
       }
 
       WalletService.backupWallet(`${folderPaths}/walletBackup.dat`).then((data) => {
-        if(data === null) {
+        if (data === null) {
           event.emit('animate', lang.backupOk);
         } else {
           event.emit('animate', getErrorFromCode(data.code, data.message));
@@ -245,7 +246,7 @@ class StatusPage extends Component {
     });
   }
 
-  renderDialog(){
+  renderDialog() {
     if (!this.state.dialog) {
       return null;
     }
@@ -254,7 +255,7 @@ class StatusPage extends Component {
         <div className="dialog">
           <div className="header">
             <p className="title">Encrypt Wallet</p>
-            {this.state.loading ? <ReactLoading className="loading" type="bars" color="#444"/> : null}
+            {this.state.loading ? <ReactLoading className="loading" type="bars" color="#444" /> : null}
           </div>
           <div className="body">
             {this.state.changePassRequesting ? <div className="row">

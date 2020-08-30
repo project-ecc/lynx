@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { traduction } from '../lang/lang';
 
 const config = require('../../config');
+
 const lang = traduction();
 
 class BalanceBanner extends Component {

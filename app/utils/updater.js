@@ -1,7 +1,8 @@
-const fs = require('fs');
-const request = require('request-promise-native');
 import { grabWalletDir } from '../services/platform.service';
 import config from '../../config.json';
+
+const fs = require('fs');
+const request = require('request-promise-native');
 
 const releaseUrl = config.releaseUrl;
 

@@ -10,7 +10,7 @@ import Transaction from './components/Transactions/Transaction';
 import Send from './components/SendTransactions/Send';
 import Settings from './components/Settings/Settings';
 
-export default function Routes({route}) {
+export default function Routes({ route }) {
   return (
     <App route={route}>
       <Switch>

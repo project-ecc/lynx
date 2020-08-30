@@ -6,6 +6,7 @@ import { traduction } from '../../lang/lang';
 const settings = require('electron-settings');
 const event = require('../../utils/eventhandler');
 const config = require('../../../config.json');
+
 const lang = traduction();
 
 
@@ -131,7 +132,7 @@ class TransactionTable extends Component {
     const currentTrans = [];
 
     if (self.state.page > 0) {
-      let p = self.state.page - 1;
+      const p = self.state.page - 1;
       self.setState({ requesting: true, page: p });
 
       wallet.getTransactions(countTras, countTras * p).then((data) => {

@@ -13,7 +13,7 @@ type RootType = {
 };
 
 const updateTimer = store => setTimeout(() => {
-  store.dispatch(updateWalletStatus())
+  store.dispatch(updateWalletStatus());
   updateTimer(store);
 }, 3000);
 

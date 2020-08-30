@@ -6,8 +6,9 @@ import { getPlatformWalletUri, getPlatformFileName, getPlatformName, grabWalletD
 import { traduction } from '../lang/lang';
 
 const event = require('../utils/eventhandler');
+
 const walletUri = getPlatformWalletUri();
-var firstRun = true;
+let firstRun = true;
 
 export const GET_BLOCKCHAIN_INFO = 'GET_BLOCKCHAIN_INFO';
 export const GET_INFO = 'GET_INFO';
@@ -255,7 +256,7 @@ const formatVersion = (unformattedVersion) => {
     if (sb.length > 1) {
       let tempSB = '';
       for (i = sb.length - 1; i > 0; i--) {
-        tempSB = tempSB + String(sb[i]);
+        tempSB += String(sb[i]);
       }
       tempSB = String(parseInt(tempSB, 10));
       tempSB = String(sb[0]) + tempSB;

@@ -1,4 +1,3 @@
-const settings = require('electron-settings');
 import lang_en from './en';
 import lang_pt from './pt';
 import lang_nl from './nl';
@@ -16,6 +15,7 @@ import lang_zh_hk from './zh_hk';
 import lang_zh_cn from './zh_cn';
 import lang_sl from './sl';
 
+const settings = require('electron-settings');
 
 
 export function traduction() {

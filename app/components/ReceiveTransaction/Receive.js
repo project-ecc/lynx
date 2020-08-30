@@ -4,7 +4,7 @@ import CurrentAddresses from './CurrentAddressTable';
 
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-import {handleWalletError} from '../../services/error.service';
+import { handleWalletError } from '../../services/error.service';
 import ImportPartial from './Partials/ImportPartial';
 
 const event = require('../../utils/eventhandler');
@@ -51,7 +51,7 @@ class Receive extends Component {
     const self = this;
     let name;
 
-    if (self.state.nameOfNewAddress === ''){
+    if (self.state.nameOfNewAddress === '') {
       name = null;
     } else {
       name = self.state.nameOfNewAddress;
@@ -72,7 +72,6 @@ class Receive extends Component {
         event.emit('animate', lang.notificationErrorCreatingAdrress);
       }
     });
-
   }
 
   _handleGenericFormChange(event) {
@@ -82,7 +81,7 @@ class Receive extends Component {
   }
 
   render() {
-    const {isOpened} = this.state;
+    const { isOpened } = this.state;
     return (
       <div className="receive">
         <div className="row">
@@ -117,7 +116,7 @@ class Receive extends Component {
               </div>
               <div className="col-md-6">
                 <button type="button" className="btn btn-default btn-sm pull-right" onClick={this.toggleImport} style={{ marginTop: '-10px', paddingTop: '10px' }}>
-                  <span className="glyphicon glyphicon-plus"></span> {lang.import}
+                  <span className="glyphicon glyphicon-plus" /> {lang.import}
                 </button>
               </div>
 
@@ -128,7 +127,7 @@ class Receive extends Component {
             </div>
             <div className="row">
               <div className="col-md-12">
-                <p className="title pull-left">{isOpened === true ? lang.receiveExistingAddresses: null }</p>
+                <p className="title pull-left">{isOpened === true ? lang.receiveExistingAddresses : null }</p>
               </div>
             </div>
             <div className="row">
