@@ -5,7 +5,6 @@ import CurrentAddresses from './CurrentAddressTable';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
 import { handleWalletError } from '../../services/error.service';
-import ImportPartial from './Partials/ImportPartial';
 
 const event = require('../../utils/eventhandler');
 
@@ -34,17 +33,10 @@ class Receive extends Component {
     };
     this._handleAddressClick = this._handleAddressClick.bind(this);
     this._handleGenericFormChange = this._handleGenericFormChange.bind(this);
-    this.toggleImport = this.toggleImport.bind(this);
   }
 
   componentWillUnmount() {
     this.state.requesting = false;
-  }
-
-  toggleImport() {
-    this.setState({
-      isOpened: !this.state.isOpened
-    });
   }
 
   _handleAddressClick() {
@@ -110,21 +102,6 @@ class Receive extends Component {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <div className="row">
-              <div className="col-md-6">
-                <p className="title">{isOpened === true ? lang.importPrivKey : lang.receiveExistingAddresses }</p>
-              </div>
-              <div className="col-md-6">
-                <button type="button" className="btn btn-default btn-sm pull-right" onClick={this.toggleImport} style={{ marginTop: '-10px', paddingTop: '10px' }}>
-                  <span className="glyphicon glyphicon-plus" /> {lang.import}
-                </button>
-              </div>
-
-            </div>
-            <div className="row">
-
-              <ImportPartial isOpened={isOpened} />
-            </div>
             <div className="row">
               <div className="col-md-12">
                 <p className="title pull-left">{isOpened === true ? lang.receiveExistingAddresses : null }</p>
