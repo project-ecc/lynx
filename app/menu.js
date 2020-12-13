@@ -1,6 +1,7 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from 'electron';
 
+import wallet from './utils/wallet';
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -56,7 +57,16 @@ export default class MenuBuilder {
         { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
         { label: 'Show All', selector: 'unhideAllApplications:' },
         { type: 'separator' },
-        { label: 'Quit', accelerator: 'Command+Q', click: () => { app.quit(); } }
+        { label: 'Quit', accelerator: 'Command+Q', click: () =>
+            {
+                wallet.walletstop().then((data) => {
+                  console.log(data);
+                }).catch(err => {
+                  console.log(err);
+                });
+                app.quit();
+            }
+        }
       ]
     };
     const subMenuEdit = {
@@ -126,8 +136,14 @@ export default class MenuBuilder {
       }, {
         label: '&Close',
         accelerator: 'Ctrl+W',
-        click: () => {
-          this.mainWindow.close();
+        click: () =>
+        {
+            wallet.walletstop().then((data) => {
+              console.log(data);
+            }).catch(err => {
+              console.log(err);
+            });
+            this.mainWindow.close();
         }
       }]
     }, {

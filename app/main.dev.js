@@ -13,6 +13,7 @@
 
 import MenuBuilder from './menu';
 import { grabWalletDir } from './services/platform.service';
+import wallet from './utils/wallet';
 
 const { app, Tray, Menu, BrowserWindow, nativeImage, ipcMain } = require('electron');
 
@@ -122,7 +123,12 @@ app.on('ready', async () => {
         mainWindow.hide();
       }
     } else {
-      app.quit();
+        wallet.walletstop().then((data) => {
+          console.log(data);
+        }).catch(err => {
+          console.log(err);
+        });
+        app.quit();
     }
     return false;
   });
