@@ -35,6 +35,31 @@ body {
   overflow-x: hidden;
 }
 
+.panel {
+  background: #fff;
+  padding: 10px;
+  margin: 10px; 
+}
+
+.orangeButton{
+  @extend .btn !optional;
+  color: #fff !important;
+  min-width: 100px;
+	margin: 0 !important;
+	background-color: #D58920 !important;
+    transition: background-color 0.1s linear;
+}
+
+.orangeButton:hover {
+    margin: 0 !important;
+    background-color: #BF7B1D !important;
+}
+
+.orangeButton:active {
+    margin: 0 !important;
+    background-color: #D58920 !important;
+}
+
 .splash-image-container {
   z-index: 1000;
   background-color: #fff;

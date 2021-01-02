@@ -83,7 +83,7 @@ class Receive extends Component {
               <div className="panel-body">
                 <div className="input-group">
                   <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
-                    <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
+                    <button className="orangeButton btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
                   </span>
                   <div>
                     <input

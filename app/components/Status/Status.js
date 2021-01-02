@@ -286,8 +286,8 @@ class StatusPage extends Component {
 
   render() {
     return (
-      <div>
-        <div className="row stauts-row status-panel-bottom">
+      <div className="panel">
+        <div className="row stauts-row">
           <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
             <p className="title">{config.guiName} Version</p>
             <p>Version: {appVersion}</p>
@@ -297,7 +297,17 @@ class StatusPage extends Component {
             <p>Version: {`${this.props.version}`}</p>
           </div>
         </div>
-        <div className="row status-row status-panel-bottom">
+        <div className="row stauts-row">
+          <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
+            <p className="title">Staking</p>
+            <p>{`${this.props.staking ? 'Yes' : 'No'}`}</p>
+          </div>
+          <div className="col-sm-6 col-md-6 col-lg-6 status-panel">
+            <p className="title">Encrypted</p>
+            <p>{`${this.props.encrypted ? 'Yes': 'No'}`}</p>
+          </div>
+        </div>
+        <div className="row status-row">
           <div className="col-md-12 col-md-12 col-lg-12 status-panel">
             <p className="title">{config.coinName} Network Status</p>
             <p>Blocks: {`${this.props.blocks}`}</p>
@@ -309,23 +319,22 @@ class StatusPage extends Component {
         </div>
         <div className="row status-row">
           <div className="col-md-12 col-md-12 col-lg-12 status-panel">
-            <p className="title">{config.coinName} Wallet Status</p>
-            <div className="row">
-                <div className="col-md-3 col-sm-3 col-xs-3">
-                    <p>Staking: {`${this.props.staking}`}</p>
-                </div>
-                <div className="col-md-3 col-sm-3 col-xs-3">
-                    {!this.props.staking
-                        ? <button className="button btn_confirm" onClick={this.toggleStakingLive}>Start Staking</button>
-                        : <button className="button btn_confirm" onClick={this.toggleStakingLive}>Stop Staking</button>}
-                </div>
-                <div className="col-md-3 col-sm-3 col-xs-3">
-                    {!this.state.stakingInConfig
-                        ? <button className="button btn_confirm" onClick={this.toggleStakingConfig}>Enable Staking on Wallet Start</button>
-                        : <button className="button btn_confirm" onClick={this.toggleStakingConfig}>Disable Staking on Wallet Start</button>}
-                </div>
+            <p className="title">{config.coinName} Wallet functions</p>
+            <div className='row'>
+              <div className='col'>
+                {!this.props.staking
+                        ? <button className="orangeButton btn btn-raised" onClick={this.toggleStakingLive}>Start Staking</button>
+                        : <button className="orangeButton btn btn-raised" onClick={this.toggleStakingLive}>Stop Staking</button>}
+              </div>
+              <div className='col'>
+              {!this.state.stakingInConfig
+                        ? <button className="orangeButton btn btn-raised" onClick={this.toggleStakingConfig}>Enable Staking on Wallet Start</button>
+                        : <button className="orangeButton btn btn-raised" onClick={this.toggleStakingConfig}>Disable Staking on Wallet Start</button>}
+              </div>
+              <div className='col'>
+              {!this.props.encrypted ? <button className="orangeButton btn btn-raised" onClick={this.openModalForEncryption}>Encrypt Wallet</button> : <button className="orangeButton btn btn-raised" onClick={this.openModalToChangePassword}>Change Wallet Password</button>}
+              </div>
             </div>
-            <p>Encrypted: {`${this.props.encrypted}`} {!this.props.encrypted ? <button className="button btn_confirm" onClick={this.openModalForEncryption}>Encrypt Wallet</button> : <button className="button btn_confirm" onClick={this.openModalToChangePassword}>Change Wallet Password</button>}</p>
           </div>
         </div>
         {this.renderDialog()}

@@ -46,9 +46,13 @@ class Transaction extends Component {
                   </select>
                 </div>
                 <TransTable h={'90%'} option={this.state.select} countTras={100} ref={(input) => { this.child_load_more = input; }} />
-                <div className="bottomButtonContainer">
-                  <button className="btn_load_less -grey-btn-hover" onClick={this.loadless.bind(this)}>{lang.transactionsLoadPrevious}</button>
-                  <button className="btn_load_more -grey-btn-hover" onClick={this.loadmore.bind(this)}>{lang.transactionsLoadMore}</button>
+                <div className="row justify-content-end">
+                  <div className='col-6'>
+                    <button className="orangeButton btn btn-raised" onClick={this.loadless.bind(this)}>{lang.transactionsLoadPrevious}</button>
+                  </div>
+                  <div className='col-6'>
+                    <button className="orangeButton btn btn-raised" onClick={this.loadmore.bind(this)}>{lang.transactionsLoadMore}</button>
+                  </div>
                 </div>
               </div>
             </div>

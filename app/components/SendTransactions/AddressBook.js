@@ -94,17 +94,22 @@ class AddressBook extends Component {
       data = this.state.friendList;
     }
     return (
-      <div>
+      <div className="panel">
+         <h1 className="title">{lang.addressBook}</h1>
         <div>
-          <div className="input-group">
-            <span className="input-group-btn" style={{ verticalAlign: 'middle' }}>
-              <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleToggleAddAddress}>Add to Address Book</button>
-            </span>
-            <div>
-              <input className="inpuText form-control" onChange={this._handleInput} value={this.state.name} name="name" placeholder={lang.sendNameOptional} type="text" />
-              <input className="inpuText form-control" onChange={this._handleInput} value={this.state.address} name="address" placeholder={lang.address} type="text" />
+            <div className="row">
+              <div className="col">
+                <input className="inpuText form-control" onChange={this._handleInput} value={this.state.name} name="name" placeholder={lang.sendNameOptional} type="text" />
+              </div>
+              <div className="col">
+                <input className="inpuText form-control" onChange={this._handleInput} value={this.state.address} name="address" placeholder={lang.address} type="text" />
+              </div>
             </div>
-          </div>
+            <div className="row">
+              <div className="col">
+                <button className="orangeButton btn btn-success btn-raised" type="button" onClick={this._handleToggleAddAddress}>Add to Address Book</button>
+              </div>
+            </div>
         </div>
         <div className="friends_table">
           <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>

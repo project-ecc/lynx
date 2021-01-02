@@ -269,17 +269,10 @@ class Send extends Component {
   render() {
     return (
       <div className="send">
-        <div className="row">
-          <div className="col-md-6">
-            <p className="title">{lang.send}</p>
-          </div>
-          <div className="col-md-6">
-
-          </div>
-        </div>
+      <div className="panel">
+        <p className="title">{lang.send}</p>
         <div className="row">
           <div className="col-md-12">
-            <div className="panel panel-default">
               <div className="panel-body">
                 <div className="input-group">
                   <input type="text" className="inpuText form-control" name="address" placeholder={lang.sendNameAddress} onChange={this._handleGenericFormChange} value={this.state.address} />
@@ -293,30 +286,14 @@ class Send extends Component {
                     <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleSendToAddress}> {lang.send} </button>
                   </span>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-6">
-            <p className="title">{lang.addressBook}</p>
-          </div>
-          <div className="col-md-6">
-
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-12">
-            <div className="panel panel-default">
-              <div className="panel-body">
-                <AddressBook friendClicked={this.friendClicked} />
-              </div>
             </div>
           </div>
         </div>
 
         {this.renderDialog()}
       </div>
+      <AddressBook friendClicked={this.friendClicked} />
+    </div>  
     );
   }
 }

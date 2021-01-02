@@ -274,7 +274,7 @@ class SettingsDebug extends Component {
             <p className="subtitle">Debug Console</p>
             <div className="row">
               <div className="col-md-4">
-                <p className="btn_files_open" onClick={this.switchLayout.bind(this)}>{lang.console}</p>
+                <button className="orangeButton btn btn-raised" onClick={this.switchLayout.bind(this)}>{lang.console}</button>
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@ class SettingsDebug extends Component {
             <p className="subtitle">{lang.settingsDebugLogFile}</p>
             <div className="row">
               <div className="col-md-4">
-                <p className="btn_files_open" onClick={this.openDebugFile}>{lang.settingsDebugOpen}</p>
+                <button className="orangeButton btn btn-raised" onClick={this.openDebugFile}>{lang.settingsDebugOpen}</button>
               </div>
             </div>
           </div>
@@ -290,7 +290,7 @@ class SettingsDebug extends Component {
             <p className="subtitle">{lang.settingsDebugConfigurationFile}</p>
             <div className="row">
               <div className="col-md-4">
-                <p className="btn_files_open" onClick={this.openConfigFile}>{lang.settingsDebugOpen}</p>
+                <button className="orangeButton btn btn-raised" onClick={this.openConfigFile}>{lang.settingsDebugOpen}</button>
               </div>
             </div>
           </div>
@@ -298,8 +298,14 @@ class SettingsDebug extends Component {
       );
     }
     return (
-      <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-        <p className="btn_console" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</p>
+      <div className='col'> 
+        <div className='row'>
+          <div className='col-12'>
+          <button className="orangeButton btn btn-raised" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</button>
+          </div>
+        </div>
+        <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+          
         <div className="row console_body">
           <div id="console" className="col-md-12 console_wrapper">
             {this.renderHelpMsg()}
@@ -348,16 +354,15 @@ class SettingsDebug extends Component {
             })}
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12 console_buttons">
+        <div className="row console_body">
             <div className="col-md-10" style={{ padding: '0px' }}>
-              <input className="command_input" type="text" name="command_input" value={this.state.command_input} onChange={this.handleInputChange.bind(this)} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />
+              <input style={{maxHeight: '39px'}} className="command_input" type="text" name="command_input" value={this.state.command_input} onChange={this.handleInputChange.bind(this)} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />
             </div>
-            <div className="col-md-2" style={{ paddingLeft: '5px', paddingRight: '18px' }}>
-              <p className="enter_btn" onClick={this.onenter.bind(this)}>Enter</p>
+            <div className="col-md-2" style={{ paddingLeft: '5px', paddingRight: '18px', width: '100%' }}>
+              <button className="orangeButton btn btn-raised" onClick={this.onenter.bind(this)}>Enter</button>
             </div>
-          </div>
         </div>
+      </div>
       </div>
     );
   }

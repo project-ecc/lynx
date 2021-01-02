@@ -403,27 +403,28 @@ class Sidebar extends Component {
           <p style={progressStyle}>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
           <p style={progressStyle}>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
+
+        <div className="sidebar-section-buttons">
         { this.props.running && this.props.encrypted //eslint-disable-line
           ? this.props.unlocked_until === 0
-            ? <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
-                <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Unlock Wallet</span>
-              </div>
-            : <div id='unlock_pane' style={{padding: '10px', textAlign: 'center', color: 'white', border: '2px solid white'}}>
-                <span className="title" style={{cursor: 'pointer'}} onClick={this.showWalletUnlockDialog}>Lock Wallet</span>
-              </div>
+            ? <button className="orangeButton btn btn-raised sidebar-button" onClick={this.showWalletUnlockDialog}>Unlock Wallet</button>
+            : <button className="orangeButton btn btn-raised sidebar-button" onClick={this.showWalletUnlockDialog}>Lock Wallet</button>
           : null
         }
-        <div className="sidebar-section-container">
-          {this.props.running //eslint-disable-line
+        <p></p>
+                  {this.props.running //eslint-disable-line
             ? !this.props.stopping
-              ? <button className="stopStartButton" onClick={this.buttonClick}>{lang.stopWallet}</button>
-              : <button className="stopStartButton" disabled>{lang.stoppingWallet}</button>
+              ? <button className="orangeButton btn btn-raised sidebar-button" onClick={this.buttonClick}>{lang.stopWallet}</button>
+              : <button className="orangeButton btn btn-raised sidebar-button" disabled>{lang.stoppingWallet}</button>
             : !this.props.starting
               ? this.props.walletInstalled
-                ? <button className="stopStartButton" onClick={this.buttonClick}>{lang.startWallet}</button>
+                ? <button className="orangeButton btn btn-raised sidebar-button" onClick={this.buttonClick}>{lang.startWallet}</button>
                 : null
-              : <button className="stopStartButton" disabled>{lang.startingWallet}</button>
+              : <button className="orangeButton btn btn-raised sidebar-button" disabled>{lang.startingWallet}</button>
           }
+        </div>
+        <div className="sidebar-section-container">
+
 
           <br />
           <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />

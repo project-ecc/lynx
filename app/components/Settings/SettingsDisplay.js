@@ -171,9 +171,13 @@ class SettingsDisplay extends Component {
                   </div>
                 </div>
               </div>
-              <div className="buttons">
-                <p className="greenButton left" onClick={this.btnConfirm.bind(this)}>{lang.confirm}</p>
-                <p className="greenButton right" onClick={this.btnCancel.bind(this)}>{lang.cancel}</p>
+              <div className="row">
+                <div className='col-2'>
+                <button className="orangeButton btn btn-raised" onClick={this.btnCancel.bind(this)}>{lang.cancel}</button>
+                </div>
+                <div className='col-2'>
+                <button className="orangeButton btn btn-raised" onClick={this.btnConfirm.bind(this)} style={{marginLeft: "10px !important"}}>{lang.confirm}</button>
+                </div>
               </div>
             </div>
           </div>
