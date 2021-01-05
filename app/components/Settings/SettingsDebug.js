@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-import { getConfUri, getDebugUri } from '../../services/platform.service';
+import { getConfUri, getDebugUri, grabCoinDir } from '../../services/platform.service';
 
 import $ from 'jquery';
 
@@ -61,6 +61,11 @@ class SettingsDebug extends Component {
   openConfigFile() {
     console.log(getConfUri());
     shell.openItem(getConfUri());
+  }
+
+  openWalletFolder() {
+    console.log(grabCoinDir());
+    shell.openItem(grabCoinDir());
   }
 
   renderHelpMsg() {
@@ -294,18 +299,26 @@ class SettingsDebug extends Component {
               </div>
             </div>
           </div>
+          <div className="col-md-12">
+            <p className="subtitle">{"wallet.dat folder"}</p>
+            <div className="row">
+              <div className="col-md-4">
+                <button className="orangeButton btn btn-raised" onClick={this.openWalletFolder}>{lang.settingsDebugOpen}</button>
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
     return (
-      <div className='col'> 
+      <div className='col'>
         <div className='row'>
           <div className='col-12'>
           <button className="orangeButton btn btn-raised" onClick={this.switchLayout.bind(this)}>{lang.backupBack}</button>
           </div>
         </div>
         <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-          
+
         <div className="row console_body">
           <div id="console" className="col-md-12 console_wrapper">
             {this.renderHelpMsg()}
