@@ -156,13 +156,7 @@ class Wallet {
   }
 
   async createNewAddress(nameOpt) {
-    const name = nameOpt || null;
-    let newAddress;
-    if (name === null) {
-      newAddress = await this.client.getNewAddress();
-    } else {
-      newAddress = await this.client.getNewAddress(name);
-    }
+    let newAddress = await this.client.getNewAddress();
     return newAddress;
   }
 

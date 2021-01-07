@@ -25,7 +25,6 @@ class Receive extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nameOfNewAddress: '',
       theNewAddress: '',
       address: '',
       amout: '',
@@ -41,18 +40,12 @@ class Receive extends Component {
 
   _handleAddressClick() {
     const self = this;
-    let name;
-
-    if (self.state.nameOfNewAddress === '') {
-      name = null;
-    } else {
-      name = self.state.nameOfNewAddress;
-    }
+    let name = null;
 
     self.setState({ requesting: true });
 
-    wallet.createNewAddress(name).then((newAddress) => {
-      self.setState({ requesting: false, nameOfNewAddress: '' });
+    wallet.createNewAddress().then((newAddress) => {
+      self.setState({ requesting: false,});
       event.emit('animate', lang.notificationAddressCopiedToClipboard);
       clipboard.writeText(newAddress);
       self.child_current_addresses.getAllAddresses();
@@ -60,7 +53,7 @@ class Receive extends Component {
       handleWalletError(err, this.props.history);
 
       if (this.state.requesting) {
-        self.setState({ requesting: false, nameOfNewAddress: '' });
+        self.setState({ requesting: false,});
         event.emit('animate', lang.notificationErrorCreatingAdrress);
       }
     });
@@ -85,16 +78,6 @@ class Receive extends Component {
                   <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
                     <button className="orangeButton btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
                   </span>
-                  <div>
-                    <input
-                      className="inpuText form-control"
-                      onChange={this._handleGenericFormChange}
-                      value={this.state.nameOfNewAddress}
-                      name="nameOfNewAddress"
-                      placeholder={lang.receiveAddressNameOptional}
-                      type="text"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
