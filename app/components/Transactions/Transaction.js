@@ -51,7 +51,7 @@ class Transaction extends Component {
                     <button className="orangeButton btn btn-raised" onClick={this.loadless.bind(this)}>{lang.transactionsLoadPrevious}</button>
                   </div>
                   <div className='col-6'>
-                    <button className="orangeButton btn btn-raised" onClick={this.loadmore.bind(this)}>{lang.transactionsLoadMore}</button>
+                    <button className="orangeButton btn btn-raised" style={{float: 'right'}} onClick={this.loadmore.bind(this)}>{lang.transactionsLoadMore}</button>
                   </div>
                 </div>
               </div>

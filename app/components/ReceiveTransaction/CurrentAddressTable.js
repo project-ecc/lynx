@@ -54,7 +54,6 @@ class CurrentAddresses extends Component {
     let data = [];
     if (this.state.existingAddresses !== null) {
       data = this.state.existingAddresses;
-      console.log(data);
     }
     return (
       <div>

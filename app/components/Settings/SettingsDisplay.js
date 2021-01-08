@@ -117,7 +117,7 @@ class SettingsDisplay extends Component {
             <p className="desc">{lang.restartRequiredDesc}</p>
           </div>
           <div className="footer">
-            <p className="button btn_confirm" onClick={this.btnConfirmRestart}>{lang.confirm}</p>
+            <button className="orangeButton btn btn-raised" onClick={this.btnConfirmRestart}>{lang.confirm}</button>
           </div>
         </div>
       </div>

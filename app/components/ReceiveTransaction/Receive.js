@@ -45,7 +45,7 @@ class Receive extends Component {
     self.setState({ requesting: true });
 
     wallet.createNewAddress().then((newAddress) => {
-      self.setState({ requesting: false,});
+      self.setState({ requesting: false, newAddress: newAddress});
       event.emit('animate', lang.notificationAddressCopiedToClipboard);
       clipboard.writeText(newAddress);
       self.child_current_addresses.getAllAddresses();
@@ -76,8 +76,9 @@ class Receive extends Component {
               <div className="panel-body">
                 <div className="input-group">
                   <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
-                    <button className="orangeButton btn btn-success btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
+                    <button className="orangeButton btn btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
                   </span>
+                  <p>{this.state.newAddress}</p>
                 </div>
               </div>
             </div>

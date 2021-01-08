@@ -269,8 +269,8 @@ class Sidebar extends Component {
           <div className="dialog">
             {this.renderDialogBody()}
             <div className="footer">
-              <p className="button btn_cancel" onClick={this.cancelDialog}>{lang.cancel}</p>
-              <p className="button btn_confirm" onClick={this.confirmDialog}>{lang.confirm}</p>
+              <p className="btn btn-flat" onClick={this.cancelDialog}>{lang.cancel}</p>
+              <p className="orangeButton btn btn-raised" onClick={this.confirmDialog}>{lang.confirm}</p>
             </div>
           </div>
         </div>
@@ -333,7 +333,7 @@ class Sidebar extends Component {
         progressStyle = {visibility: 'visible'}
     }
     return (
-      <div className="sidebar" style={{zIndex: '10'}}>
+      <div className="sidebar">
         <div className="userimage">
           <img src={usericon} />
         </div>

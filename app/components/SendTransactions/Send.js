@@ -258,8 +258,8 @@ class Send extends Component {
             </div>
           </div>
           <div className="footer">
-            <p className="button btn_cancel" onClick={this.cancelSend}>{lang.cancel}</p>
-            <p className="button btn_confirm" onClick={this.confirmSend}>{lang.confirm}</p>
+            <button className="btn btn-flat" onClick={this.cancelSend}>{lang.cancel}</button>
+            <button className="orangeButton btn btn-raised" onClick={this.confirmSend}>{lang.confirm}</button>
           </div>
         </div>
       </div>
@@ -277,13 +277,13 @@ class Send extends Component {
                 <div className="input-group">
                   <input type="text" className="inpuText form-control" name="address" placeholder={lang.sendNameAddress} onChange={this._handleGenericFormChange} value={this.state.address} />
                   <span className="input-group-btn" style={{ paddingRight: '0px' }}>
-                    <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this.handleClear}> {lang.sendClear} </button>
+                    <button className="btn btn-flat" type="button" onClick={this.handleClear}> {lang.sendClear} </button>
                   </span>
                 </div>
                 <div className="input-group" style={{ marginTop: '10px' }}>
                   <input type="number" className="inpuText form-control" name="amount" placeholder={lang.sendAmountToSend} onChange={this._handleGenericFormChange} value={this.state.amount} />
                   <span className="input-group-btn" style={{ paddingRight: '0px' }}>
-                    <button className="greenBtn btn btn-success btn-raised" type="button" onClick={this._handleSendToAddress}> {lang.send} </button>
+                    <button className="orangeButton btn btn-raised" type="button" onClick={this._handleSendToAddress}> {lang.send} </button>
                   </span>
                 </div>
             </div>

@@ -35,8 +35,6 @@ class Home extends Component {
   render() {
     return (
       <div className="home">
-        <div className="row">
-          <div className="col-md-12 ">
             <div className="panel panel-default transaction-container">
               <div className="panel-body">
                 <div>
@@ -60,8 +58,6 @@ class Home extends Component {
                 </div>
                 <TransactionTable h={'250px'} option={this.state.select} countTras={100} />
               </div>
-            </div>
-          </div>
         </div>
       </div>
     );
