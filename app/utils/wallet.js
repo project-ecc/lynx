@@ -93,14 +93,16 @@ class Wallet {
   }
 
   async getInfo() {
-    if (typeof this.client === 'undefined' || !this.client) {
-      return Promise.reject(new Error('RPC this.client was not defined'));
+    if (typeof this.client === 'undefined' || !this.client)
+    {
+        return Promise.reject(new Error('RPC this.client was not defined'));
     }
-
-    return this.client.getInfo().then(res => {
-      return Promise.resolve(res);
-    }).catch((err) => {
-      return Promise.reject(err);
+    return this.client.getInfo().then(res =>
+    {
+        return Promise.resolve(res);
+    }).catch((err) =>
+    {
+        return Promise.reject(err);
     });
   }
 

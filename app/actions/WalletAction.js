@@ -8,7 +8,6 @@ import { traduction } from '../lang/lang';
 const event = require('../utils/eventhandler');
 
 const walletUri = getPlatformWalletUri();
-let firstRun = true;
 
 export const GET_BLOCKCHAIN_INFO = 'GET_BLOCKCHAIN_INFO';
 export const GET_INFO = 'GET_INFO';
@@ -154,62 +153,74 @@ export const isImportingPrivateKey = data => ({
   }
 });
 
-export const startStopWalletHandler = () => (dispatch, getstate) => {
-  const state = getstate().wallet;
-  if (state.off) {
-    dispatch(startWallet(state));
-  } else if (state.running) {
-    dispatch(stopWallet());
-  } else {
-    console.log(state);
-    event.emit('animate', lang.walletBusyState);
-  }
+export const startStopWalletHandler = () => (dispatch, getstate) =>
+{
+    const state = getstate().wallet;
+    if (state.off)
+    {
+        dispatch(startWallet(state));
+    }
+    else if (state.running)
+    {
+        dispatch(stopWallet());
+    }
+    else
+    {
+        console.log(state);
+        event.emit('animate', lang.walletBusyState);
+    }
 };
 
 export const stakingStatusHandler = () => (dispatch) => {
   dispatch(getMiningInfo());
 };
 
-const startWallet = (state) => (dispatch) => {
-  dispatch(evaluateStatus({
-    starting: true,
-    running: false,
-    stopping: false,
-    off: false,
-  }));
-  wallet.walletstart((result) => {
-    console.log(result);
-    if (result) {
-      event.emit('show', lang.startingWallet);
-    } else {
-      console.log(result);
-      dispatch(evaluateStatus({
-        starting: false,
+const startWallet = (state) => (dispatch) =>
+{
+    dispatch(evaluateStatus({
+        starting: true,
         running: false,
         stopping: false,
-        off: true,
-      }));
-      glob(walletUri, (err, files) =>
-      {
-        if (!files.length)
+        off: false,
+    }));
+    wallet.walletstart((result) =>
+    {
+        console.log(result);
+        if (result)
         {
-          dispatch(isWalletInstalled(false));
-        }
-        else if (files.length)
-        {
-          dispatch(isWalletInstalled(true));
+            event.emit('show', lang.startingWallet);
         }
         else
         {
-          console.log(err);
-          event.emit('show', err.message);
+            console.log(result);
+            dispatch(evaluateStatus({
+                starting: false,
+                running: false,
+                stopping: false,
+                off: true,
+            }));
+            glob(walletUri, (err, files) =>
+            {
+                if (!files.length)
+                {
+                    dispatch(isWalletInstalled(false));
+                }
+                else if (files.length)
+                {
+                    dispatch(isWalletInstalled(true));
+                }
+                else
+                {
+                    console.log(err);
+                    event.emit('show', err.message);
+                }
+            });
+            if (state.walletInstalled === false)
+            {
+                event.emit('show', lang.missingWalletDaemon);
+            }
         }
-      });
-      if (state.walletInstalled === false) {
-        event.emit('show', lang.missingWalletDaemon);
-      }
-    }
-  });
+    });
 };
 
 const stopWallet = () => (dispatch) => {
@@ -275,103 +286,117 @@ const formatVersion = (unformattedVersion) => {
 };
 
 
-const processError = (err) => (dispatch) => {
-  if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119')) {
-      console.log(err);
-      dispatch(evaluateStatus({
-        starting: false,
-        running: false,
-        stopping: false,
-        off: true,
-      }));
-  } else if (err.code === -28) {
-    event.emit('show', getErrorFromCode(err.code, err.message));
-    dispatch(evaluateStatus({
-      starting: true,
-      running: false,
-      stopping: false,
-      off: false,
-    }));
-  } else if (err.code === 500) {
-    console.log(err);
-  } else if (err.message.includes('500 Internal Server Error')) {
-    console.log(err);
-  } else if (err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT')) {
-    event.emit('show', lang.socketDisconnect);
-  } else {
-    event.emit('show', getErrorFromCode(err.code, err.message));
-  }
+const processError = (err) => (dispatch) =>
+{
+    // TODO: on windows the ECCONREFUSED message happens both when loading the wallet
+    // and when it cannot be found. add some logic to determine based on our state if
+    // we should be dispatching a state of starting or a state of off.
+    if (err.code === -28)
+    {
+        event.emit('show', getErrorFromCode(err.code, err.message));
+        dispatch(evaluateStatus({
+            starting: true,
+            running: false,
+            stopping: false,
+            off: false,
+        }));
+    }
+    else if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119'))
+    {
+        console.log(err);
+        dispatch(evaluateStatus({
+            starting: false,
+            running: false,
+            stopping: false,
+            off: true,
+        }));
+    }
+    else if (err.code === 500)
+    {
+        console.log(err);
+    }
+    else if (err.message.includes('500 Internal Server Error'))
+    {
+        console.log(err);
+    }
+    else if (err.message.includes('socket hang up') || err.message.includes('ESOCKETTIMEDOUT'))
+    {
+        event.emit('show', lang.socketDisconnect);
+    }
+    else
+    {
+        event.emit('show', getErrorFromCode(err.code, err.message));
+    }
 };
 
-export const updateWalletStatus = () => (dispatch, getstate) => {
-  const state = getstate().wallet;
-  if (state.walletInstalled && firstRun){
-      wallet.getInfo().then((data) => {
-        dispatch(evaluateStatus({
-          starting: false,
-          running: true,
-          stopping: false,
-          off: false,
-        }));
-      }).catch((err) => {
-        dispatch(processError(err));
-      });
-      firstRun = false;
-      return;
-  }
-  if (state.starting) {
-    if (state.walletInstalled) {
-      wallet.getInfo().then((data) => {
-        dispatch(evaluateStatus({
-          starting: false,
-          running: true,
-          stopping: false,
-          off: false,
-        }));
-      }).catch((err) => {
-        dispatch(processError(err));
-      });
-    }
-  }
-  else if (state.running) {
-    event.emit('hide');
-    dispatch(getBlockchainInfo());
-    dispatch(getInfo());
-    dispatch(getWalletInfo());
-    dispatch(getMiningInfo());
-  }
-  else if (state.stopping) {
-    event.emit('show', lang.walletStopping);
-    if (state.walletInstalled) {
-      wallet.getInfo().then((data) => {
-        dispatch(evaluateStatus({
-          starting: false,
-          running: true,
-          stopping: false,
-          off: false,
-        }));
-      }).catch((err) => {
-        dispatch(processError(err));
-      });
-    }
-  }
-  else if (state.off && state.walletInstalled == false)
-  {
-    glob(walletUri, (err, files) =>
+export const updateWalletStatus = () => (dispatch, getstate) =>
+{
+    const state = getstate().wallet;
+    if (state.walletInstalled == false)
     {
-      if (!files.length)
-      {
-        dispatch(isWalletInstalled(false));
-      }
-      else if (files.length)
-      {
-        dispatch(isWalletInstalled(true));
-      }
-      else
-      {
-        console.log(err);
-        event.emit('show', err.message);
-      }
-    });
-  }
+        glob(walletUri, (err, files) =>
+        {
+            if (!files.length)
+            {
+                dispatch(isWalletInstalled(false));
+            }
+            else if (files.length)
+            {
+                dispatch(isWalletInstalled(true));
+            }
+            else
+            {
+                console.log(err);
+                event.emit('show', err.message);
+            }
+        });
+    }
+    else if (state.starting)
+    {
+        wallet.getInfo().then((data) =>
+        {
+            event.emit('show', "DATA = " + JSON.stringify(data));
+            dispatch(evaluateStatus({
+                starting: false,
+                running: true,
+                stopping: false,
+                off: false,
+            }));
+        }).catch((err) =>
+        {
+            event.emit('show', "ERR = " + JSON.stringify(err));
+            dispatch(processError(err));
+        });
+    }
+    else if (state.running)
+    {
+        event.emit('hide');
+        dispatch(getBlockchainInfo());
+        dispatch(getInfo());
+        dispatch(getWalletInfo());
+        dispatch(getMiningInfo());
+    }
+    else if (state.stopping)
+    {
+        event.emit('show', lang.walletStopping);
+        if (state.walletInstalled)
+        {
+            wallet.getInfo().then((data) =>
+            {
+                dispatch(evaluateStatus({
+                    starting: false,
+                    running: true,
+                    stopping: false,
+                    off: false,
+                }));
+            }).catch((err) =>
+            {
+                dispatch(processError(err));
+            });
+        }
+    }
+    else if (state.off)
+    {
+
+    }
 };
