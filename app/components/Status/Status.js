@@ -317,25 +317,24 @@ class StatusPage extends Component {
             <p>Available Rewards: {25000000000 - `${Number(this.props.moneysupply)}`}</p>
           </div>
         </div>
+        <p className="title">{config.coinName} Wallet functions</p>
         <div className="row status-row">
-          <div className="col-md-12 col-md-12 col-lg-12 status-panel">
-            <p className="title">{config.coinName} Wallet functions</p>
-            <div className='row'>
-              <div className='col'>
+            
+              <div className='col-md-4'>
                 {!this.props.staking
                         ? <button className="orangeButton btn btn-raised" onClick={this.toggleStakingLive}>Start Staking</button>
                         : <button className="orangeButton btn btn-raised" onClick={this.toggleStakingLive}>Stop Staking</button>}
               </div>
-              <div className='col'>
+              <div className='col-md-4'>
               {!this.state.stakingInConfig
                         ? <button className="orangeButton btn btn-raised" onClick={this.toggleStakingConfig}>Enable Staking on Wallet Start</button>
                         : <button className="orangeButton btn btn-raised" onClick={this.toggleStakingConfig}>Disable Staking on Wallet Start</button>}
               </div>
-              <div className='col'>
+              <div className='col-md-4'>
               {!this.props.encrypted ? <button className="orangeButton btn btn-raised" onClick={this.openModalForEncryption}>Encrypt Wallet</button> : <button className="orangeButton btn btn-raised" onClick={this.openModalToChangePassword}>Change Wallet Password</button>}
               </div>
-            </div>
-          </div>
+  
+          
         </div>
         {this.renderDialog()}
       </div>

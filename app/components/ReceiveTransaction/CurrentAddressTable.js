@@ -60,7 +60,7 @@ class CurrentAddresses extends Component {
         <div className="addresses_table">
           <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
             <div className="col-md-5 trans_col">
-              <p className="header">{lang.address}</p>
+              <p className="title">Address List</p>
             </div>
           </div>
           {data.map((address, index) => {

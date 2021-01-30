@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import CurrentAddresses from './CurrentAddressTable';
 
 import wallet from '../../utils/wallet';
@@ -71,9 +73,9 @@ class Receive extends Component {
       <div className="receive">
         <div className="row">
           <div className="col-md-12">
-            <p className="title">{lang.receiveNewAddress }</p>
             <div className="panel panel-default">
               <div className="panel-body">
+              <p className="title">{lang.receiveNewAddress }</p>
                 <div className="input-group">
                   <span className="input-group-btn" style={{ paddingLeft: '0px' }}>
                     <button className="orangeButton btn btn-raised" type="button" onClick={this._handleAddressClick}>{lang.receiveCreateNewAddress}</button>
@@ -95,7 +97,9 @@ class Receive extends Component {
               <div className="col-md-12">
                 <div className="panel panel-default">
                   <div className="panel-body">
-                    <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />
+                  {this.props.unlocked_until === 0
+            ? 'Unlock your wallet to see your address list.'
+            : <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />}
                   </div>
                 </div>
               </div>
@@ -108,4 +112,10 @@ class Receive extends Component {
   }
 }
 
-export default Receive;
+const mapStateToProps = state => {
+  return {
+    unlocked_until: state.wallet.unlocked_until,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Receive));

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
-import { getConfUri, getDebugUri, grabCoinDir } from '../../services/platform.service';
+import { getConfUri, getDebugUri, grabCoinDir, grabWalletDir } from '../../services/platform.service';
 
 import $ from 'jquery';
 
@@ -66,6 +66,11 @@ class SettingsDebug extends Component {
   openWalletFolder() {
     console.log(grabCoinDir());
     shell.openItem(grabCoinDir());
+  }
+
+  openDaemonFolder() {
+    console.log(grabWalletDir());
+    shell.openItem(grabWalletDir());
   }
 
   renderHelpMsg() {
@@ -275,38 +280,58 @@ class SettingsDebug extends Component {
     if (!this.state.consoleOpen) {
       return (
         <div>
-          <div className="col-md-12">
-            <p className="subtitle">Debug Console</p>
-            <div className="row">
-              <div className="col-md-4">
-                <button className="orangeButton btn btn-raised" onClick={this.switchLayout.bind(this)}>{lang.console}</button>
+          <div className="row">
+            <div className="col-md-4">
+            <div className="card settingsCard" style={{width: '20rem'}}>
+                <div className="card-body">
+                  <h5 className="card-title">Debug Console</h5>
+                  <p className="card-text">Opens the debug console to run eccoin commands</p>
+                  <button className="orangeButton btn btn-raised" onClick={this.switchLayout.bind(this)}>{lang.console}</button>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card settingsCard" style={{width: '20rem'}}>
+                <div className="card-body">
+                  <h5 className="card-title">{lang.settingsDebugLogFile}</h5>
+                  <p className="card-text">Opens the debug.log file, this will help with debugging any issues</p>
+                  <button className="orangeButton btn btn-raised" onClick={this.openDebugFile}>{lang.settingsDebugOpen}</button>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card settingsCard" style={{width: '20rem'}}>
+                <div className="card-body">
+                  <h5 className="card-title">Eccoin Folder</h5>
+                  <p className="card-text">This folder contains the eccoin daemon, open this to manually update</p>
+                  <button className="orangeButton btn btn-raised" onClick={this.openDaemonFolder}>Open</button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-md-12">
-            <p className="subtitle">{lang.settingsDebugLogFile}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <button className="orangeButton btn btn-raised" onClick={this.openDebugFile}>{lang.settingsDebugOpen}</button>
+          <div style={{padding: '10px'}}></div>
+
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card settingsCard" style={{width: '20rem'}}>
+                <div className="card-body">
+                  <h5 className="card-title">{lang.settingsDebugConfigurationFile}</h5>
+                  <p className="card-text">Opens the eccoin.conf file, this file sets configuration options for eccoin</p>
+                  <button className="orangeButton btn btn-raised" onClick={this.openConfigFile}>{lang.settingsDebugOpen}</button>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card settingsCard" style={{width: '20rem'}}>
+                <div className="card-body">
+                  <h5 className="card-title">Wallet Folder</h5>
+                  <p className="card-text">This folder contains your wallet.dat file, back this file up to ensure you do not loose your funds.</p>
+                  <button className="orangeButton btn btn-raised" onClick={this.openWalletFolder}>{lang.settingsDebugOpen}</button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-md-12">
-            <p className="subtitle">{lang.settingsDebugConfigurationFile}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <button className="orangeButton btn btn-raised" onClick={this.openConfigFile}>{lang.settingsDebugOpen}</button>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-12">
-            <p className="subtitle">{"wallet.dat folder"}</p>
-            <div className="row">
-              <div className="col-md-4">
-                <button className="orangeButton btn btn-raised" onClick={this.openWalletFolder}>{lang.settingsDebugOpen}</button>
-              </div>
-            </div>
-          </div>
+
         </div>
       );
     }
@@ -386,9 +411,7 @@ class SettingsDebug extends Component {
         <div className="col-md-12 tab_body">
           <div className="panel panel-default">
             <div className="panel-body">
-              <div className="row">
                 {this.renderBody()}
-              </div>
             </div>
           </div>
         </div>
