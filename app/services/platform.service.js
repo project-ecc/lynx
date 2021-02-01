@@ -22,22 +22,6 @@ export function grabWalletDir() {
 }
 
 /**
- * This function forwards the daemon zip download url given the inputted parameters.
- * @param product
- * @param version
- * @param platform
- * @returns {string}
- */
-
-export function formatDownloadURL(product, version, platform) {
-  if (platform == "win32" || platform == "win64"){
-    return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.zip`;
-  }
-  return config.humanReleaseUrl + `/download/${product}${version}/${product}-${version}-${platform}.tar.gz`;
-}
-
-
-/**
  * Extracts the platform zip checksum from the body of text on the github release page.
  * @param platform
  * @param text
@@ -49,6 +33,15 @@ export function extractChecksum (platform, text) {
   const checksumMatches = text.match(new RegExp(`[\\s\\S]*checksum-${platform}: (\\w+)[\\s\\S]*`));
 
   return (checksumMatches && checksumMatches.length > 1) ? checksumMatches[1] : '';
+}
+
+export function extractDownloadURL (platform, text) {
+  const delimit = "download-" + platform + ":";
+  console.log(delimit)
+  const downloadMatches = text.split(delimit);
+  const url = downloadMatches[1].split(" ");
+  console.log(url[1])
+  return url[1];
 }
 
 /**

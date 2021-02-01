@@ -3,7 +3,7 @@ import fs from 'fs';
 import PropTypes from 'prop-types';
 import { traduction } from '../../lang/lang';
 import config from '../../../config.json';
-import { grabWalletDir, getPlatformFileName, getPlatformFileExtension, formatDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
+import { grabWalletDir, getPlatformFileName, getPlatformFileExtension, extractDownloadURL, extractChecksum, getPlatformName } from '../../services/platform.service';
 import { downloadFile } from '../../utils/downloader';
 
 const request = require('request-promise-native');
@@ -89,11 +89,14 @@ class WalletInstallerPartial extends React.Component {
 
       request(opts).then(async (data) => {
         const parsed = JSON.parse(data);
-        const latestDaemon = parsed[0].name.split(' ')[1];
-        const zipChecksum = extractChecksum(getPlatformName(), parsed[0].body);
-        const downloadUrl = formatDownloadURL(config.clientName, latestDaemon, getPlatformName());
+        const latestDaemon = parsed[0].name;
+        const latestVersion = latestDaemon.split("eccoin")[1];
+        console.log(latestVersion)
+        const zipChecksum = extractChecksum(getPlatformName(), parsed[0].description);
+        console.log(zipChecksum)
+        const downloadUrl = extractDownloadURL(getPlatformName(), parsed[0].description);
         console.log(downloadUrl);
-
+        reject(false);
         const downloaded = await downloadFile(downloadUrl, walletDirectory, 'Eccoind.zip', zipChecksum, true);
 
         if (downloaded) {
@@ -106,7 +109,7 @@ class WalletInstallerPartial extends React.Component {
 
           const platFileName = getPlatformFileName();
           const fileExtension = getPlatformFileExtension();
-          fs.rename(`${walletDirectory}eccoin-${latestDaemon}/bin/eccoind${fileExtension}`, walletDirectory + platFileName, (err) => {
+          fs.rename(`${walletDirectory}eccoin-${latestVersion}/bin/eccoind${fileExtension}`, walletDirectory + platFileName, (err) => {
             if (err) throw err;
             console.log('Successfully renamed - AKA moved!');
           });
