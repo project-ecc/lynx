@@ -4,6 +4,8 @@ import ReactLoading from 'react-loading';
 import AddressBook from './AddressBook';
 import wallet from '../../utils/wallet';
 import { traduction } from '../../lang/lang';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import glob from 'glob';
 import { handleWalletError } from '../../services/error.service';
 import { getErrorFromCode } from '../../services/error.service';
@@ -39,17 +41,19 @@ class Send extends Component {
   }
 
   checkIfWalletEncrypted() {
-    const self = this;
-    wallet.help().then((data) => {
-      // console.log(data);
-      if (data.indexOf('walletlock') > -1) {
-        self.setState({ step: 3 });
-      } else {
-        self.setState({ step: 1 });
-      }
-    }).catch((err) => {
-      handleWalletError(err, this.props.history);
-    });
+    if(this.props.walletInstalled && this.props.walletRunning) {
+      const self = this;
+      wallet.help().then((data) => {
+        // console.log(data);
+        if (data.indexOf('walletlock') > -1) {
+          self.setState({ step: 3 });
+        } else {
+          self.setState({ step: 1 });
+        }
+      }).catch((err) => {
+        handleWalletError(err, this.props.history);
+      });
+    }
   }
 
   _handleGenericFormChange(event) {
@@ -298,4 +302,11 @@ class Send extends Component {
   }
 }
 
-export default Send;
+const mapStateToProps = state => {
+  return {
+    walletInstalled: state.wallet.walletInstalled,
+    walletRunning: state.wallet.walletRunning
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Send));

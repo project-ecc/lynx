@@ -1,6 +1,7 @@
 import Client from 'eccoin-js';
 import shell from 'node-powershell';
 import fs from 'fs';
+import {runExec, runExecFile} from './runExec';
 
 import { getPlatformWalletUri, getConfUri } from '../services/platform.service';
 
@@ -40,6 +41,7 @@ class Wallet {
   }
 
   loadClient() {
+    console.log('in load')
     return new Promise((resolve, reject) => {
       readRpcCredentials().then((data) => {
         if (data !== null) {
@@ -262,6 +264,22 @@ class Wallet {
     }
   }
 
+  getWalletVersion(){
+    return new Promise(async (resolve, reject) => {
+      let path = getPlatformWalletUri();
+      this.runWalletWithOptions(path, ['-version']).then((data)=>{
+        // Eccoind version v0.2.5.15-06804e7
+        let firstLine = data.split(/\r?\n/)[0];
+        let splitOnSpace = firstLine.split(" ")[2];
+        let cleaned = splitOnSpace.split("-")[0];
+        // this will return vxx.xx.xx.xx IE v0.2.5.15
+        resolve(cleaned);
+      }).catch((err)=>{
+        reject(err)
+      })
+    });
+  }
+
   async walletstop() {
     try {
       return await this.client.stop();
@@ -270,42 +288,66 @@ class Wallet {
     }
   }
 
-  walletstart(cb) {
-    let path = getPlatformWalletUri();
-    if (process.platform === 'linux') {
-      runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
-        return cb(true);
-      })
-        .catch(() => {
-          cb(false);
-        });
-    } else if (process.platform === 'darwin') {
-      console.log(path);
-      runExec(`chmod +x "${path}" && "${path}"`, 1000).then(() => {
-        return cb(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        cb(false);
-      });
-    } else if (process.platform.indexOf('win') > -1) {
-      path = `& "${path}"`;
-      const ps = new shell({ //eslint-disable-line
-        executionPolicy: 'Bypass',
-        noProfile: true
-      });
+  async runWalletWithOptions(path, options){
+    // options = options.join(" ");
+    return new Promise(async (resolve, reject) => {
+      if (process.platform === 'linux' || process.platform === 'darwin') {
+        await runExec(`chmod +x "${path}"`, 1000)
+          .then(() => {
+            runExecFile(path, options).then((data)=>{
+              return resolve(data);
+            }).catch((err)=>{
+              reject(err);
+            })
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      } else if (process.platform.indexOf('win') > -1) {
+        let command = ''
 
-      ps.addCommand(path);
-      ps.invoke()
-        .then(() => {
-          return cb(true);
-        })
-        .catch(err => {
-          console.log(err);
-          cb(false);
-          ps.dispose();
+        if(options.join(' ').indexOf('version') > -1){
+          command = `${path} -version`;
+          console.log(command)
+        } else {
+          command = `& start-process "${path}" -ArgumentList "${options.join(' ')}" -verb runAs -WindowStyle Hidden`;
+          console.log(command)
+        }
+
+        const ps = new Shell({
+          executionPolicy: 'Bypass',
+          noProfile: true
         });
-    }
+        ps.addCommand(command);
+        ps.invoke()
+          .then(data => {
+            console.log(data)
+            return resolve(data);
+          })
+          .catch(err => {
+            console.log(err);
+            ps.dispose();
+            return reject(err);
+          });
+      }
+    });
+  }
+
+  walletstart(rescan = false) {
+    console.log('in wallet start');
+    return new Promise(async (resolve, reject) => {
+      let options = [];
+      options.push('-daemon');
+      if(rescan == true){
+        options.push('-reindex');
+      }
+      let path = getPlatformWalletUri();
+      this.runWalletWithOptions(path, options).then(()=>{
+        resolve(true);
+      }).catch((err)=>{
+        reject(err)
+      })
+    });
   }
 
 }
@@ -352,18 +394,3 @@ function readRpcCredentials () {
   });
 }
 
-function runExec(cmd, timeout, cb) {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        console.log(error);
-        reject(error);
-      } else {
-        resolve('program exited without an error');
-      }
-    });
-    setTimeout(() => {
-      resolve('program still running');
-    }, timeout);
-  });
-}

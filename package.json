@@ -156,6 +156,7 @@
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
     "request-progress": "^3.0.0",
+    "semver": "^7.3.4",
     "source-map-support": "^0.4.15",
     "style-loader": "^1.2.1",
     "tar": "^4.4.13"

@@ -100,18 +100,17 @@ class WalletInstallerPartial extends React.Component {
         const downloaded = await downloadFile(downloadUrl, walletDirectory, 'Eccoind.zip', zipChecksum, true);
 
         if (downloaded) {
-          fs.writeFile(`${grabWalletDir()}wallet-version.txt`, latestDaemon, (err) => {
-            if (err) throw err;
-            event.emit('file-download-complete');
-            event.emit('hide');
-            event.emit('show', 'Wallet downloaded and ready to start.');
-          });
+          event.emit('file-download-complete');
+          event.emit('hide');
+          event.emit('show', 'Wallet downloaded and ready to start.');
+
 
           const platFileName = getPlatformFileName();
           const fileExtension = getPlatformFileExtension();
           fs.rename(`${walletDirectory}eccoin-${latestVersion}/bin/eccoind${fileExtension}`, walletDirectory + platFileName, (err) => {
             if (err) throw err;
             console.log('Successfully renamed - AKA moved!');
+            event.emit('file-download-complete');
           });
 
           resolve(true);
@@ -146,13 +145,13 @@ class WalletInstallerPartial extends React.Component {
       );
     } else if (this.props.isWalletInstalled && this.props.isNewVersionAvailable) {
       return (
-        <button className="stopStartButton" onClick={this.downloadDaemon}>
+        <button className="orangeButton btn btn-raised sidebar-button" onClick={this.downloadDaemon}>
           {lang.clickUpdateWallet}
         </button>
       );
     } else if (!this.props.isWalletInstalled) {
       return (
-        <button className="stopStartButton" onClick={this.downloadDaemon}>
+        <button className="orangeButton btn btn-raised sidebar-button" onClick={this.downloadDaemon}>
           {lang.clickInstallWallet}
         </button>
       );

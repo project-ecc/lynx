@@ -84,12 +84,6 @@ export const getInfo = () => (dispatch) => {
         unlocked_until: data.unlocked_until,
       }));
     }
-    updateWalletFromRedux(formatVersion(data.version))
-      .then((data) => {
-        console.log(data);
-      }).catch((err) => {
-        console.log(err);
-      });
   }).catch((err) => {
     dispatch(processError(err));
   });
@@ -183,7 +177,7 @@ const startWallet = (state) => (dispatch) =>
         stopping: false,
         off: false,
     }));
-    wallet.walletstart((result) =>
+    wallet.walletstart().then((result) =>
     {
         console.log(result);
         if (result)
@@ -234,24 +228,6 @@ const stopWallet = () => (dispatch) => {
     }));
   }).catch(err => {
     dispatch(processError(err));
-  });
-};
-
-const updateWalletFromRedux = (reduxVersion) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(`${grabWalletDir()}wallet-version.txt`, 'utf8', (err, data) => {
-      if (err) { reject(err); } else {
-        const version = data.split(' ')[1];
-        if(version !== reduxVersion){
-          let toWrite = `Version ${reduxVersion}`;
-          fs.writeFile(`${grabWalletDir()}wallet-version.txt`, toWrite, 'utf8', (err) => {
-            if(!err)
-              resolve(true);
-            else resolve(false);
-          });
-        }
-      }
-    });
   });
 };
 
@@ -332,6 +308,7 @@ const processError = (err) => (dispatch) =>
 export const updateWalletStatus = () => (dispatch, getstate) =>
 {
     const state = getstate().wallet;
+    
     if (state.walletInstalled == false)
     {
         glob(walletUri, (err, files) =>
@@ -364,6 +341,7 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
             }));
         }).catch((err) =>
         {
+          console.log(err)
             event.emit('show', "ERR = " + JSON.stringify(err));
             dispatch(processError(err));
         });

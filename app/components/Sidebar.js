@@ -423,10 +423,7 @@ class Sidebar extends Component {
               : <button className="orangeButton btn btn-raised sidebar-button" disabled>{lang.startingWallet}</button>
           }
         </div>
-        <div className="sidebar-section-container">
-
-
-          <br />
+        <div className="sidebar-section-buttons">
           <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />
         </div>
         {this.renderDialog()}

@@ -214,6 +214,6 @@
     "walletNotInstalled": "Wallet not installed",
     "startWallet": "Start wallet",
     "stopWallet": "Stop wallet",
-    "clickUpdateWallet": "Click to update wallet",
-    "clickInstallWallet": "Click to install wallet"
+    "clickUpdateWallet": "Update wallet",
+    "clickInstallWallet": "Install wallet"
 }

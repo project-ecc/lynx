@@ -34,9 +34,6 @@ class SettingsDebug extends Component {
     this.onenter = this.onenter.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -325,7 +322,7 @@ class SettingsDebug extends Component {
               <div className="card settingsCard" style={{width: '20rem'}}>
                 <div className="card-body">
                   <h5 className="card-title">Wallet Folder</h5>
-                  <p className="card-text">This folder contains your wallet.dat file, back this file up to ensure you do not loose your funds.</p>
+                  <p className="card-text">This folder contains your wallet.dat file, back this file up to ensure you do not lose your funds.</p>
                   <button className="orangeButton btn btn-raised" onClick={this.openWalletFolder}>{lang.settingsDebugOpen}</button>
                 </div>
               </div>
