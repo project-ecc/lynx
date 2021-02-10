@@ -6,7 +6,7 @@ import { getInfoGet, stakingStatusHandler } from '../actions/WalletAction';
 
 const mapStateToProps = state => {
   return {
-    version: state.wallet.version,
+    version: state.wallet.versionformatted,
     subversion: state.wallet.subversion,
     paytxfee: state.wallet.paytxfee,
     relayfee: state.wallet.relayfee,

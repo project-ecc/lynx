@@ -6,7 +6,8 @@ import {
   SET_UNLOCKED_UNTIL,
   EVALUATE_STATUS,
   IS_WALLET_INSTALLED,
-  IS_INSTALLING_PRIVATE_KEY
+  IS_INSTALLING_PRIVATE_KEY,
+  WALLET_VERSION
 } from '../actions/WalletAction';
 
 
@@ -66,6 +67,11 @@ export default (state = initialState, action) => {
         ...state,
         importingKey: action.payload.importingKey
       };
+      case WALLET_VERSION:
+        return {
+          ...state,
+          versionformatted: action.payload.version
+        };
     case GET_INFO:
       return {
         ...state,

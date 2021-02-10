@@ -20,7 +20,7 @@ const lang = traduction();
 class StatusPage extends Component {
   static propTypes = {
     stakingStatusHandler: PropTypes.func,
-    version: PropTypes.number,
+    version: PropTypes.String,
     blocks: PropTypes.number,
     headers: PropTypes.number,
     bestblockhash: PropTypes.string,

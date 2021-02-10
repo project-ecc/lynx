@@ -4,6 +4,7 @@ import wallet from '../utils/wallet';
 import { getErrorFromCode } from '../services/error.service';
 import { getPlatformWalletUri, getPlatformFileName, getPlatformName, grabWalletDir } from '../services/platform.service';
 import { traduction } from '../lang/lang';
+const semver = require('semver')
 
 const event = require('../utils/eventhandler');
 
@@ -11,6 +12,7 @@ const walletUri = getPlatformWalletUri();
 
 export const GET_BLOCKCHAIN_INFO = 'GET_BLOCKCHAIN_INFO';
 export const GET_INFO = 'GET_INFO';
+export const WALLET_VERSION = 'WALLET_VERSION';
 export const GET_WALLET_INFO = 'GET_WALLET_INFO';
 export const GET_MINING_INFO = 'GET_MINING_INFO';
 export const SET_UNLOCKED_UNTIL = 'SET_UNLOCKED_UNTIL';
@@ -36,7 +38,6 @@ export const getBlockchainInfo = () => (dispatch) => {
 export const getInfoGet = data => ({
   type: GET_INFO,
   payload: {
-    versionformatted: data.versionformatted,
     version: data.version,
     protocolversion: data.protocolversion,
     walletversion: data.walletversion,
@@ -56,12 +57,26 @@ export const getInfoGet = data => ({
   }
 });
 
+export const setWalletVersion = () => (dispatch) => {
+  wallet.getWalletVersion().then((data) => {
+    const version = semver.valid(semver.coerce(data));
+    dispatch({
+      type: WALLET_VERSION,
+      payload: {
+        versionformatted: version,
+      }
+    })
+  });
+}
+
 export const getInfo = () => (dispatch) => {
   wallet.getInfo().then(data => {
+    const eccoinVer = formatVersion(data.version);
+    const version = semver.valid(semver.coerce(eccoinVer));
     dispatch({
       type: GET_INFO,
       payload: {
-        versionformatted: data.versionformatted,
+        versionformatted: version,
         version: data.version,
         protocolversion: data.protocolversion,
         walletversion: data.walletversion,
@@ -220,6 +235,7 @@ const startWallet = (state) => (dispatch) =>
 const stopWallet = () => (dispatch) => {
   wallet.walletstop().then((data) => {
     console.log(data);
+    event.emit('animate', data);
     dispatch(evaluateStatus({
       starting: false,
       running: false,
@@ -227,6 +243,7 @@ const stopWallet = () => (dispatch) => {
       off: false,
     }));
   }).catch(err => {
+    console.log(err)
     dispatch(processError(err));
   });
 };
@@ -262,8 +279,9 @@ const formatVersion = (unformattedVersion) => {
 };
 
 
-const processError = (err) => (dispatch) =>
+const processError = (err) => (dispatch, getstate) =>
 {
+    const state = getstate().wallet;
     // TODO: on windows the ECCONREFUSED message happens both when loading the wallet
     // and when it cannot be found. add some logic to determine based on our state if
     // we should be dispatching a state of starting or a state of off.
@@ -279,13 +297,16 @@ const processError = (err) => (dispatch) =>
     }
     else if (err.message.includes('connect ECONNREFUSED 127.0.0.1:19119'))
     {
-        console.log(err);
+      // console.log(err);
+      if(!state.starting) {
         dispatch(evaluateStatus({
             starting: false,
             running: false,
             stopping: false,
             off: true,
         }));
+      }
+
     }
     else if (err.code === 500)
     {
@@ -332,7 +353,6 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
     {
         wallet.getInfo().then((data) =>
         {
-            event.emit('show', "DATA = " + JSON.stringify(data));
             dispatch(evaluateStatus({
                 starting: false,
                 running: true,
@@ -342,7 +362,6 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
         }).catch((err) =>
         {
           console.log(err)
-            event.emit('show', "ERR = " + JSON.stringify(err));
             dispatch(processError(err));
         });
     }
@@ -378,8 +397,31 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
         dispatch(evaluateStatus({
             starting: false,
             running: false,
-            stopping: true,
-            off: false,
+            stopping: false,
+            off: true,
         }));
+
+        //sanity check to see if its running in the background already.
+        if(wallet.client != null) {
+          // check if running
+          wallet.getInfo().then((data) =>
+          {
+              dispatch(evaluateStatus({
+                  starting: false,
+                  running: true,
+                  stopping: false,
+                  off: false,
+              }));
+          }).catch((err) =>
+          {
+            // console.log(err)
+              dispatch(processError(err));
+          });
+          dispatch(setWalletVersion());
+          //check wallet version
+
+        }
     }
+
+
 };

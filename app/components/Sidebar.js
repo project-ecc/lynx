@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-    }, 500);
+    }, 5000);
 
     this.checkWalletVersion();
 
