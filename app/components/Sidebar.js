@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-    }, 600000);
+    }, 500);
 
     this.checkWalletVersion();
 
@@ -123,19 +123,21 @@ class Sidebar extends Component {
     });
   }
 
-  async checkWalletVersion() {
+  checkWalletVersion() {
     try {
-      const exists = await updater.checkForWalletVersion();
-      if (exists) {
+      const exists = updater.checkForWalletVersion();
+      if (exists)
+      {
         updater.checkWalletVersion((result) => {
             this.state.newVersionAvailable = result;
         });
+        this.checkWalletState();
       }
     } catch (err) { console.log(err); }
   }
 
   checkWalletState() {
-    this.props.updateWalletStatus;
+    this.props.updateWalletStatus();
   }
 
   checkStateMenu(pathname) {

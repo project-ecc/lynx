@@ -308,7 +308,7 @@ const processError = (err) => (dispatch) =>
 export const updateWalletStatus = () => (dispatch, getstate) =>
 {
     const state = getstate().wallet;
-    
+
     if (state.walletInstalled == false)
     {
         glob(walletUri, (err, files) =>
@@ -375,6 +375,11 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
     }
     else if (state.off)
     {
-
+        dispatch(evaluateStatus({
+            starting: false,
+            running: false,
+            stopping: true,
+            off: false,
+        }));
     }
 };
