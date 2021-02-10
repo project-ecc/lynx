@@ -70,7 +70,7 @@ export default (state = initialState, action) => {
       case WALLET_VERSION:
         return {
           ...state,
-          versionformatted: action.payload.version
+          versionformatted: action.payload.versionformatted
         };
     case GET_INFO:
       return {
