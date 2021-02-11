@@ -1,5 +1,5 @@
 import Client from 'eccoin-js';
-import shell from 'node-powershell';
+import Shell from 'node-powershell';
 import fs from 'fs';
 import {runExec, runExecFile} from './runExec';
 
