@@ -14,7 +14,8 @@ const lang = traduction();
 class WalletInstallerPartial extends React.Component {
   static propTypes = {
     isWalletInstalled: PropTypes.bool,
-    isNewVersionAvailable: PropTypes.bool
+    isNewVersionAvailable: PropTypes.bool,
+    isWalletOff: PropTypes.bool
   };
 
   constructor(props) {
@@ -102,7 +103,7 @@ class WalletInstallerPartial extends React.Component {
         if (downloaded) {
           event.emit('file-download-complete');
           event.emit('hide');
-          event.emit('show', 'Wallet downloaded and ready to start.');
+          event.emit('animate', 'Wallet downloaded and ready to start.');
 
 
           const platFileName = getPlatformFileName();
@@ -145,13 +146,13 @@ class WalletInstallerPartial extends React.Component {
       );
     } else if (this.props.isWalletInstalled && this.props.isNewVersionAvailable) {
       return (
-        <button className="orangeButton btn btn-raised sidebar-button" onClick={this.downloadDaemon}>
+        <button className="orangeButton btn btn-raised sidebar-button" disabled={!this.props.isWalletOff} onClick={this.downloadDaemon}>
           {lang.clickUpdateWallet}
         </button>
       );
     } else if (!this.props.isWalletInstalled) {
       return (
-        <button className="orangeButton btn btn-raised sidebar-button" onClick={this.downloadDaemon}>
+        <button className="orangeButton btn btn-raised sidebar-button" disabled={!this.props.isWalletOff} onClick={this.downloadDaemon}>
           {lang.clickInstallWallet}
         </button>
       );

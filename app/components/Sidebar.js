@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-    }, 5000);
+    }, 50000);
 
     this.checkWalletVersion();
 
@@ -130,6 +130,7 @@ class Sidebar extends Component {
       {
         updater.checkWalletVersion((result) => {
             this.state.newVersionAvailable = result;
+            this.setState({})
         });
         this.checkWalletState();
       }
@@ -426,7 +427,7 @@ class Sidebar extends Component {
           }
         </div>
         <div className="sidebar-section-buttons">
-          <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} />
+          <WalletInstallerPartial isWalletInstalled={this.props.walletInstalled} isNewVersionAvailable={this.state.newVersionAvailable} isWalletOff={this.props.off} />
         </div>
         {this.renderDialog()}
       </div>
