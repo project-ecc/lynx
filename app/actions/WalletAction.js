@@ -417,9 +417,11 @@ export const updateWalletStatus = () => (dispatch, getstate) =>
             // console.log(err)
               dispatch(processError(err));
           });
-          dispatch(setWalletVersion());
-          //check wallet version
 
+          //check wallet version
+          if (process.platform === 'linux' || process.platform === 'darwin') {
+            dispatch(setWalletVersion());
+          }
         }
     }
 

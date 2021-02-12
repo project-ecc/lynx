@@ -322,6 +322,7 @@ class Wallet {
         ps.invoke()
           .then(data => {
             console.log(data)
+            ps.dispose();
             return resolve(data);
           })
           .catch(err => {

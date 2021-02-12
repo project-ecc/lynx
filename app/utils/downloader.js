@@ -154,6 +154,7 @@ export function unpackFile(fileToUnpack, targetDirectory, deleteOldZip = false) 
               } else {
                 event.emit('unzipping-file', { message: 'Cleaning up..' });
                 console.log('File successfully deleted');
+                event.emit('file-download-complete');
 
                 resolve(true);
               }
