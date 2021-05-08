@@ -97,7 +97,7 @@ class Receive extends Component {
               <div className="col-md-12">
                 <div className="panel panel-default">
                   <div className="panel-body">
-                  {this.props.unlocked_until === 0
+                  {this.props.encrypted && this.props.unlocked_until === 0
             ? 'Unlock your wallet to see your address list.'
             : <CurrentAddresses ref={(input) => { this.child_current_addresses = input; }} />}
                   </div>
@@ -115,6 +115,8 @@ class Receive extends Component {
 const mapStateToProps = state => {
   return {
     unlocked_until: state.wallet.unlocked_until,
+    encrypted: state.wallet.encrypted,
+
   };
 };
 
