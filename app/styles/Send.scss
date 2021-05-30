@@ -21,10 +21,15 @@
 
 .send .inpuText {
 	font-size: 0.9em !important;
+	font-weight: normal !important;
+	color: #8f96af !important;
+	background-color: #232633 !important;
 }
 
 .send .inpuText::-webkit-input-placeholder{
 	font-size: 0.9em !important;
+	font-weight: normal !important;
+	color: #8f96af !important;
 }
 
 .friends_table{
@@ -63,7 +68,9 @@
 }
 
 .friends_table .stripped{
-	background-color: #fafafa;
+	/*background-color: #fafafa;*/
+	background-color: rgb(45, 53, 66);
+    border-radius: 10px;
 }
 
 .friends_table .trans_row{

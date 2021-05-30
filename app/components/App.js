@@ -5,7 +5,8 @@ import BalanceBanner from '../containers/BalanceBanner';
 
 
 const event = require('../utils/eventhandler');
-const splash = require('../../resources/images/splash-image.jpg');
+//const splash = require('../../resources/images/splash-image.jpg');
+const splash = require('../../resources/images/lynx_logo_large.png');
 
 let lasttype = 'hide';
 
