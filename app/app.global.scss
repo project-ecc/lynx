@@ -18,6 +18,9 @@
 html,
 body {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+  background-color: #14181F;
+  color: #8f96af;
+  font-weight: normal;
 }
 
 *:focus {
@@ -36,10 +39,15 @@ body {
 }
 
 .panel {
-  background: #fff;
+  background: #232633;
   padding: 10px;
   margin: 10px; 
   position: relative;
+  border-radius: 10px;
+}
+
+.btn{
+  border-radius: 8px !important;
 }
 
 .orangeButton{
@@ -63,7 +71,7 @@ body {
 
 .splash-image-container {
   z-index: 1000;
-  background-color: #fff;
+  background-color: #14181F;
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -75,7 +83,7 @@ body {
 }
 
 .splash-image {
-  width: 20%;
+ /* width: 20%;*/
   max-width: 300px;
 }
 

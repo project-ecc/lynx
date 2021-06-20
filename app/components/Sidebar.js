@@ -12,7 +12,7 @@ import wallet from '../utils/wallet';
 
 const event = require('../utils/eventhandler');
 const { ipcRenderer } = require('electron');
-const usericon = require('../../resources/images/logo1.png');
+const usericon = require('../../resources/images/lynx_logo_solo.png');
 const lockedPad = require('../../resources/images/padclose.png');
 const unlockedPad = require('../../resources/images/padopen.png');
 
@@ -403,7 +403,9 @@ class Sidebar extends Component {
               style={{ width: `${progressBar.toFixed(2)}%`, backgroundColor: '#8DA557' }}
             />
           </div>
-          <p style={progressStyle}>{`${this.props.blocks} blocks / ${this.props.headers} headers`}</p>
+        
+          <p style={progressStyle}>{`Blocks: ${this.props.blocks}`}</p>
+          <p style={progressStyle}>{`Headers: ${this.props.headers}`}</p>
           <p style={progressStyle}>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
         </div>
 

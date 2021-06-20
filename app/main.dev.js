@@ -84,6 +84,7 @@ app.on('ready', async () => {
     minWidth: 1200,
     minHeight: 620,
     icon: iconPath,
+    backgroundColor:'#14181F',
     title: `${config.coinName}-${config.guiName}`
   });
 
