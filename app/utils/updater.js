@@ -54,6 +54,10 @@ export default class Updater {
                         lastRemoteChecksum = remoteChecksum;
                         cb(true);
                     }
+                    else
+                    {
+                        cb(false);
+                    }
                 }
                 else
                 {
@@ -70,6 +74,10 @@ export default class Updater {
             else if (semver.eq(String(version), String(gitlabVersion))) {
                 if ( data[1] != lastRemoteChecksum) {
                     cb(true);
+                }
+                else
+                {
+                    cb(false);
                 }
             }
             else

@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     this.timerCheckWalletVersion = setInterval(() => {
       this.checkWalletVersion();
-    }, 50000);
+  }, 15000);
 
     this.checkWalletVersion();
 
@@ -403,7 +403,7 @@ class Sidebar extends Component {
               style={{ width: `${progressBar.toFixed(2)}%`, backgroundColor: '#8DA557' }}
             />
           </div>
-        
+
           <p style={progressStyle}>{`Blocks: ${this.props.blocks}`}</p>
           <p style={progressStyle}>{`Headers: ${this.props.headers}`}</p>
           <p style={progressStyle}>{`${lang.nabBarNetworkInfoActiveConnections}: ${this.props.connections}`}</p>
