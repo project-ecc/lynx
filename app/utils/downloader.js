@@ -128,7 +128,7 @@ export function unzipFile(fileToUnzip, targetDirectory, latestVersion, deleteOld
           }
         }
         else { // if we do not delete, rename
-            fs.rename(fileToUnzip, targetDirectory + "eccoin" + latestVersion + ".bak", (err) => {
+            fs.rename(fileToUnzip, targetDirectory + "v" + latestVersion + ".bak", (err) => {
               if (err) {
                   throw err;
               }
@@ -177,7 +177,7 @@ export function unpackFile(fileToUnpack, targetDirectory, latestVersion, deleteO
           }
         }
         else { // if we do not delete, rename
-            fs.rename(fileToUnpack, targetDirectory + "eccoin" + latestVersion + ".bak", (err) => {
+            fs.rename(fileToUnpack, targetDirectory + "v" + latestVersion + ".bak", (err) => {
               if (err) {
                   throw err;
               }
