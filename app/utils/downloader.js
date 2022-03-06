@@ -17,7 +17,7 @@ const tar = require('tar');
  * @param cs
  * @param unzip
  */
-export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip = false) {
+export function downloadFile(srcUrl, destFolder, destFileName, latestVersion, cs = null, unzip = false) {
   return new Promise((resolve, reject) => {
     const downloadRequestOpts = {
       url: srcUrl,
@@ -66,20 +66,26 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
       event.emit('verifying-file');
       if (cs !== null) {
         const validated = await validateChecksum(fileName, cs);
-        if (!validated) reject(validated);
+        if (!validated) {
+            reject(validated);
+        }
       }
       event.emit('verifying-file');
 
       event.emit('unzipping-file', { message: 'Unzipping..' });
       if(unzip) {
         if (getPlatformName() == "win32" || getPlatformName() == "win64") {
-          const unzipped = await unzipFile(fileName, destFolder, true);
-          if(!unzipped) reject(unzipped);
+          const unzipped = await unzipFile(fileName, destFolder, latestVersion, false);
+          if(!unzipped) {
+              reject(unzipped);
+          }
         }
         else {
           console.log("about to unpack tar file");
-          const unzipped = await unpackFile(fileName, destFolder, true);
-          if(!unzipped) reject(unzipped);
+          const unzipped = await unpackFile(fileName, destFolder, latestVersion, false);
+          if(!unzipped) {
+              reject(unzipped);
+          }
         }
       }
       event.emit('unzipping-file', { message: 'Unzip Complete' });
@@ -98,7 +104,7 @@ export function downloadFile(srcUrl, destFolder, destFileName, cs = null, unzip 
  * @param deleteOldZip
  * @returns {Promise}
  */
-export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
+export function unzipFile(fileToUnzip, targetDirectory, latestVersion, deleteOldZip = false) {
   return new Promise((resolve, reject) => {
     extract(fileToUnzip, { dir: targetDirectory }, (err) => {
       if (err) {
@@ -121,7 +127,16 @@ export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
             });
           }
         }
-        resolve(true);
+        else { // if we do not delete, rename
+            fs.rename(fileToUnzip, targetDirectory + "eccoin" + latestVersion + ".bak", (err) => {
+              if (err) {
+                  throw err;
+              }
+              console.log('Successfully renamed - AKA moved!');
+              event.emit('file-download-complete');
+            });
+            resolve(true);
+        }
       }
     });
   });
@@ -134,7 +149,7 @@ export function unzipFile(fileToUnzip, targetDirectory, deleteOldZip = false) {
  * @param deleteOldZip
  * @returns {Promise}
  */
-export function unpackFile(fileToUnpack, targetDirectory, deleteOldZip = false) {
+export function unpackFile(fileToUnpack, targetDirectory, latestVersion, deleteOldZip = false) {
   return new Promise((resolve, reject) =>{
     // extracting a directory
     tar.x(  // or tar.extract(
@@ -161,9 +176,33 @@ export function unpackFile(fileToUnpack, targetDirectory, deleteOldZip = false) 
             });
           }
         }
-        resolve(true);
+        else { // if we do not delete, rename
+            fs.rename(fileToUnpack, targetDirectory + "eccoin" + latestVersion + ".bak", (err) => {
+              if (err) {
+                  throw err;
+              }
+              console.log('Successfully renamed - AKA moved!');
+              event.emit('file-download-complete');
+            });
+            resolve(true);
+        }
       });
   });
+}
+
+export function getChecksum(fileName) {
+    return new Promise((resolve, reject) =>{
+    if (!fs.existsSync(fileName)) {
+          resolve(-1)
+    }
+    var shasum = crypto.createHash('sha256');
+    var s = fs.ReadStream(fileName);
+    s.on('data', function(d) { shasum.update(d); });
+    s.on('end', function() {
+      var sha256 = shasum.digest('hex');
+      resolve(sha256);
+    });
+    });
 }
 
 /**
@@ -174,23 +213,17 @@ export function unpackFile(fileToUnpack, targetDirectory, deleteOldZip = false) 
  */
 export function validateChecksum (fileName, toValidateAgainst) {
   return new Promise((resolve, reject) =>{
-    event.emit('verifying-file');
-
-    var shasum = crypto.createHash('sha256');
-    console.log(fileName)
-    var s = fs.ReadStream(fileName);
-    s.on('data', function(d) { shasum.update(d); });
-    s.on('end', function() {
-      var sha256 = shasum.digest('hex');
-      console.log(`checksum from file ${sha256}`);
-      console.log(`validating against ${toValidateAgainst}`);
-      console.log('Done downloading. verifying...');
-      event.emit('verifying-file');
-      if (toValidateAgainst === sha256) {
-        resolve(true);
-      } else {
-        reject('Checksums do not match!');
-      }
+    getChecksum(fileName).then( localChecksum => {
+        event.emit('verifying-file');
+        console.log(`checksum from file ${localChecksum}`);
+        console.log(`validating against ${toValidateAgainst}`);
+        console.log('Done downloading. verifying...');
+        event.emit('verifying-file');
+        if (toValidateAgainst === localChecksum) {
+            resolve(true);
+        } else {
+            reject('Checksums do not match!');
+        }
     });
-  });
+});
 }

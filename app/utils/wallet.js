@@ -3,7 +3,8 @@ import Shell from 'node-powershell';
 import fs from 'fs';
 import {runExec, runExecFile} from './runExec';
 
-import { getPlatformWalletUri, getConfUri } from '../services/platform.service';
+import { getPlatformWalletUri, getConfUri, grabWalletDir } from '../services/platform.service';
+import { getChecksum } from './downloader';
 
 const { exec, spawn } = require('child_process');
 
@@ -271,9 +272,14 @@ class Wallet {
         // Eccoind version v0.2.5.15-06804e7
         let firstLine = data.split(/\r?\n/)[0];
         let splitOnSpace = firstLine.split(" ")[2];
-        let cleaned = splitOnSpace.split("-")[0];
         // this will return vxx.xx.xx.xx IE v0.2.5.15
-        resolve(cleaned);
+        let cleaned = splitOnSpace.split("-")[0];
+        // also get the hash
+        const walletDirectory = grabWalletDir();
+        const fileName = walletDirectory + cleaned + ".bak";
+        getChecksum(fileName).then(checksum => {
+            resolve([cleaned, checksum]);
+        });
       }).catch((err)=>{
         reject(err)
       })
@@ -394,4 +400,3 @@ function readRpcCredentials () {
     })
   });
 }
-

@@ -59,7 +59,7 @@ export const getInfoGet = data => ({
 
 export const setWalletVersion = () => (dispatch) => {
   wallet.getWalletVersion().then((data) => {
-    const version = semver.valid(semver.coerce(data));
+    const version = semver.valid(semver.coerce(data[0]));
     dispatch({
       type: WALLET_VERSION,
       payload: {
