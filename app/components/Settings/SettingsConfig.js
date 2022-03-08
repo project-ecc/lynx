@@ -54,7 +54,6 @@ class SettingsConfig extends Component {
       console.log(err);
       event.emit('animate', 'conf file not loaded');
     });
-    this.getConfigInfo();
   }
 
   handleInputChange(event) {
