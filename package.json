@@ -1,7 +1,7 @@
 {
   "name": "Lynx",
   "productName": "Lynx",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "Electron application providing the graphical user interface for ECC",
   "scripts": {
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
